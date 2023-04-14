@@ -8,7 +8,8 @@ import java.util.Objects;
 
 @Setter
 @Getter
-@Entity(name = "payment_methods")
+@Entity
+@Table(name = "payment_methods")
 public class PaymentMethod {
 
     @Id

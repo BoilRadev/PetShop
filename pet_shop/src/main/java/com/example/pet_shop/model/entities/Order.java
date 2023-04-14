@@ -8,8 +8,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Setter
-    @Getter
-    @Entity(name = "orders")
+@Getter
+@Entity
+@Table(name = "orders")
     public class Order {
 
         @Id

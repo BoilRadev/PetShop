@@ -8,7 +8,9 @@ import java.util.Objects;
 
 @Setter
 @Getter
-@Entity(name = "suppliers")
+@Entity
+@Table(name = "suppliers")
+
 public class Supplier {
 
     @Id

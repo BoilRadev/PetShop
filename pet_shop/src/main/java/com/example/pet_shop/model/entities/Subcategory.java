@@ -8,7 +8,8 @@ import java.util.Objects;
 
 @Setter
 @Getter
-@Entity(name = "subcategories")
+@Entity
+@Table(name = "subcategories")
 public class Subcategory {
 
     @Id
