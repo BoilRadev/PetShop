@@ -34,7 +34,6 @@ public class Discount {
     private boolean isActive;
 
     @OneToMany(mappedBy = "discount")
-
     private Set<Product> products;
 
 

@@ -42,11 +42,11 @@ public abstract class AbstractController {
     }
 
     private ErrorDTO generateErrorDTO(Exception e, HttpStatus s){
-        return ErrorDTO.builder()
-                .msg(e.getMessage())
-                .time(LocalDateTime.now())
-                .status(s.value())
-                .build();
+        return new ErrorDTO(e.getMessage(),s.value(), LocalDateTime.now());
+//                .msg(e.getMessage())
+//                .time(LocalDateTime.now())
+//                .status(s.value())
+//                .build();
     }
 
     protected int getLoggedId(HttpSession s){

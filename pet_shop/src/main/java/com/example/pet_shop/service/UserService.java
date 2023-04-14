@@ -25,12 +25,10 @@ public class UserService extends AbstractService{
     private UserRepository userRepository;
 
     public UserWithoutPassDTO register(RegisterDTO dto) {
+
         if(!dto.getPassword().equals(dto.getConfirmPassword())){
             throw new BadRequestException("Passwords mismatch!");
         }
-//        if(!dto.getPassword().matches()){
-//            throw new BadRequestException("Weak password!");
-//        }
         if(userRepository.existsByEmail(dto.getEmail())){
             throw new BadRequestException("Email already exists!");
         }
@@ -41,11 +39,12 @@ public class UserService extends AbstractService{
     }
 
     public UserWithoutPassDTO login(LoginDTO dto) {
-        Optional<User> u = userRepository.getByEmail(dto.getEmail());
+
+        Optional<User> u = userRepository.getByEmail(dto.email());
         if(!u.isPresent()){
             throw new UnauthorizedException("Wrong credentials");
         }
-        if(!encoder.matches(dto.getPassword(), u.get().getPassword())){
+        if(!encoder.matches(dto.password(), u.get().getPassword())){
             throw new UnauthorizedException("Wrong credentials");
         }
         return mapper.map(u, UserWithoutPassDTO.class);
