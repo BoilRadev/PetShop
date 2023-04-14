@@ -39,6 +39,7 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private Set<Image> images;
+
     @ManyToOne
     @JoinColumn(name = "discount_id")
     private Discount discount;

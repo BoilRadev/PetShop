@@ -27,17 +27,17 @@ public class User {
     @Column
     private String password;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column
+    private String first_name;
 
-    @Column(name = "last_name")
-    private String lastName;
+    @Column
+    private String last_name;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
+    @Column
+    private String phone_number;
 
-    @Column(name = "personal_discount")
-    private BigDecimal personalDiscount;
+    @Column
+    private BigDecimal personal_discount;
 
     @Column
     private String town;
@@ -45,22 +45,22 @@ public class User {
     @Column
     private String address;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt; //TODO кога да сложим дата
+    @Column
+    private LocalDateTime created_at; //TODO кога да сложим дата
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    @Column
+    private LocalDateTime deleted_at;
 
-    @Column(name = "is_subscribed")
-    private boolean isSubscribed;
+    @Column
+    private boolean is_subscribed;
 
-    @Column(name = "is_admin")
-    private boolean isAdmin;
+    @Column
+    private boolean is_admin;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "owner")
     private Set<Payment> payments = new HashSet<>();
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private Set<Order> orders = new HashSet<>();
 
 

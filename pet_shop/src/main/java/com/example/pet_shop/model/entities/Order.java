@@ -29,9 +29,6 @@ import java.time.LocalDateTime;
         @JoinColumn(name = "payment_method_id")
         private PaymentMethod paymentMethod;
 
-        @Column
-        private String address;
-
         @Column(name = "created_at")
         private LocalDateTime createdAt;
 
