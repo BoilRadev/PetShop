@@ -4,7 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Setter
+@Getter
 @NoArgsConstructor
-public record LoginDTO( String email , String password ) {
+public class LoginDTO {
 
+    private String email;
+    private String password;
 }
