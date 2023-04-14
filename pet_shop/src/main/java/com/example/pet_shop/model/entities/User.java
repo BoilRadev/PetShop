@@ -12,8 +12,8 @@ import java.util.Set;
 
 @Setter
 @Getter
-@Entity
-@Table(name = "users")
+@Entity(name = "users")
+
 public class User {
 
     @Id
@@ -56,11 +56,11 @@ public class User {
     @Column(name = "is_admin")
     private boolean isAdmin;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Payment> payments = new HashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<Order> orders = new HashSet<>();
+//    @OneToMany(mappedBy = "users")
+//    private Set<Payment> payments = new HashSet<>();
+//
+//    @OneToMany(mappedBy = "users")
+//    private Set<Order> orders = new HashSet<>();
 
 
 
