@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 
 @Setter
 @Getter
@@ -17,6 +19,8 @@ public class RegisterDTO {
     private String phoneNumber;
     private String townName;
     private String address;
+    private LocalDateTime time;
     private boolean isSubscribed;
+    private boolean isAdmin;
 
 }
