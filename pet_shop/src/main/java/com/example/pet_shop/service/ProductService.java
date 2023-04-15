@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService extends AbstractService{
 
@@ -16,21 +18,33 @@ public class ProductService extends AbstractService{
     @Autowired
     private ProductRepository productRepository;
 
-    public CartDTO addToCart(ProductInfoDTO dto) {
-        return new CartDTO();
+
+    public ProductInfoDTO viewProductById(int id) {
+        return null;
     }
 
-    public CartDTO removeFromCart(ProductInfoDTO dto) {
-        return new CartDTO();
+    public List<ProductInfoDTO> viewAll() {
+        return null;
     }
 
-    public OrderStatusDTO editStatus(int id) {
-        return new OrderStatusDTO();
-
+    public List<ProductInfoDTO> filter() {
+        return null;
     }
 
-    public OrderStatusDTO getStatus(int id) {
-        return new OrderStatusDTO();
+    public List<ProductInfoDTO> search(ProductInfoDTO dto) {
+        return null;
+    }
+
+    public List<ProductInfoDTO> sort() {
+        return null;
+    }
+
+    public ProductInfoDTO addProduct(ProductInfoDTO dto) {
+        return null;
+    }
+
+    public ProductInfoDTO editProduct(int id) {
+        return null;
     }
 
 }

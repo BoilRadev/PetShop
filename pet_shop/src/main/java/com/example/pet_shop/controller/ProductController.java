@@ -1,11 +1,11 @@
 package com.example.pet_shop.controller;
 
-import com.example.pet_shop.model.DTOS.CartDTO;
-import com.example.pet_shop.model.DTOS.OrderStatusDTO;
 import com.example.pet_shop.model.DTOS.ProductInfoDTO;
 import com.example.pet_shop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ProductController extends AbstractController {
@@ -13,24 +13,43 @@ public class ProductController extends AbstractController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping("/orders")
-    public CartDTO addToCart(@RequestBody ProductInfoDTO dto){
-        return productService.addToCart(dto);
+    @GetMapping("/products/{id}")
+    public ProductInfoDTO viewProductById(@PathVariable int id){
+        return productService.viewProductById(id);
     }
 
-    @DeleteMapping("/orders")
-    public CartDTO removeFromCart(@RequestBody ProductInfoDTO dto){
-        return productService.removeFromCart(dto);
+    @GetMapping("/products/all")
+    public List<ProductInfoDTO> viewAllProducts(){
+        return productService.viewAll();
     }
 
-    @PutMapping("/orders/{id}/status")
-    public OrderStatusDTO editStatus(@PathVariable int id){
-        return productService.editStatus(id);
+    @GetMapping("/product/filter")
+    public List<ProductInfoDTO> filter(){
+        return productService.filter();
     }
 
-    @GetMapping("/orders/{id}/status")
-    public OrderStatusDTO getStatus(@PathVariable int id){
-        return productService.getStatus(id);
+    @GetMapping("/products/search")
+    public List<ProductInfoDTO> search(@RequestBody ProductInfoDTO dto){
+        return productService.search(dto);
+    }
+
+    @GetMapping("/products/sort")
+    public List<ProductInfoDTO> sort(){
+        return productService.sort();
+    }
+
+    @PostMapping("/products")
+    public ProductInfoDTO addProduct(@RequestBody ProductInfoDTO dto){
+        return productService.addProduct(dto);
+    }
+
+    @PutMapping("/products/{id}")
+    public ProductInfoDTO editProduct(@PathVariable int id){
+        return productService.editProduct(id);
+    }
+
+    @DeleteMapping("/products/{id}")
+    public void deleteProduct(@PathVariable int id){
     }
 
 }

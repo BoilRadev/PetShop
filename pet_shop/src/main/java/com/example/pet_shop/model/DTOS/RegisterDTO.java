@@ -14,18 +14,6 @@ import java.time.LocalDateTime;
 public class RegisterDTO {
     private String email;
     private String password;
-<<<<<<< HEAD
-
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
-    private String townName;
-    private String address;
-    private LocalDateTime time;
-    private boolean isSubscribed;
-    private boolean isAdmin;
-=======
->>>>>>> e514a4f1cc5903adf21ea50d9813d3a1c68abd7c
     private String confirmPassword;
 
     @Column(name = "first_name")

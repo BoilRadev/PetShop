@@ -1,6 +1,9 @@
 package com.example.pet_shop;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.NameTokenizers;
+import org.modelmapper.convention.NamingConventions;
+import org.modelmapper.spi.NamingConvention;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +24,10 @@ public class PetShopApplication {
 
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setSourceNamingConvention((NamingConvention) NameTokenizers.UNDERSCORE)
+                .setDestinationNameTokenizer(NameTokenizers.CAMEL_CASE);
+        return modelMapper;
     }
 }

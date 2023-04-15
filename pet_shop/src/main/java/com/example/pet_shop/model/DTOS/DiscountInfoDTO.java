@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductInfoDTO {
+public class DiscountInfoDTO {
 }
