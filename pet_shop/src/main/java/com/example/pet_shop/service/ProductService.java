@@ -4,7 +4,6 @@ import com.example.pet_shop.model.DTOS.CartDTO;
 import com.example.pet_shop.model.DTOS.OrderStatusDTO;
 import com.example.pet_shop.model.DTOS.ProductInfoDTO;
 import com.example.pet_shop.model.repositories.ProductRepository;
-import com.example.pet_shop.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
