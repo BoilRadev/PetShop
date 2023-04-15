@@ -1,6 +1,6 @@
 package com.example.pet_shop.model.DTOS;
 
-import lombok.*;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
