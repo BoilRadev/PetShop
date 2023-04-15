@@ -28,16 +28,16 @@ public class User {
     private String password;
 
     @Column(name = "first_name")
-    private String firstName;
+    private String first_name;
 
     @Column(name = "last_name")
-    private String lastName;
+    private String last_name;
 
     @Column(name = "phone_number")
-    private String phoneNumber;
+    private String phone_number;
 
     @Column(name = "personal_discount")
-    private BigDecimal personalDiscount;
+    private BigDecimal personal_discount;
 
     @Column
     private String town;

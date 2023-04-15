@@ -11,7 +11,9 @@ import com.example.pet_shop.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +36,7 @@ public class UserService extends AbstractService{
         }
         User u = mapper.map(dto, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
+        u.setCreatedAt(LocalDateTime.now());
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);
     }
