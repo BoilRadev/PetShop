@@ -1,5 +1,6 @@
 package com.example.pet_shop.controller;
 
+import com.example.pet_shop.model.DTOS.ProductAddDTO;
 import com.example.pet_shop.model.DTOS.ProductInfoDTO;
 import com.example.pet_shop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class ProductController extends AbstractController {
     }
 
     @PostMapping("/products")
-    public ProductInfoDTO addProduct(@RequestBody ProductInfoDTO dto){
+    public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto){
         return productService.addProduct(dto);
     }
 
@@ -50,6 +51,7 @@ public class ProductController extends AbstractController {
 
     @DeleteMapping("/products/{id}")
     public void deleteProduct(@PathVariable int id){
+        productService.deleteProduct(id);
     }
 
 }

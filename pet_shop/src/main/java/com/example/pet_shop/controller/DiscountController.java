@@ -14,16 +14,16 @@ public class DiscountController extends AbstractController {
     private DiscountService discountService;
 
     @PostMapping("/discounts")
-    public DiscountInfoDTO addProduct(@RequestBody ProductInfoDTO dto){
+    public DiscountInfoDTO addDiscount(@RequestBody ProductInfoDTO dto){
         return discountService.addDiscount(dto);
     }
 
     @PutMapping("/discounts/{id}")
-    public DiscountInfoDTO editProduct(@PathVariable int id){
+    public DiscountInfoDTO editDiscount(@PathVariable int id){
         return discountService.editDiscount(id);
     }
 
     @DeleteMapping("/discounts/{id}")
-    public void deleteProduct(@PathVariable int id){
+    public void deleteDiscount(@PathVariable int id){
     }
 }
