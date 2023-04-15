@@ -7,7 +7,24 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record RegisterDTO (int id , String email , String password, String confirmPassword, String firstName ,
-                           String lastName, String phoneNumber, BigDecimal personalDiscount, String town,
-                           String address , LocalDateTime createdAt, boolean isSubscribed, boolean isAdmin) {
-    }
+@Setter
+@Getter
+@NoArgsConstructor
+public class RegisterDTO {
+
+    private int id;
+    private String email;
+    private String password;
+    private String confirmPassword;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private BigDecimal personalDiscount;
+    private String townName;
+    private String address;
+    private LocalDateTime createdAt;
+    private boolean isSubscribed;
+    private boolean isAdmin;
+
+
+}

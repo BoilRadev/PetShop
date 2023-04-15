@@ -1,4 +1,14 @@
 package com.example.pet_shop.model.DTOS;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record LoginDTO(String email , String password ) {}
+@Setter
+@Getter
+@NoArgsConstructor
+public class LoginDTO {
+
+    private String email;
+    private String password;
+}
