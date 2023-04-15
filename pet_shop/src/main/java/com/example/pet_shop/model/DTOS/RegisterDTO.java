@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class RegisterDTO {
     private String email;
     private String password;
-    private String confirmPassword;
+
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -22,5 +22,6 @@ public class RegisterDTO {
     private LocalDateTime time;
     private boolean isSubscribed;
     private boolean isAdmin;
+    private String confirmPassword;
 
 }
