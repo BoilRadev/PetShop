@@ -63,7 +63,7 @@ public class ProductService extends AbstractService{
             int loggedUserId = (int) ses.getAttribute("LOGGED_ID");
             User u = getUserById(loggedUserId);
 
-            if (!u.isAdmin()) {
+            if (!u.is_admin()) {
                 throw new UnauthorizedException("You are not admin");
             } else {
 

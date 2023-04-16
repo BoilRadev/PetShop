@@ -6,4 +6,4 @@ import java.time.LocalDateTime;
 
 
 @Builder
-public record ErrorDTO ( String msg , int status , LocalDateTime time ){}
+public record ErrorDTO ( Object msg , int status , LocalDateTime time ){}

@@ -4,6 +4,7 @@ import com.example.pet_shop.model.DTOS.userDTOs.*;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class UserController extends AbstractController {
     private UserService userService;
 
     @PostMapping("/users")
-    public UserWithoutPassDTO register(@RequestBody RegisterDTO dto){
+    public UserWithoutPassDTO register(@Valid @RequestBody RegisterDTO dto){
         return userService.register(dto);
     }
 
@@ -34,11 +35,16 @@ public class UserController extends AbstractController {
         if (ses.getAttribute("LOGGED") == null || !((Boolean) ses.getAttribute("LOGGED"))) {
             throw new BadRequestException("You have to be logged in!");
         } else {
-            int loggedUserId = (int) ses.getAttribute("LOGGED_ID");
+            int loggedUserId = getLoggedId(ses);
 
             return userService.edit(userDto,loggedUserId);
 
         }
+    }
+
+    @PostMapping("/users/logout")
+    public void logout(HttpSession session) {
+        session.invalidate();
     }
 
     @GetMapping("/users/{id}")

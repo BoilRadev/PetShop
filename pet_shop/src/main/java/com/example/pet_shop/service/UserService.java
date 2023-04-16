@@ -25,7 +25,7 @@ public class UserService extends AbstractService{
 
     public UserWithoutPassDTO register(RegisterDTO dto) {
 
-        if(!dto.getPassword().equals(dto.getConfirmPassword())){
+        if(!dto.getPassword().equals(dto.getConfirm_password())){
             throw new BadRequestException("Passwords mismatch!");
         }
         if(userRepository.existsByEmail(dto.getEmail())){
@@ -33,7 +33,7 @@ public class UserService extends AbstractService{
         }
         User u = mapper.map(dto, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
-        u.setCreatedAt(LocalDateTime.now());
+        u.setCreated_at(LocalDateTime.now());
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);
     }
@@ -59,6 +59,7 @@ public class UserService extends AbstractService{
 
         User u = mapper.map(userDto, User.class);
 
+        //TODO нещо се губи сесията и не се връзва ?
         if (u.getId() != id) {
             throw new BadRequestException("You can only edit your own profile!");
         }

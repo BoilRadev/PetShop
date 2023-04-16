@@ -6,10 +6,14 @@ import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractController {
 
@@ -41,12 +45,12 @@ public abstract class AbstractController {
         return generateErrorDTO(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ErrorDTO generateErrorDTO(Exception e, HttpStatus s){
-        return new ErrorDTO(e.getMessage(),s.value(), LocalDateTime.now());
-//                .msg(e.getMessage())
-//                .time(LocalDateTime.now())
-//                .status(s.value())
-//                .build();
+    private ErrorDTO generateErrorDTO(Object o, HttpStatus s){
+        return ErrorDTO.builder()
+                .msg(o)
+                .time(LocalDateTime.now())
+                .status(s.value())
+               .build();
     }
 
     protected int getLoggedId(HttpSession s){
@@ -54,5 +58,17 @@ public abstract class AbstractController {
             throw new UnauthorizedException("You have to login first");
         }
         return (int) s.getAttribute("LOGGED_ID");
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ErrorDTO handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
 }
