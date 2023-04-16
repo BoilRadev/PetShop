@@ -51,7 +51,7 @@ public class UserService extends AbstractService{
     }
 
 
-    public UserWithoutPassDTO edit(UserEditRequestDTO userDto, int id) {
+    public UserEditResponseDTO edit(UserEditRequestDTO userDto, int id) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("User not found!");
@@ -64,7 +64,7 @@ public class UserService extends AbstractService{
         }
 
         userRepository.save(u);
-        return mapper.map(u, UserWithoutPassDTO.class);
+        return mapper.map(u, UserEditResponseDTO.class);
     }
     public UserWithoutPassDTO getById(int id) {
         Optional<User> u = userRepository.findById(id);
