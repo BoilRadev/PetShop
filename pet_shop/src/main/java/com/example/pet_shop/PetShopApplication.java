@@ -24,10 +24,7 @@ public class PetShopApplication {
 
     @Bean
     public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setSourceNamingConvention((NamingConvention) NameTokenizers.UNDERSCORE)
-                .setDestinationNameTokenizer(NameTokenizers.CAMEL_CASE);
-        return modelMapper;
+
+        return new ModelMapper();
     }
 }

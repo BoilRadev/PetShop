@@ -3,9 +3,9 @@ package com.example.pet_shop.service;
 import com.example.pet_shop.model.DTOS.CartDTO;
 import com.example.pet_shop.model.DTOS.OrderInfoDTO;
 import com.example.pet_shop.model.DTOS.OrderStatusDTO;
-import com.example.pet_shop.model.DTOS.ProductInfoDTO;
 import com.example.pet_shop.model.entities.Order;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
+
 import com.example.pet_shop.model.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -46,16 +46,16 @@ public class User {
     private String address;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt; //TODO кога да сложим дата
+    private LocalDateTime created_at; //TODO кога да сложим дата
 
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    private LocalDateTime deleted_at;
 
     @Column(name = "is_subscribed")
-    private boolean isSubscribed;
+    private boolean is_subscribed;
 
     @Column(name = "is_admin")
-    private boolean isAdmin;
+    private boolean is_admin;
 
     @OneToMany(mappedBy = "owner")
     private Set<Payment> payments = new HashSet<>();

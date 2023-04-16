@@ -4,6 +4,7 @@ import com.example.pet_shop.model.DTOS.DiscountAddDTO;
 import com.example.pet_shop.model.DTOS.DiscountInfoDTO;
 import com.example.pet_shop.model.entities.Discount;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
+
 import com.example.pet_shop.model.repositories.DiscountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 

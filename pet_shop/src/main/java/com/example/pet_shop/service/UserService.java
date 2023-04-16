@@ -1,17 +1,15 @@
 package com.example.pet_shop.service;
 
-import com.example.pet_shop.model.DTOS.LoginDTO;
-import com.example.pet_shop.model.DTOS.RegisterDTO;
-import com.example.pet_shop.model.DTOS.UserWithoutPassDTO;
+import com.example.pet_shop.model.DTOS.userDTOs.*;
 import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.model.repositories.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +26,7 @@ public class UserService extends AbstractService{
 
     public UserWithoutPassDTO register(RegisterDTO dto) {
 
-        if(!dto.getPassword().equals(dto.getConfirmPassword())){
+        if(!dto.getPassword().equals(dto.getConfirm_password())){
             throw new BadRequestException("Passwords mismatch!");
         }
         if(userRepository.existsByEmail(dto.getEmail())){
@@ -36,7 +34,7 @@ public class UserService extends AbstractService{
         }
         User u = mapper.map(dto, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
-        u.setCreatedAt(LocalDateTime.now());
+        u.setCreated_at(LocalDateTime.now());
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);
     }
@@ -53,6 +51,23 @@ public class UserService extends AbstractService{
         return mapper.map(u, UserWithoutPassDTO.class);
     }
 
+
+    public UserEditResponseDTO edit(UserEditRequestDTO userDto, int id) {
+        Optional<User> optionalUser = userRepository.getUserById(id);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("User not found!");
+        }
+
+        User u = mapper.map(userDto, User.class);
+
+        //TODO нещо се губи сесията и не се връзва ?
+        if (u.getId() != id) {
+            throw new BadRequestException("You can only edit your own profile!");
+        }
+
+        userRepository.save(u);
+        return mapper.map(u, UserEditResponseDTO.class);
+    }
     public UserWithoutPassDTO getById(int id) {
         Optional<User> u = userRepository.findById(id);
         if(u.isPresent()){
@@ -68,4 +83,17 @@ public class UserService extends AbstractService{
                 .collect(Collectors.toList());
     }
 
+    public User getLoggedUser(HttpSession session) {
+        if (session.getAttribute("LOGGED") == null) {
+            throw new BadRequestException("You have to log in!");
+
+        } else {
+            int userId = (int) session.getAttribute("LOGGED_ID");
+            return userRepository.findById(userId).get();
+        }
+    }
+
+    public void deleteUser(int id){
+        userRepository.deleteById(id);
+    }
 }

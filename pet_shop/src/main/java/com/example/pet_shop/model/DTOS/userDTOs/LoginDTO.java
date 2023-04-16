@@ -1,4 +1,4 @@
-package com.example.pet_shop.model.DTOS;
+package com.example.pet_shop.model.DTOS.userDTOs;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class UserWithoutPassDTO {
+public class LoginDTO {
 
-    private int id;
     private String email;
+    private String password;
 }

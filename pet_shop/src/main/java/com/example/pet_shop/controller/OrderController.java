@@ -3,7 +3,7 @@ package com.example.pet_shop.controller;
 import com.example.pet_shop.model.DTOS.CartDTO;
 import com.example.pet_shop.model.DTOS.OrderInfoDTO;
 import com.example.pet_shop.model.DTOS.OrderStatusDTO;
-import com.example.pet_shop.model.DTOS.ProductInfoDTO;
+import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
 import com.example.pet_shop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
