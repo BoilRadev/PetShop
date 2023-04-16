@@ -1,9 +1,17 @@
 package com.example.pet_shop.model.DTOS;
 
-import lombok.Builder;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public record ErrorDTO ( Object msg , int status , LocalDateTime time ){}
+public class ErrorDTO{
+
+    private Object msg;
+    private int status;
+    private LocalDateTime time;
+}

@@ -22,28 +22,28 @@ public abstract class AbstractController {
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleBadRequest(Exception e){
-        return generateErrorDTO(e, HttpStatus.BAD_REQUEST);
+        return generateErrorDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     //401
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorDTO handleUnauthorized(Exception e){
-        return generateErrorDTO(e, HttpStatus.UNAUTHORIZED);
+        return generateErrorDTO(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     //404
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDTO handleNotFound(Exception e){
-        return generateErrorDTO(e, HttpStatus.NOT_FOUND);
+        return generateErrorDTO(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     //500
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleRest(Exception e){
-        return generateErrorDTO(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        return generateErrorDTO(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private ErrorDTO generateErrorDTO(Object o, HttpStatus s){
@@ -51,7 +51,7 @@ public abstract class AbstractController {
                 .msg(o)
                 .time(LocalDateTime.now())
                 .status(s.value())
-               .build();
+                .build();
     }
 
     protected int getLoggedId(HttpSession s){

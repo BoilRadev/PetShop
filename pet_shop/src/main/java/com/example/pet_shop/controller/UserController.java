@@ -8,6 +8,7 @@ import com.example.pet_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ public class UserController extends AbstractController {
     }
 
     @PostMapping("/users/login")
-    public UserWithoutPassDTO login(@RequestBody LoginDTO dto, HttpSession s){
+    public UserWithoutPassDTO login(@Valid @RequestBody LoginDTO dto, HttpSession s){
         UserWithoutPassDTO respDto = userService.login(dto);
         s.setAttribute("LOGGED", true);
         s.setAttribute("LOGGED_ID", respDto.getId());
@@ -34,7 +35,7 @@ public class UserController extends AbstractController {
 
 
     @PutMapping("/users")
-    public UserEditResponseDTO editUser(@RequestBody UserEditRequestDTO userDto, HttpSession ses) {
+    public UserEditResponseDTO editUser(@Valid @RequestBody UserEditRequestDTO userDto, HttpSession ses) {
         if (ses.getAttribute("LOGGED") == null || !((Boolean) ses.getAttribute("LOGGED"))) {
             throw new BadRequestException("You have to be logged in!");
         } else {
