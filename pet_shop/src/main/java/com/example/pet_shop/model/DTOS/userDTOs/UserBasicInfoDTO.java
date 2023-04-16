@@ -1,4 +1,4 @@
-package com.example.pet_shop.model.DTOS;
+package com.example.pet_shop.model.DTOS.userDTOs;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,8 +1,6 @@
 package com.example.pet_shop.service;
 
-import com.example.pet_shop.model.DTOS.LoginDTO;
-import com.example.pet_shop.model.DTOS.RegisterDTO;
-import com.example.pet_shop.model.DTOS.UserWithoutPassDTO;
+import com.example.pet_shop.model.DTOS.userDTOs.*;
 import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
@@ -11,7 +9,6 @@ import com.example.pet_shop.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,6 +50,22 @@ public class UserService extends AbstractService{
         return mapper.map(u, UserWithoutPassDTO.class);
     }
 
+
+    public UserWithoutPassDTO edit(UserEditRequestDTO userDto, int id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("User not found!");
+        }
+
+        User u = mapper.map(userDto, User.class);
+
+        if (u.getId() != id) {
+            throw new BadRequestException("You can only edit your own profile!");
+        }
+
+        userRepository.save(u);
+        return mapper.map(u, UserWithoutPassDTO.class);
+    }
     public UserWithoutPassDTO getById(int id) {
         Optional<User> u = userRepository.findById(id);
         if(u.isPresent()){

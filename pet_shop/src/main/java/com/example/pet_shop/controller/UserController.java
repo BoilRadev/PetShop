@@ -1,8 +1,7 @@
 package com.example.pet_shop.controller;
 
-import com.example.pet_shop.model.DTOS.LoginDTO;
-import com.example.pet_shop.model.DTOS.RegisterDTO;
-import com.example.pet_shop.model.DTOS.UserWithoutPassDTO;
+import com.example.pet_shop.model.DTOS.userDTOs.*;
+import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,18 @@ public class UserController extends AbstractController {
         return respDto;
     }
 
+
+    @PutMapping("/users")
+    public UserEditResponseDTO editUser(@RequestBody UserEditRequestDTO userDto, HttpSession ses) {
+        if (ses.getAttribute("LOGGED") == null || !((Boolean) ses.getAttribute("LOGGED"))) {
+            throw new BadRequestException("You have to be logged in!");
+        } else {
+            int loggedUserId = (int) ses.getAttribute("LOGGED_ID");
+
+            return userService.edit(userDto,loggedUserId);
+
+        }
+    }
     @GetMapping("/users/{id}")
     public UserWithoutPassDTO getById(@PathVariable int id){
         return userService.getById(id);

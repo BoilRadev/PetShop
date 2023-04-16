@@ -1,4 +1,4 @@
-package com.example.pet_shop.model.DTOS;
+package com.example.pet_shop.model.DTOS.userDTOs;
 
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
