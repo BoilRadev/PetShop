@@ -1,13 +1,16 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.userDTOs.*;
+import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
+import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -58,4 +61,12 @@ public class UserController extends AbstractController {
     }
 
 
+    @DeleteMapping("/users")
+    public void deleteUser( HttpSession ses) {
+        if (userService.getLoggedUser(ses) == null) {
+            throw new BadRequestException("You have to be logged in!");
+        } else {
+            userService.deleteUser(getLoggedId(ses));
+        }
+    }
 }

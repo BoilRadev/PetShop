@@ -1,6 +1,7 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.ErrorDTO;
+import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
@@ -71,4 +72,5 @@ public abstract class AbstractController {
         });
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
+
 }

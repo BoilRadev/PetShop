@@ -6,6 +6,7 @@ import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.model.repositories.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class UserService extends AbstractService{
 
 
     public UserEditResponseDTO edit(UserEditRequestDTO userDto, int id) {
-        Optional<User> optionalUser = userRepository.findById(id);
+        Optional<User> optionalUser = userRepository.getUserById(id);
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("User not found!");
         }
@@ -82,4 +83,17 @@ public class UserService extends AbstractService{
                 .collect(Collectors.toList());
     }
 
+    public User getLoggedUser(HttpSession session) {
+        if (session.getAttribute("LOGGED") == null) {
+            throw new BadRequestException("You have to log in!");
+
+        } else {
+            int userId = (int) session.getAttribute("LOGGED_ID");
+            return userRepository.findById(userId).get();
+        }
+    }
+
+    public void deleteUser(int id){
+        userRepository.deleteById(id);
+    }
 }
