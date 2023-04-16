@@ -1,6 +1,7 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.CartDTO;
+import com.example.pet_shop.model.DTOS.OrderInfoDTO;
 import com.example.pet_shop.model.DTOS.OrderStatusDTO;
 import com.example.pet_shop.model.DTOS.ProductInfoDTO;
 import com.example.pet_shop.service.OrderService;
@@ -14,12 +15,12 @@ public class OrderController extends AbstractController {
     private OrderService orderService;
 
     @PostMapping("/orders")
-    public CartDTO addToCart(@RequestBody ProductInfoDTO dto){
+    public OrderInfoDTO addToCart(@RequestBody OrderInfoDTO dto){
         return orderService.addToCart(dto);
     }
 
     @DeleteMapping("/orders")
-    public CartDTO removeFromCart(@RequestBody ProductInfoDTO dto){
+    public OrderInfoDTO removeFromCart(@RequestBody OrderInfoDTO dto){
         return orderService.removeFromCart(dto);
     }
 
