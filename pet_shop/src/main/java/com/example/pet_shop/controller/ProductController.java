@@ -1,8 +1,10 @@
 package com.example.pet_shop.controller;
 
-import com.example.pet_shop.model.DTOS.ProductAddDTO;
-import com.example.pet_shop.model.DTOS.ProductInfoDTO;
+import com.example.pet_shop.model.DTOS.productDTOs.ProductAddDTO;
+import com.example.pet_shop.model.DTOS.productDTOs.ProductEditRequestDTO;
+import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
 import com.example.pet_shop.service.ProductService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,13 +42,13 @@ public class ProductController extends AbstractController {
     }
 
     @PostMapping("/products")
-    public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto){
-        return productService.addProduct(dto);
+    public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto, HttpSession ses){
+        return productService.addProduct(dto,ses);
     }
 
     @PutMapping("/products/{id}")
-    public ProductInfoDTO editProduct(@PathVariable int id){
-        return productService.editProduct(id);
+    public void editProduct(@RequestBody ProductEditRequestDTO productDto, @PathVariable int id) {
+        productService.editProduct(productDto, id);
     }
 
     @DeleteMapping("/products/{id}")

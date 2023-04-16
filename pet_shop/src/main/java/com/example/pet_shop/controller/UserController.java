@@ -40,6 +40,7 @@ public class UserController extends AbstractController {
 
         }
     }
+
     @GetMapping("/users/{id}")
     public UserWithoutPassDTO getById(@PathVariable int id){
         return userService.getById(id);

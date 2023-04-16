@@ -2,7 +2,7 @@ package com.example.pet_shop.controller;
 
 
 import com.example.pet_shop.model.DTOS.DiscountInfoDTO;
-import com.example.pet_shop.model.DTOS.ProductInfoDTO;
+import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
 import com.example.pet_shop.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
