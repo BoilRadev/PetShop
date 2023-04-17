@@ -46,11 +46,11 @@ public class ProductService extends AbstractService{
                 .collect(Collectors.toList());
     }
 
-    public List<ProductInfoDTO> search(ProductInfoDTO dto) {
+    public List<ProductInfoDTO> search(String dto) {
         return productRepository.findAll()
                 .stream()
                 .map( product -> mapper.map( product ,ProductInfoDTO.class))
-                .filter(product -> product.getSubcategory().equals(dto.getName()))
+                .filter(product -> product.getName().equals(dto))
                 .collect(Collectors.toList());
     }
 
@@ -58,14 +58,14 @@ public class ProductService extends AbstractService{
         return productRepository.findAll()
                 .stream()
                 .map( product -> mapper.map( product ,ProductInfoDTO.class))
-                .sorted()
+                .sorted((Comparator.comparing(ProductInfoDTO::getPrice)))
                 .collect(Collectors.toList());
     }
     public List<ProductInfoDTO> sortDescending() {
         return productRepository.findAll()
                 .stream()
                 .map( product -> mapper.map( product ,ProductInfoDTO.class))
-                .sorted()
+                .sorted(Comparator.comparing(ProductInfoDTO::getPrice).reversed())
                 .collect(Collectors.toList());
     }
 

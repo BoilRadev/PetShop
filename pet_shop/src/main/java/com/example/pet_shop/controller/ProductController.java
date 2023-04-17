@@ -32,7 +32,7 @@ public class ProductController extends AbstractController {
     }
 
     @GetMapping("/products/search")
-    public List<ProductInfoDTO> search(@RequestBody ProductInfoDTO dto){
+    public List<ProductInfoDTO> search(@RequestBody String dto){
         return productService.search(dto);
     }
 
