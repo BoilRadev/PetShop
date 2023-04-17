@@ -1,15 +1,10 @@
 package com.example.pet_shop.controller;
 
-import com.example.pet_shop.model.entities.Discount;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
-import com.example.pet_shop.service.DiscountService;
-import com.example.pet_shop.service.EmailSenderService;
 import com.example.pet_shop.service.NotificationService;
 import com.example.pet_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +29,8 @@ public class AdminController extends AbstractController{
         return ResponseEntity.ok("User deleted successfully.");
     }
 
-    @PostMapping
-    public void sendNotificationViaEmail(){
+    @PostMapping("/admin/notify-subscribers")
+    public void notifySubscribers(){
     }
 
 

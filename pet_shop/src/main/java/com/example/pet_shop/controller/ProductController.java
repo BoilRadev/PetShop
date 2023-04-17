@@ -36,9 +36,13 @@ public class ProductController extends AbstractController {
         return productService.search(dto);
     }
 
-    @GetMapping("/products/sort")
-    public List<ProductInfoDTO> sort(){
-        return productService.sort();
+    @GetMapping("/products/sort/acs")
+    public List<ProductInfoDTO> sortAscending(){
+        return productService.sortAscending();
+    }
+    @GetMapping("/products/sort/desc")
+    public List<ProductInfoDTO> sortDescending() {
+        return productService.sortDescending();
     }
 
     @PostMapping("/products")

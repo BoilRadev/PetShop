@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,16 +38,35 @@ public class ProductService extends AbstractService{
                 .map( product -> mapper.map(product, ProductInfoDTO.class))
                 .collect(Collectors.toList());    }
 
-    public List<ProductInfoDTO> filter() {
-        return null;
+    public List<ProductInfoDTO> filter(){
+        return productRepository.findAll()
+                .stream()
+                .map( product -> mapper.map( product ,ProductInfoDTO.class))
+                .filter(product -> product.getSubcategory().equals(subcategory))
+                .collect(Collectors.toList());
     }
 
     public List<ProductInfoDTO> search(ProductInfoDTO dto) {
-        return null;
+        return productRepository.findAll()
+                .stream()
+                .map( product -> mapper.map( product ,ProductInfoDTO.class))
+                .filter(product -> product.getSubcategory().equals(dto.getName()))
+                .collect(Collectors.toList());
     }
 
-    public List<ProductInfoDTO> sort() {
-        return null;
+    public List<ProductInfoDTO> sortAscending() {
+        return productRepository.findAll()
+                .stream()
+                .map( product -> mapper.map( product ,ProductInfoDTO.class))
+                .sorted()
+                .collect(Collectors.toList());
+    }
+    public List<ProductInfoDTO> sortDescending() {
+        return productRepository.findAll()
+                .stream()
+                .map( product -> mapper.map( product ,ProductInfoDTO.class))
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     public ProductInfoDTO addProduct(ProductAddDTO dto, HttpSession ses) {
