@@ -20,6 +20,7 @@ public class DiscountService extends AbstractService {
     private DiscountRepository discountRepository;
 
     public DiscountInfoDTO addDiscount(DiscountAddDTO dto) {
+
         Discount discount = mapper.map(dto,Discount.class);
             discount.setPercent(dto.getPercent());
             discount.setFromDate(dto.getFromDate().toLocalDate());
