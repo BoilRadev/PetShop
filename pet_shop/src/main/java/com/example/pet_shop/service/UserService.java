@@ -110,7 +110,5 @@ public class UserService extends AbstractService{
         userRepository.save(user);
     }
 
-    public List<User> getSubscribedUsers(Discount discount) {
-        return userRepository.findByIsSubscribedTrue();
-    }
+
 }

@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> getByEmail(String email);
     Optional<User> getUserById(int id);
 
-    List<User> findByIsSubscribedTrue();
+
 
 
 }
