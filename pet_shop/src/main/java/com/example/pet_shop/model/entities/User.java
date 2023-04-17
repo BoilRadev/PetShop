@@ -46,7 +46,7 @@ public class User {
     private String address;
 
     @Column(name = "created_at")
-    private LocalDateTime created_at; //TODO кога да сложим дата
+    private LocalDateTime created_at;
 
     @Column(name = "deleted_at")
     private LocalDateTime deleted_at;

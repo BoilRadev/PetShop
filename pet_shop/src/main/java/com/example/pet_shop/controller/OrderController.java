@@ -13,12 +13,12 @@ public class OrderController extends AbstractController {
 
     @Autowired
     private OrderService orderService;
-
+/*
     @PostMapping("/orders")
     public OrderInfoDTO addToCart(@RequestBody OrderInfoDTO dto){
         return orderService.addToCart(dto);
     }
-
+*/
     @DeleteMapping("/orders")
     public OrderInfoDTO removeFromCart(@RequestBody OrderInfoDTO dto){
         return orderService.removeFromCart(dto);

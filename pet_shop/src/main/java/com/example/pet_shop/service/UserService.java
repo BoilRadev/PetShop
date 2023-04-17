@@ -1,6 +1,7 @@
 package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.DTOS.userDTOs.*;
+import com.example.pet_shop.model.entities.Discount;
 import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
@@ -21,8 +22,6 @@ public class UserService extends AbstractService{
 
     @Autowired
     private BCryptPasswordEncoder encoder;
-    @Autowired
-    private UserRepository userRepository;
 
     public UserWithoutPassDTO register(RegisterDTO dto) {
 
@@ -35,6 +34,7 @@ public class UserService extends AbstractService{
         User u = mapper.map(dto, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
         u.setCreated_at(LocalDateTime.now());
+        u.set_admin(true);
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);
     }
@@ -108,5 +108,9 @@ public class UserService extends AbstractService{
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         user.set_subscribed(false);
         userRepository.save(user);
+    }
+
+    public List<User> getSubscribedUsers(Discount discount) {
+        return userRepository.findByIsSubscribedTrue();
     }
 }

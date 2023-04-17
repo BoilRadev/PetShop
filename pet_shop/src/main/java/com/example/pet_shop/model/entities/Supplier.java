@@ -2,6 +2,7 @@ package com.example.pet_shop.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
@@ -10,7 +11,7 @@ import java.util.Objects;
 @Getter
 @Entity
 @Table(name = "suppliers")
-
+@NoArgsConstructor
 public class Supplier {
 
     @Id
@@ -18,7 +19,7 @@ public class Supplier {
     private int id;
 
     @Column(name = "supplier_name")
-    private String supplierName;
+    private String supplier_name;
 
     @Override
     public boolean equals(Object o) {

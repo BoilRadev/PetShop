@@ -21,10 +21,6 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService extends AbstractService{
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
-    @Autowired
-    private ProductRepository productRepository;
 
 
     public ProductInfoDTO viewProductById(int id) {
@@ -90,7 +86,7 @@ public class ProductService extends AbstractService{
 
         public void editProduct(ProductEditRequestDTO productDto, int id) {
             Optional<Product> optionalProduct = productRepository.findById(id);
-            if (!optionalProduct.isPresent()) {
+            if (optionalProduct.isEmpty()) {
                 throw new NotFoundException("Product not found!");
             }
             Product product = optionalProduct.get();

@@ -16,7 +16,7 @@ public class OrderService extends AbstractService {
 
     @Autowired
     private OrderRepository orderRepository;
-
+/*
     public OrderInfoDTO addToCart(OrderInfoDTO dto) {
         Order order = mapper.map(dto,Order.class);
             order.setUser(dto.getUser());
@@ -31,7 +31,7 @@ public class OrderService extends AbstractService {
         return mapper.map(order, OrderInfoDTO.class);
 
     }
-
+*/
     public OrderInfoDTO removeFromCart(OrderInfoDTO dto) {
         return null;
     }

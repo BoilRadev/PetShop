@@ -77,11 +77,11 @@ public class UserController extends AbstractController {
         return ResponseEntity.ok("User subscribed successfully");
     }
 
-    @PutMapping("/users/subscribe")
+    @PutMapping("/users/unsubscribe")
     public ResponseEntity<?> unSubscribeUser(HttpSession session) {
         int userId = getLoggedId(session);
         userService.unSubscribeUser(userId);
-        return ResponseEntity.ok("User subscribed successfully");
+        return ResponseEntity.ok("User unsubscribed successfully");
     }
 
 }
