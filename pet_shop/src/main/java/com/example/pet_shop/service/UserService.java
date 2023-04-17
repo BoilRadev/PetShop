@@ -96,4 +96,17 @@ public class UserService extends AbstractService{
     public void deleteUser(int id){
         userRepository.deleteById(id);
     }
+
+    public void subscribeUser(int userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        user.set_subscribed(true);
+        userRepository.save(user);
+    }
+
+
+    public void unSubscribeUser(int userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        user.set_subscribed(false);
+        userRepository.save(user);
+    }
 }
