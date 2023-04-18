@@ -8,9 +8,13 @@ import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
+import com.example.pet_shop.model.repositories.ProductRepository;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,7 +27,7 @@ public class ProductService extends AbstractService{
     public ProductInfoDTO viewProductById(int id) {
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){
-            return mapper.map(product.get(), ProductInfoDTO.class);
+            return mapper.convertValue(product.get(), ProductInfoDTO.class);
         }
         throw new NotFoundException("Product not found");
     }
@@ -31,21 +35,23 @@ public class ProductService extends AbstractService{
     public List<ProductInfoDTO> viewAll() {
         return productRepository.findAll()
                 .stream()
-                .map( product -> mapper.map(product, ProductInfoDTO.class))
+                .map( product -> mapper.convertValue(product, ProductInfoDTO.class))
                 .collect(Collectors.toList());    }
+/*
+    public List<ProductInfoDTO> filter(){
+        return productRepository.findAll()
+                .stream()
+                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
+                .filter(product -> product.getSubcategory().equals(subcategory))
+                .collect(Collectors.toList());
+    }
 
-//    public List<ProductInfoDTO> filter(){
-//        return productRepository.findAll()
-//                .stream()
-//                .map( product -> mapper.map( product ,ProductInfoDTO.class))
-//                .filter(product -> product.getSubcategory().equals(subcategory))
-//                .collect(Collectors.toList());
-//    }
+ */
 
     public List<ProductInfoDTO> search(ProductInfoDTO dto) {
         return productRepository.findAll()
                 .stream()
-                .map( product -> mapper.map( product ,ProductInfoDTO.class))
+                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
                 .filter(product -> product.getSubcategory().equals(dto.getName()))
                 .collect(Collectors.toList());
     }
@@ -53,20 +59,20 @@ public class ProductService extends AbstractService{
     public List<ProductInfoDTO> sortAscending() {
         return productRepository.findAll()
                 .stream()
-                .map( product -> mapper.map( product ,ProductInfoDTO.class))
+                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
                 .sorted()
                 .collect(Collectors.toList());
     }
     public List<ProductInfoDTO> sortDescending() {
         return productRepository.findAll()
                 .stream()
-                .map( product -> mapper.map( product ,ProductInfoDTO.class))
+                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
                 .sorted()
                 .collect(Collectors.toList());
     }
 
     public ProductInfoDTO addProduct(ProductAddDTO dto, HttpSession ses) {
-        Product product = mapper.map(dto, Product.class);
+        Product product = mapper.convertValue(dto, Product.class);
         //admin verification??
 
         if (ses.getAttribute("LOGGED") == null || !((Boolean) ses.getAttribute("LOGGED"))) {
@@ -85,7 +91,7 @@ public class ProductService extends AbstractService{
                 product.setPrice(dto.getPrice());
                 productRepository.save(product);
             }
-            return mapper.map(product, ProductInfoDTO.class);
+            return mapper.convertValue(product, ProductInfoDTO.class);
         }
     }
 

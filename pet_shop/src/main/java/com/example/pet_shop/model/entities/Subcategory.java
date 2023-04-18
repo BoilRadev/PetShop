@@ -21,8 +21,8 @@ public class Subcategory {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category_id;
+    @JoinColumn(name = "categories")
+    private Category categoryId;
 
     @Override
     public boolean equals(Object o) {

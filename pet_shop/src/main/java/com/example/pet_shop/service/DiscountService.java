@@ -23,14 +23,14 @@ public class DiscountService extends AbstractService {
 
     public DiscountInfoDTO addDiscount(DiscountAddDTO dto) {
 
-        Discount discount = mapper.map(dto,Discount.class);
+        Discount discount = mapper.convertValue(dto,Discount.class);
             discount.setPercent(dto.getPercent());
             discount.setFromDate(dto.getFromDate().toLocalDate());
             discount.setToDate(dto.getToDate().toLocalDate());
             discount.setActive(dto.isActive());
             discountRepository.save(discount);
 
-        return mapper.map(discount, DiscountInfoDTO.class);
+        return mapper.convertValue(discount, DiscountInfoDTO.class);
     }
 
     public DiscountInfoDTO editDiscount(int id) {

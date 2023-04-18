@@ -21,7 +21,7 @@ public class Category {
     @Column
     private String name;
 
-    @OneToMany(mappedBy = "category_id")
+    @OneToMany(mappedBy = "categoryId")
     private Set<Subcategory> subcategories = new HashSet<>();
 
     @Override

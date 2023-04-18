@@ -57,7 +57,7 @@ public class User {
     @Column(name = "is_admin")
     private boolean is_admin;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "userId")
     private Set<Payment> payments = new HashSet<>();
 
     @OneToMany(mappedBy = "user")

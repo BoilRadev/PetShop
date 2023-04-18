@@ -1,7 +1,10 @@
 package com.example.pet_shop;
 
 import com.example.pet_shop.service.EmailSenderService;
-import jakarta.mail.internet.MimeMessage;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.modelmapper.convention.NamingConventions;
@@ -18,8 +21,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.io.InputStream;
 
 @SpringBootApplication
 public class PetShopApplication {
@@ -38,22 +39,21 @@ public class PetShopApplication {
     }
 
     @Bean
-    public ModelMapper modelMapper() {
-
-        return new ModelMapper();
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper;
     }
-//
-//    @EventListener(ApplicationReadyEvent.class)
-//        public void sendMail(){
-//            senderService.sendEmail("b.p.radev@gmail.com",
-//                    "Test", "This is a test");
-//        }
-    @Bean
-    public JavaMailSenderImpl mailSender(){
-        return new JavaMailSenderImpl();
-
-    }
+/*
+    @EventListener(ApplicationReadyEvent.class)
+        public void sendMail(){
+            senderService.sendEmail("b.p.radev@gmail.com",
+                    "Test", "This is a test");
+        }
 
 
+ */
 
 }

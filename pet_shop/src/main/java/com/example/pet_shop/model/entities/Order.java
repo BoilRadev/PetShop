@@ -18,11 +18,11 @@ import java.time.LocalDateTime;
         private int id;
 
         @ManyToOne
-        @JoinColumn(name = "user_id")
+        @JoinColumn(name = "userId")
         private User user;
 
         @ManyToOne
-        @JoinColumn(name = "status_id")
+        @JoinColumn(name = "statusId")
         private OrderStatus orderStatus;
 
         @ManyToOne

@@ -18,14 +18,14 @@ public class Payment {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User owner;
+    @JoinColumn(name = "users")
+    private User userId;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+    @JoinColumn(name = "orders")
+    private Order orderId;
 
-    @Column(name = "created_at")
+    @Column
     private LocalDateTime createdAt;
 
     @Column

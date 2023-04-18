@@ -21,7 +21,7 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, Intege
     default Subcategory create(String name, Category category) {
         Subcategory subcategory = new Subcategory();
         subcategory.setName(name);
-        subcategory.setCategory_id(category);
+        subcategory.setCategoryId(category);
         return save(subcategory);
     }
 }

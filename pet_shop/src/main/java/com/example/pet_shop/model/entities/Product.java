@@ -25,11 +25,11 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "suppliers")
-    private Supplier supplier_id;
+    private Supplier supplierId;
 
     @ManyToOne
     @JoinColumn(name = "subcategories")
-    private Subcategory subcategory_id;
+    private Subcategory subcategoryId;
 
     @Column
     private int quantity;
@@ -42,5 +42,5 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "discounts")
-    private Discount discount_id;
+    private Discount discountId;
 }

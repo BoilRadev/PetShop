@@ -21,12 +21,12 @@ public class SubcategoryService extends AbstractService{
     }
 
     public Subcategory addSubcategory(Subcategory subcategory) {
-        Category category = subcategory.getCategory_id();
+        Category category = subcategory.getCategoryId();
         Optional<Category> optionalCategory = categoryRepository.findById(category.getId());
         if (optionalCategory.isEmpty()) {
             throw new NotFoundException("Category not found. Please add a new category here: /category/add");
         }
-        subcategory.setCategory_id(optionalCategory.get());
+        subcategory.setCategoryId(optionalCategory.get());
         return subcategoryRepository.save(subcategory);
     }
 

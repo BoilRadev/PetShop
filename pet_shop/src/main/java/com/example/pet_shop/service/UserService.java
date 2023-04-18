@@ -29,12 +29,12 @@ public class UserService extends AbstractService{
         if(userRepository.existsByEmail(dto.getEmail())){
             throw new BadRequestException("Email already exists!");
         }
-        User u = mapper.map(dto, User.class);
+        User u = mapper.convertValue(dto, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
         u.setCreated_at(LocalDateTime.now());
         u.set_admin(true);
         userRepository.save(u);
-        return mapper.map(u, UserWithoutPassDTO.class);
+        return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
 
     public UserWithoutPassDTO login(LoginDTO dto) {
@@ -46,25 +46,30 @@ public class UserService extends AbstractService{
         if(!encoder.matches(dto.getPassword(), u.get().getPassword())){
             throw new UnauthorizedException("Wrong credentials");
         }
-        return mapper.map(u, UserWithoutPassDTO.class);
+        return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
 
 
     public UserEditResponseDTO edit(UserEditRequestDTO userDto, int id) {
+        Optional<User> optionalUser = userRepository.getUserById(id);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("User not found!");
+        }
 
+        User u = mapper.convertValue(userDto, User.class);
 
-        User u = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-
-                u.setAddress(userDto.getAddress());
-
+        //TODO нещо се губи сесията и не се връзва ?
+        if (u.getId() != id) {
+            throw new BadRequestException("You can only edit your own profile!");
+        }
 
         userRepository.save(u);
-        return mapper.map(u, UserEditResponseDTO.class);
+        return mapper.convertValue(u, UserEditResponseDTO.class);
     }
     public UserWithoutPassDTO getById(int id) {
         Optional<User> u = userRepository.findById(id);
         if(u.isPresent()){
-            return mapper.map(u.get(), UserWithoutPassDTO.class);
+            return mapper.convertValue(u.get(), UserWithoutPassDTO.class);
         }
         throw new NotFoundException("User not found");
     }
@@ -72,7 +77,7 @@ public class UserService extends AbstractService{
     public List<UserWithoutPassDTO> getAll() {
         return userRepository.findAll()
                 .stream()
-                .map( u -> mapper.map(u, UserWithoutPassDTO.class))
+                .map( u -> mapper.convertValue(u, UserWithoutPassDTO.class))
                 .collect(Collectors.toList());
     }
 
