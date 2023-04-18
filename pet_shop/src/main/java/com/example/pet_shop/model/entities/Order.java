@@ -29,19 +29,19 @@ import java.time.LocalDateTime;
         @JoinColumn(name = "payment_method_id")
         private PaymentMethod paymentMethod;
 
-        @Column(name = "created_at")
+        @Column
         private LocalDateTime createdAt;
 
-        @Column(name = "gross_value")
+        @Column
         private BigDecimal grossValue;
 
         @Column(name = "discount_amount")
         private BigDecimal discountAmount;
 
-        @Column(name = "net_value")
+        @Column
         private BigDecimal netValue;
 
-        @Column(name = "is_paid")
+        @Column
         private boolean isPaid;
 
     }

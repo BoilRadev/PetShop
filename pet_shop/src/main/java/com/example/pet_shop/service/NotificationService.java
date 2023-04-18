@@ -17,17 +17,16 @@ public class NotificationService extends AbstractService {
     private EmailSenderService senderService;
     @Autowired
     private UserRepository userRepository;
-/*
+
     @EventListener(ApplicationReadyEvent.class)
     public void sendAllSubscribed() {
         userRepository.findAll()
                     .stream()
                     .map( u -> mapper.map(u, RegisterDTO.class))
-                    .map(u -> u.is_subscribed())
-                    .forEach(u -> senderService.sendEmail("email@mail.com" ,"New discount at our shop",
+                    .filter(u -> u.is_subscribed())
+                    .forEach(u -> senderService.sendEmail(u.getEmail() ,"New discount at our shop",
                             "Come and check the latest discount for the upcoming holidays "));
 
         }
 
- */
 }

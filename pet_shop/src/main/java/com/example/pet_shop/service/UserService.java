@@ -51,17 +51,12 @@ public class UserService extends AbstractService{
 
 
     public UserEditResponseDTO edit(UserEditRequestDTO userDto, int id) {
-        Optional<User> optionalUser = userRepository.getUserById(id);
-        if (optionalUser.isEmpty()) {
-            throw new NotFoundException("User not found!");
-        }
 
-        User u = mapper.map(userDto, User.class);
 
-        //TODO нещо се губи сесията и не се връзва ?
-        if (u.getId() != id) {
-            throw new BadRequestException("You can only edit your own profile!");
-        }
+        User u = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+
+                u.setAddress(userDto.getAddress());
+
 
         userRepository.save(u);
         return mapper.map(u, UserEditResponseDTO.class);

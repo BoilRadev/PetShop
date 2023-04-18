@@ -8,13 +8,9 @@ import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
-import com.example.pet_shop.model.repositories.ProductRepository;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,13 +34,13 @@ public class ProductService extends AbstractService{
                 .map( product -> mapper.map(product, ProductInfoDTO.class))
                 .collect(Collectors.toList());    }
 
-    public List<ProductInfoDTO> filter(){
-        return productRepository.findAll()
-                .stream()
-                .map( product -> mapper.map( product ,ProductInfoDTO.class))
-                .filter(product -> product.getSubcategory().equals(subcategory))
-                .collect(Collectors.toList());
-    }
+//    public List<ProductInfoDTO> filter(){
+//        return productRepository.findAll()
+//                .stream()
+//                .map( product -> mapper.map( product ,ProductInfoDTO.class))
+//                .filter(product -> product.getSubcategory().equals(subcategory))
+//                .collect(Collectors.toList());
+//    }
 
     public List<ProductInfoDTO> search(ProductInfoDTO dto) {
         return productRepository.findAll()
