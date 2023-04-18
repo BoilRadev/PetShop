@@ -33,7 +33,7 @@ public class Discount {
     @Column(name = "is_active")
     private boolean isActive;
 
-    @OneToMany(mappedBy = "discount")
+    @OneToMany(mappedBy = "discount_id")
     private Set<Product> products;
 
 

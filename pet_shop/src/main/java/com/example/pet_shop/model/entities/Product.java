@@ -24,12 +24,12 @@ public class Product {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
+    @JoinColumn(name = "suppliers")
+    private Supplier supplier_id;
 
     @ManyToOne
-    @JoinColumn(name = "subcategory_id")
-    private Subcategory subcategory;
+    @JoinColumn(name = "subcategories")
+    private Subcategory subcategory_id;
 
     @Column
     private int quantity;
@@ -41,6 +41,6 @@ public class Product {
     private Set<Image> images;
 
     @ManyToOne
-    @JoinColumn(name = "discount_id")
-    private Discount discount;
+    @JoinColumn(name = "discounts")
+    private Discount discount_id;
 }

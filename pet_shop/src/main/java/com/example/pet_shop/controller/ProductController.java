@@ -25,12 +25,12 @@ public class ProductController extends AbstractController {
     public List<ProductInfoDTO> viewAllProducts(){
         return productService.viewAll();
     }
-
+/*
     @GetMapping("/product/filter")
     public List<ProductInfoDTO> filter(){
         return productService.filter();
     }
-
+*/
     @GetMapping("/products/search")
     public List<ProductInfoDTO> search(@RequestBody String dto){
         return productService.search(dto);

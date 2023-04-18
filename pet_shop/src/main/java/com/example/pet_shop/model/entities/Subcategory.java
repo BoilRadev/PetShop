@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Setter
 @Getter
-@Entity
-@Table(name = "subcategories")
+@Entity@Table(name = "subcategories")
 public class Subcategory {
 
     @Id
@@ -21,7 +22,7 @@ public class Subcategory {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;
+    private Category category_id;
 
     @Override
     public boolean equals(Object o) {

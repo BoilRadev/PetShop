@@ -34,12 +34,14 @@ public class PetShopApplication {
 
         return new ModelMapper();
     }
-
+/*
     @EventListener(ApplicationReadyEvent.class)
         public void sendMail(){
             senderService.sendEmail("b.p.radev@gmail.com",
                     "Test", "This is a test");
         }
 
+
+ */
 
 }

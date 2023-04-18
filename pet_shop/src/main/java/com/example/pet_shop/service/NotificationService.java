@@ -17,7 +17,7 @@ public class NotificationService extends AbstractService {
     private EmailSenderService senderService;
     @Autowired
     private UserRepository userRepository;
-
+/*
     @EventListener(ApplicationReadyEvent.class)
     public void sendAllSubscribed() {
         userRepository.findAll()
@@ -28,4 +28,6 @@ public class NotificationService extends AbstractService {
                             "Come and check the latest discount for the upcoming holidays "));
 
         }
+
+ */
 }

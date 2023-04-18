@@ -13,7 +13,8 @@ public class ProductAddDTO {
 
     private String name;
     private String description;
+    private int supplier_id;
+    private int subcategory_id;
     private int quantity;
     private BigDecimal price;
-
 }
