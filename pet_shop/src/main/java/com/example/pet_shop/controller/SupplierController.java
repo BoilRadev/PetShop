@@ -39,7 +39,7 @@ public class SupplierController extends AbstractController {
         int loggedUserId = (int) ses.getAttribute("LOGGED_ID");
         User u = userService.getUserById(loggedUserId);
 
-        if (!u.is_admin()) {
+        if (!u.isAdmin()) {
             throw new UnauthorizedException("You are not admin");
         }
         //TODO да търси по ид понеже имена може да съвпадат или да са фирми ?

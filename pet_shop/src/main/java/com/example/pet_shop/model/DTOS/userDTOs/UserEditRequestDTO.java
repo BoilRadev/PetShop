@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 public class UserEditRequestDTO {
     private String email;
     private String password;
-    private String confirm_password;
-    private String first_name;
-    private String last_name;
-    private String phone_number;
+    private String confirmPassword;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
     private String town;
     private String address;
-    private boolean is_subscribed;
+    private boolean isSubscribed;
 }

@@ -20,7 +20,7 @@ public class AdminController extends AbstractController{
 
     @DeleteMapping("/admin/users/{user-id}")
     public ResponseEntity<?> deleteUserById(@PathVariable("user-id") int userId, HttpSession session) {
-        boolean isAdmin = userService.getLoggedUser(session).is_admin();
+        boolean isAdmin = userService.getLoggedUser(session).isAdmin();
         if (!isAdmin) {
             throw new UnauthorizedException("Only admins can delete users.");
         }

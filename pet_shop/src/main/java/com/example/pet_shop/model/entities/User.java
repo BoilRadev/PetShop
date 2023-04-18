@@ -1,20 +1,21 @@
 package com.example.pet_shop.model.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
-
 public class User {
 
     @Id
@@ -28,16 +29,17 @@ public class User {
     private String password;
 
     @Column(name = "first_name")
-    private String first_name;
+    private String firstName;
 
     @Column(name = "last_name")
-    private String last_name;
+    private String lastName;
 
     @Column(name = "phone_number")
-    private String phone_number;
+    private String phoneNumber;
 
-    @Column(name = "personal_discount")
-    private BigDecimal personal_discount;
+
+    @Column(name = "personal_discount", columnDefinition = "DECIMAL(5,2) DEFAULT '0.00'")
+    private BigDecimal personalDiscount;
 
     @Column
     private String town;
@@ -45,25 +47,20 @@ public class User {
     @Column
     private String address;
 
-    @Column(name = "created_at")
-    private LocalDateTime created_at;
+    @Column(name = "created_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
 
     @Column(name = "deleted_at")
-    private LocalDateTime deleted_at;
+    private LocalDateTime deletedAt;
 
     @Column(name = "is_subscribed")
-    private boolean is_subscribed;
+    private boolean isSubscribed;
 
     @Column(name = "is_admin")
-    private boolean is_admin;
+    private boolean isAdmin;
 
-    @OneToMany(mappedBy = "userId")
-    private Set<Payment> payments = new HashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<Order> orders = new HashSet<>();
-
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

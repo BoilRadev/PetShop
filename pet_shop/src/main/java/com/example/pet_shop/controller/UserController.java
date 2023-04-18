@@ -1,18 +1,15 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.userDTOs.*;
-import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
-import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -22,12 +19,13 @@ public class UserController extends AbstractController {
     private UserService userService;
 
     @PostMapping("/users")
-    public UserWithoutPassDTO register(@Valid @RequestBody RegisterDTO dto) {
-        return userService.register(dto);
+    public ResponseEntity<UserWithoutPassDTO> registerUser(@Valid @RequestBody RegisterDTO dto) {
+        UserWithoutPassDTO user = userService.register(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PostMapping("/users/login")
-    public UserWithoutPassDTO login(@Valid @RequestBody LoginDTO dto, HttpSession s) {
+    public UserWithoutPassDTO login(@RequestBody LoginDTO dto, HttpSession s){
         UserWithoutPassDTO respDto = userService.login(dto);
         s.setAttribute("LOGGED", true);
         s.setAttribute("LOGGED_ID", respDto.getId());
@@ -36,7 +34,7 @@ public class UserController extends AbstractController {
 
 
     @PutMapping("/users")
-    public UserEditResponseDTO editUser(@Valid @RequestBody UserEditRequestDTO userDto, HttpSession ses) {
+    public UserWithoutPassDTO editUser(@Valid @RequestBody RegisterDTO userDto, HttpSession ses) {
         if (ses.getAttribute("LOGGED") == null || !((Boolean) ses.getAttribute("LOGGED"))) {
             throw new BadRequestException("You have to be logged in!");
         } else {

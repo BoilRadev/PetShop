@@ -22,8 +22,7 @@ public class UserService extends AbstractService{
     private BCryptPasswordEncoder encoder;
 
     public UserWithoutPassDTO register(RegisterDTO dto) {
-
-        if(!dto.getPassword().equals(dto.getConfirm_password())){
+        if(!dto.getPassword().equals(dto.getConfirmPassword())){
             throw new BadRequestException("Passwords mismatch!");
         }
         if(userRepository.existsByEmail(dto.getEmail())){
@@ -31,40 +30,43 @@ public class UserService extends AbstractService{
         }
         User u = mapper.convertValue(dto, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
-        u.setCreated_at(LocalDateTime.now());
-        u.set_admin(true);
+        u.setCreatedAt(LocalDateTime.now());
+        u.setAdmin(false);
+        u.setSubscribed(false);
         userRepository.save(u);
         return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
 
     public UserWithoutPassDTO login(LoginDTO dto) {
-
         Optional<User> u = userRepository.getByEmail(dto.getEmail());
-        if(!u.isPresent()){
+        if (u.isEmpty()) {
             throw new UnauthorizedException("Wrong credentials");
         }
-        if(!encoder.matches(dto.getPassword(), u.get().getPassword())){
+        if (!encoder.matches(dto.getPassword(), u.get().getPassword())) {
             throw new UnauthorizedException("Wrong credentials");
         }
-        return mapper.convertValue(u, UserWithoutPassDTO.class);
+        return mapper.convertValue(u.get(), UserWithoutPassDTO.class);
     }
 
 
-    public UserEditResponseDTO edit(UserEditRequestDTO userDto, int id) {
-        Optional<User> optionalUser = userRepository.getUserById(id);
-        if (optionalUser.isEmpty()) {
-            throw new NotFoundException("User not found!");
-        }
 
-        User u = mapper.convertValue(userDto, User.class);
+    public UserWithoutPassDTO edit(RegisterDTO dto, int userId) {
 
-        //TODO нещо се губи сесията и не се връзва ?
-        if (u.getId() != id) {
-            throw new BadRequestException("You can only edit your own profile!");
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new NotFoundException("Email already exists!");
         }
+        User u = getUserById(userId);
+        u.setEmail(dto.getEmail());
+        u.setPassword(encoder.encode(dto.getPassword()));
+        u.setFirstName(dto.getFirstName());
+        u.setLastName(dto.getLastName());
+        u.setPhoneNumber(dto.getPhoneNumber());
+        u.setTown(dto.getTown());
+        u.setAddress(dto.getAddress());
+        u.setSubscribed(dto.isSubscribed());
 
         userRepository.save(u);
-        return mapper.convertValue(u, UserEditResponseDTO.class);
+        return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
     public UserWithoutPassDTO getById(int id) {
         Optional<User> u = userRepository.findById(id);
@@ -97,14 +99,14 @@ public class UserService extends AbstractService{
 
     public void subscribeUser(int userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        user.set_subscribed(true);
+        user.setSubscribed(true);
         userRepository.save(user);
     }
 
 
     public void unSubscribeUser(int userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        user.set_subscribed(false);
+        user.setSubscribed(false);
         userRepository.save(user);
     }
 
