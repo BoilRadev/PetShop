@@ -17,4 +17,9 @@ public class OrderStatus {
     @Column
     private String type;
 
+    @OneToMany
+    @JoinColumn(name = "orderStatus")
+    private Order order;
+
+
 }

@@ -18,11 +18,11 @@ public class Payment {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "users")
+    @JoinColumn(name = "user_id")
     private User userId;
 
     @ManyToOne
-    @JoinColumn(name = "orders")
+    @JoinColumn(name = "order_id")
     private Order orderId;
 
     @Column
