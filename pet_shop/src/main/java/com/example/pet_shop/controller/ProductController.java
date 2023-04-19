@@ -1,9 +1,7 @@
 package com.example.pet_shop.controller;
 
-import com.example.pet_shop.model.DTOS.productDTOs.FilterDTO;
-import com.example.pet_shop.model.DTOS.productDTOs.ProductAddDTO;
-import com.example.pet_shop.model.DTOS.productDTOs.ProductEditRequestDTO;
-import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
+import com.example.pet_shop.model.DTOS.productDTOs.*;
+import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +31,19 @@ public class ProductController extends AbstractController {
     }
 
     @GetMapping("/products/search")
-    public List<ProductInfoDTO> search(@RequestBody ProductInfoDTO dto){
+    public List<ProductInfoDTO> search(@RequestBody SearchDTO dto){
         return productService.search(dto);
     }
 
-    @GetMapping("/products/sort/acs")
-    public List<ProductInfoDTO> sortAscending(){
-        return productService.sortAscending();
-    }
-    @GetMapping("/products/sort/desc")
-    public List<ProductInfoDTO> sortDescending() {
-        return productService.sortDescending();
+    @GetMapping("/products/order")
+    public List<ProductInfoDTO> sortProductsByOrder(@RequestParam(value = "order", defaultValue = "asc") String order) {
+        if (order.equalsIgnoreCase("asc")) {
+            return productService.sortAscending();
+        } else if (order.equalsIgnoreCase("desc")) {
+            return productService.sortDescending();
+        } else {
+            throw new BadRequestException("Invalid sort order");
+        }
     }
 
     @PostMapping("/products")

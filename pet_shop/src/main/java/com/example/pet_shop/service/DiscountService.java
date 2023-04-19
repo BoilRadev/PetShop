@@ -1,10 +1,9 @@
 package com.example.pet_shop.service;
 
-import com.example.pet_shop.model.DTOS.DiscountAddDTO;
-import com.example.pet_shop.model.DTOS.DiscountInfoDTO;
+import com.example.pet_shop.model.DTOS.discountDTO.DiscountAddDTO;
+import com.example.pet_shop.model.DTOS.discountDTO.DiscountInfoDTO;
 import com.example.pet_shop.model.entities.Discount;
 import com.example.pet_shop.model.exceptions.BadRequestException;
-import com.example.pet_shop.model.exceptions.UnauthorizedException;
 
 import com.example.pet_shop.model.repositories.DiscountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,17 +37,16 @@ public class DiscountService extends AbstractService {
         if(!opt.isPresent()){
             throw new BadRequestException("No discount found with id: " + id);
         }
-        //scanner?
-//        Discount d = opt.get();
-//        d.setDescription();
-//        d.setFromDate();
-//        d.setToDate();
-//        d.setPercent();
-//        d.setActive();
-//        discountRepository.save(д);
-//
-//        return mapper.map(d , DiscountInfoDTO.class);
-        return null;
+
+        Discount d = opt.get();
+        d.setDescription(d.getDescription());
+        d.setFromDate(d.getFromDate());
+        d.setToDate(d.getToDate());
+        d.setPercent(d.getPercent());
+        d.setActive(d.isActive());
+        discountRepository.save(d);
+
+        return mapper.convertValue(d , DiscountInfoDTO.class);
     }
 
     public List<Discount> getUpdatedDiscounts() {

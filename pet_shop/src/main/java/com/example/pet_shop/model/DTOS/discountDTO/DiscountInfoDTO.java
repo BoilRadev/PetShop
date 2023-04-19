@@ -1,4 +1,5 @@
-package com.example.pet_shop.model.DTOS;
+package com.example.pet_shop.model.DTOS.discountDTO;
+
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DiscountAddDTO {
+public class DiscountInfoDTO {
 
+    private String description;
     private BigDecimal percent;
     private LocalDateTime fromDate;
     private LocalDateTime toDate;

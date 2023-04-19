@@ -1,9 +1,6 @@
 package com.example.pet_shop.service;
 
-import com.example.pet_shop.model.DTOS.productDTOs.FilterDTO;
-import com.example.pet_shop.model.DTOS.productDTOs.ProductAddDTO;
-import com.example.pet_shop.model.DTOS.productDTOs.ProductEditRequestDTO;
-import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
+import com.example.pet_shop.model.DTOS.productDTOs.*;
 import com.example.pet_shop.model.entities.Product;
 import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -50,11 +48,11 @@ public class ProductService extends AbstractService{
 
 
 
-    public List<ProductInfoDTO> search(ProductInfoDTO dto) {
+    public List<ProductInfoDTO> search(SearchDTO dto) {
         return productRepository.findAll()
                 .stream()
+                .filter(product -> product.getName().toLowerCase(Locale.ROOT).contains(dto.getName().toLowerCase(Locale.ROOT)))
                 .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
-                .filter(product -> product.getSubcategory().equals(dto.getName()))
                 .collect(Collectors.toList());
     }
 
@@ -75,7 +73,6 @@ public class ProductService extends AbstractService{
 
     public ProductInfoDTO addProduct(ProductAddDTO dto, HttpSession ses) {
         Product product = mapper.convertValue(dto, Product.class);
-        //admin verification??
 
         if (ses.getAttribute("LOGGED") == null || !((Boolean) ses.getAttribute("LOGGED"))) {
             throw new BadRequestException("You have to be logged in!");
