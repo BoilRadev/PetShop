@@ -1,5 +1,6 @@
 package com.example.pet_shop.service;
 
+import com.example.pet_shop.model.DTOS.productDTOs.FilterDTO;
 import com.example.pet_shop.model.DTOS.productDTOs.ProductAddDTO;
 import com.example.pet_shop.model.DTOS.productDTOs.ProductEditRequestDTO;
 import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
@@ -37,16 +38,17 @@ public class ProductService extends AbstractService{
                 .stream()
                 .map( product -> mapper.convertValue(product, ProductInfoDTO.class))
                 .collect(Collectors.toList());    }
-/*
-    public List<ProductInfoDTO> filter(){
+
+    public List<ProductInfoDTO> filter(FilterDTO dto){
         return productRepository.findAll()
                 .stream()
+                .filter(p -> p.getSubcategory().equals(dto.getCategory()))
+                .filter(product -> product.getSubcategory().equals(dto.getSubcategory()))
                 .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
-                .filter(product -> product.getSubcategory().equals(subcategory))
                 .collect(Collectors.toList());
     }
 
- */
+
 
     public List<ProductInfoDTO> search(ProductInfoDTO dto) {
         return productRepository.findAll()

@@ -1,5 +1,6 @@
 package com.example.pet_shop.controller;
 
+import com.example.pet_shop.model.DTOS.productDTOs.FilterDTO;
 import com.example.pet_shop.model.DTOS.productDTOs.ProductAddDTO;
 import com.example.pet_shop.model.DTOS.productDTOs.ProductEditRequestDTO;
 import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
@@ -25,12 +26,12 @@ public class ProductController extends AbstractController {
     public List<ProductInfoDTO> viewAllProducts(){
         return productService.viewAll();
     }
-/*
+
     @GetMapping("/product/filter")
-    public List<ProductInfoDTO> filter(){
-        return productService.filter();
+    public List<ProductInfoDTO> filter(@RequestBody FilterDTO dto){
+        return productService.filter(dto);
     }
-*/
+
     @GetMapping("/products/search")
     public List<ProductInfoDTO> search(@RequestBody ProductInfoDTO dto){
         return productService.search(dto);
