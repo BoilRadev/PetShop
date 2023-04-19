@@ -1,8 +1,11 @@
 package com.example.pet_shop.model.DTOS.productDTOs;
 
+import com.example.pet_shop.model.entities.Subcategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -12,8 +15,8 @@ public class ProductEditRequestDTO {
     private String name;
     private String description;
     private String supplier;
-    private String subcategoryId;
+    private Subcategory subcategory;
     private int quantity;
-    private double price;
+    private BigDecimal price;
 
 }

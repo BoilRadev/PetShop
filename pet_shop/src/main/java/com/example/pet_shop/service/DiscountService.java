@@ -2,9 +2,12 @@ package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.DTOS.discountDTO.DiscountAddDTO;
 import com.example.pet_shop.model.DTOS.discountDTO.DiscountInfoDTO;
+import com.example.pet_shop.model.DTOS.userDTOs.UserWithoutPassDTO;
 import com.example.pet_shop.model.entities.Discount;
+import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 
+import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.repositories.DiscountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,6 +50,13 @@ public class DiscountService extends AbstractService {
         discountRepository.save(d);
 
         return mapper.convertValue(d , DiscountInfoDTO.class);
+    }
+    public DiscountInfoDTO getById(int id) {
+        Optional<Discount> discount = discountRepository.findById(id);
+        if (discount.isPresent()) {
+            return mapper.convertValue(discount.get(), DiscountInfoDTO.class);
+        }
+        throw new NotFoundException("User not found");
     }
 
     public List<Discount> getUpdatedDiscounts() {
