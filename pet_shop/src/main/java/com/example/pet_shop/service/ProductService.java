@@ -39,12 +39,11 @@ public class ProductService extends AbstractService{
     public List<ProductInfoDTO> filter(FilterDTO dto){
         return productRepository.findAll()
                 .stream()
-                .filter(p -> p.getSubcategory().getName().equals(dto.getCategory()))
+                .filter(p -> p.getCategory().getName().equals(dto.getCategory()))
                 .filter(product -> product.getSubcategory().getName().equals(dto.getSubcategory()))
                 .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
                 .collect(Collectors.toList());
     }
-
 
 
     public List<ProductInfoDTO> search(SearchDTO dto) {
