@@ -2,6 +2,8 @@ package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.CategoryDTO;
 import com.example.pet_shop.model.entities.Category;
+import com.example.pet_shop.model.exceptions.BadRequestException;
+import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +13,30 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-public class CategoryController {
+public class CategoryController extends AbstractController{
     @Autowired
     private CategoryService categoryService;
 
     @PostMapping("/categories/add")
     public ResponseEntity<Category> addCategory(@RequestBody @Valid CategoryDTO categoryDto) {
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!logger.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
         Category category = categoryService.createCategory(categoryDto);
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(@PathVariable int categoryId) {
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!logger.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
         categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

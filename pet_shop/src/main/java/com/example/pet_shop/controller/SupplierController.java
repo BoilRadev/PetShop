@@ -1,49 +1,42 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.SupplierDTO;
-import com.example.pet_shop.model.entities.Supplier;
-import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
-import com.example.pet_shop.model.repositories.SupplierRepository;
-import com.example.pet_shop.model.repositories.UserRepository;
-import com.example.pet_shop.service.UserService;
-import jakarta.servlet.http.HttpSession;
+import com.example.pet_shop.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 @RestController
 public class SupplierController extends AbstractController {
     @Autowired
-    private UserService userService;
-    @Autowired
-    private SupplierRepository supplierRepository;
-
+    private SupplierService supplierService;
 
 
     @PostMapping("/suppliers/add")
-    public ResponseEntity<Void> addSupplier(@RequestBody SupplierDTO supplierDTO, HttpSession ses) {
+    public ResponseEntity<Void> addSupplier(@RequestBody SupplierDTO supplierDTO) {
 
-        if (ses.getAttribute("LOGGED") == null || !((Boolean) ses.getAttribute("LOGGED"))) {
+        if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
-
-        int loggedUserId = (int) ses.getAttribute("LOGGED_ID");
-        User u = userService.getUserById(loggedUserId);
-
-        if (!u.isAdmin()) {
+        if (!logger.isAdmin()) {
             throw new UnauthorizedException("You are not admin");
         }
-        //TODO да търси по ид понеже имена може да съвпадат или да са фирми ?
-        Supplier supplier = new Supplier();
-        supplier.setSupplierName(supplierDTO.getSupplierName());
-        supplierRepository.save(supplier);
+        supplierService.addSupplier(supplierDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+    @DeleteMapping("/suppliers/{supplier-id}")
+    public ResponseEntity<String> deleteSupplier(@PathVariable("supplier-id") int supplierId) {
 
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!logger.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
+        supplierService.deleteById(supplierId);
+        return ResponseEntity.ok("successfully deleted");
+    }
 }

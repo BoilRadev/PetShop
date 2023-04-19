@@ -3,7 +3,6 @@ package com.example.pet_shop.controller;
 import com.example.pet_shop.model.DTOS.userDTOs.*;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,27 +24,26 @@ public class UserController extends AbstractController {
     }
 
     @PostMapping("/users/login")
-    public UserWithoutPassDTO login(@RequestBody LoginDTO dto, HttpSession s){
+    public UserWithoutPassDTO login(@RequestBody LoginDTO dto){
         UserWithoutPassDTO respDto = userService.login(dto);
-        s.setAttribute("LOGGED", true);
-        s.setAttribute("LOGGED_ID", respDto.getId());
+        logger.login(userService.getUserById(respDto.getId()));
         return respDto;
     }
 
 
     @PutMapping("/users")
-    public UserWithoutPassDTO editUser(@Valid @RequestBody RegisterDTO userDto, HttpSession ses) {
-        if (ses.getAttribute("LOGGED") == null || !((Boolean) ses.getAttribute("LOGGED"))) {
+    public UserWithoutPassDTO editUser(@Valid @RequestBody RegisterDTO userDto) {
+        if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         } else {
-            int loggedUserId = getLoggedId(ses);
+            int loggedUserId = logger.id();
             return userService.edit(userDto, loggedUserId);
         }
     }
 
     @PostMapping("/users/logout")
-    public void logout(HttpSession session) {
-        session.invalidate();
+    public void logout() {
+        logger.logout();
     }
 
     @GetMapping("/users/{id}")
@@ -60,26 +58,33 @@ public class UserController extends AbstractController {
 
 
     @DeleteMapping("/users")
-    public void deleteUser(HttpSession ses) {
-        if (userService.getLoggedUser(ses) == null) {
+    public void deleteUser() {
+        if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         } else {
-            userService.deleteUser(getLoggedId(ses));
+            userService.deleteUser(logger.id());
         }
     }
 
     @PutMapping("/users/subscribe")
-    public ResponseEntity<?> subscribeUser(HttpSession session) {
-        int userId = getLoggedId(session);
-        userService.subscribeUser(userId);
-        return ResponseEntity.ok("User subscribed successfully");
+    public ResponseEntity<?> subscribeUser() {
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        } else {
+            int userId = logger.id();
+            userService.subscribeUser(userId);
+            return ResponseEntity.ok("User subscribed successfully");
+        }
     }
 
     @PutMapping("/users/unsubscribe")
-    public ResponseEntity<?> unSubscribeUser(HttpSession session) {
-        int userId = getLoggedId(session);
-        userService.unSubscribeUser(userId);
-        return ResponseEntity.ok("User unsubscribed successfully");
+    public ResponseEntity<?> unSubscribeUser() {
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        } else {
+            int userId = logger.id();
+            userService.unSubscribeUser(userId);
+            return ResponseEntity.ok("User unsubscribed successfully");
+        }
     }
-
 }

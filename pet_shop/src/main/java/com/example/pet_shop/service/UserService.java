@@ -6,6 +6,7 @@ import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class UserService extends AbstractService{
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+
 
     public UserWithoutPassDTO register(RegisterDTO dto) {
         if(!dto.getPassword().equals(dto.getConfirmPassword())){
@@ -83,15 +85,6 @@ public class UserService extends AbstractService{
                 .collect(Collectors.toList());
     }
 
-    public User getLoggedUser(HttpSession session) {
-        if (session.getAttribute("LOGGED") == null) {
-            throw new BadRequestException("You have to log in!");
-
-        } else {
-            int userId = (int) session.getAttribute("LOGGED_ID");
-            return userRepository.findById(userId).get();
-        }
-    }
 
     public void deleteUser(int id){
         userRepository.deleteById(id);
