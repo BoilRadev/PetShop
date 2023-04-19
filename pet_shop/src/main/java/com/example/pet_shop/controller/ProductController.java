@@ -27,7 +27,7 @@ public class ProductController extends AbstractController {
         return productService.viewAll();
     }
 
-    @GetMapping("/product/filter")
+    @GetMapping("/products/filter")
     public List<ProductInfoDTO> filter(@RequestBody FilterDTO dto){
         return productService.filter(dto);
     }

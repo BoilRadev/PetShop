@@ -25,8 +25,9 @@ public class Product {
     @Column
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "supplier_id")
+    @JsonIgnoreProperties("supplier")
     private Supplier supplier;
 
     @ManyToOne

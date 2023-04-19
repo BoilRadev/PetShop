@@ -18,7 +18,7 @@ public class CategoryController extends AbstractController{
     private CategoryService categoryService;
     @Autowired
     protected Logger logger;
-    @PostMapping("/categories/add")
+    @PostMapping("/categories")
     public ResponseEntity<Category> addCategory(@RequestBody @Valid CategoryDTO categoryDto) {
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");

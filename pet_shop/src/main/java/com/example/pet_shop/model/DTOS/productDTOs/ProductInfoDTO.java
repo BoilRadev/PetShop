@@ -4,6 +4,7 @@ package com.example.pet_shop.model.DTOS.productDTOs;
 import com.example.pet_shop.model.entities.Category;
 import com.example.pet_shop.model.entities.Subcategory;
 import com.example.pet_shop.model.entities.Supplier;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProductInfoDTO {
 
     private int id;

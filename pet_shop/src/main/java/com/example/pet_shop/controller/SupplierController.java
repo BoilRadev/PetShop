@@ -16,7 +16,7 @@ public class SupplierController extends AbstractController {
 
     @Autowired
     protected Logger logger;
-    @PostMapping("/suppliers/add")
+    @PostMapping("/suppliers")
     public ResponseEntity<Void> addSupplier(@RequestBody SupplierDTO supplierDTO) {
 
         if (!logger.isLogged()) {

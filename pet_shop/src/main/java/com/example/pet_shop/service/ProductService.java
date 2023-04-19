@@ -65,32 +65,17 @@ public class ProductService extends AbstractService{
     public ProductInfoDTO addProduct(ProductAddDTO dto) {
         Product product = mapper.convertValue(dto, Product.class);
 
-
-        Optional<Supplier> optionalSupplier = supplierRepository.findById(dto.getSupplierId());
-        if (optionalSupplier.isEmpty()) {
-            throw new NotFoundException("Supplier not found. Please add a new supplier here: /suppliers");
-        }
-
-        Optional<Subcategory> optionalSubcategory = subcategoryRepository.findById(dto.getSubcategoryId());
-        if (optionalSubcategory.isEmpty()) {
-            throw new NotFoundException("Subcategory not found. Please add a new subcategory here: /subcategories");
-        }
-
-        Optional<Category> optionalCategory = categoryRepository.findById(dto.getCategoryId());
-        if (optionalCategory.isEmpty()) {
-            throw new NotFoundException("Category not found. Please add a new category here: /categories");
-        }
-
+        product.setSupplier(getSupplierById(dto.getSupplierId()));
+        product.setSubcategory(getSubcategoryById(dto.getSubcategoryId()));
+        product.setCategory(getCategoryById(dto.getCategoryId()));
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setQuantity(dto.getQuantity());
         product.setPrice(dto.getPrice());
-        product.setSupplier(optionalSupplier.get());
-        product.setSubcategory(optionalSubcategory.get());
-        product.setCategory(optionalCategory.get());
 
         ProductInfoDTO productInfoDTO = mapper.convertValue(product, ProductInfoDTO.class);
         productRepository.save(product);
+        productInfoDTO.setId(product.getId());
         return productInfoDTO;
     }
 
@@ -104,8 +89,49 @@ public class ProductService extends AbstractService{
     }
 
 
-        public void editProduct(ProductAddDTO productDto, int id) {
-        addProduct(productDto);
+    public ProductInfoDTO editProduct(ProductAddDTO dto, int id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            throw new NotFoundException("Product not found");
         }
+        Product product = optionalProduct.get();
 
+        product.setSupplier(getSupplierById(dto.getSupplierId()));
+        product.setSubcategory(getSubcategoryById(dto.getSubcategoryId()));
+        product.setCategory(getCategoryById(dto.getCategoryId()));
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setQuantity(dto.getQuantity());
+        product.setPrice(dto.getPrice());
+
+        productRepository.save(product);
+        ProductInfoDTO infoDto  = new ProductInfoDTO();
+        infoDto.setId(id);
+        return mapper.convertValue(product, ProductInfoDTO.class);
+    }
+
+
+    private Supplier getSupplierById(int supplierId) {
+        Optional<Supplier> optionalSupplier = supplierRepository.findById(supplierId);
+        if (optionalSupplier.isEmpty()) {
+            throw new NotFoundException("Supplier not found. Please add a new supplier here: /suppliers");
+        }
+        return optionalSupplier.get();
+    }
+
+    private Subcategory getSubcategoryById(int subcategoryId) {
+        Optional<Subcategory> optionalSubcategory = subcategoryRepository.findById(subcategoryId);
+        if (optionalSubcategory.isEmpty()) {
+            throw new NotFoundException("Subcategory not found. Please add a new subcategory here: /subcategories");
+        }
+        return optionalSubcategory.get();
+    }
+
+    private Category getCategoryById(int categoryId) {
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+        if (optionalCategory.isEmpty()) {
+            throw new NotFoundException("Category not found. Please add a new category here: /categories");
+        }
+        return optionalCategory.get();
+    }
     }
