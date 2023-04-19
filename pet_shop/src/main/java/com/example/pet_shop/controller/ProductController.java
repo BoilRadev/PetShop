@@ -1,7 +1,9 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.productDTOs.*;
+import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
+import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class ProductController extends AbstractController {
     }
 
     @GetMapping("/products/order")
-    public List<ProductInfoDTO> sortProductsByOrder(@RequestParam(value = "order", defaultValue = "asc") String order) {
+    public List<ProductInfoDTO> sort(@RequestParam(value = "order", defaultValue = "asc") String order) {
         if (order.equalsIgnoreCase("asc")) {
             return productService.sortAscending();
         } else if (order.equalsIgnoreCase("desc")) {

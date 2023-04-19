@@ -124,6 +124,7 @@ public class ProductService extends AbstractService{
 
 
         public void editProduct(ProductEditRequestDTO productDto, int id) {
+
             Optional<Product> optionalProduct = productRepository.findById(id);
             if (optionalProduct.isEmpty()) {
                 throw new NotFoundException("Product not found!");
@@ -134,12 +135,6 @@ public class ProductService extends AbstractService{
             product.setSubcategory(productDto.getSubcategory());
             product.setQuantity(productDto.getQuantity());
             product.setPrice(productDto.getPrice());
-            // set other fieldsprivate String name;
-            //    private String description;
-            //    private String supplier;
-            //    private String subcategoryId;
-            //    private int quantity;
-            //    private double price;
             productRepository.save(product);
         }
 

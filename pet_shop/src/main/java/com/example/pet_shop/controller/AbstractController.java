@@ -61,6 +61,7 @@ public abstract class AbstractController {
         return (int) s.getAttribute("LOGGED_ID");
     }
 
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorDTO handleValidationExceptions(
             MethodArgumentNotValidException ex) {
