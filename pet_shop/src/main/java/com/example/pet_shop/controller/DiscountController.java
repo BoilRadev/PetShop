@@ -15,7 +15,8 @@ public class DiscountController extends AbstractController {
 
     @Autowired
     private DiscountService discountService;
-
+    @Autowired
+    protected Logger logger;
     @PostMapping("/discounts")
     public DiscountInfoDTO addDiscount(@RequestBody DiscountAddDTO dto){
         if (!logger.isLogged()) {

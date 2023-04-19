@@ -2,6 +2,7 @@ package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.productDTOs.*;
 import com.example.pet_shop.model.exceptions.BadRequestException;
+import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,8 @@ import java.util.List;
 
 @RestController
 public class ProductController extends AbstractController {
-
+    @Autowired
+    protected Logger logger;
     @Autowired
     private ProductService productService;
 

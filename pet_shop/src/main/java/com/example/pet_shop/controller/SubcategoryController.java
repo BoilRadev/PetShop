@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.*;
 public class SubcategoryController extends AbstractController {
     @Autowired
     private SubcategoryService subcategoryService;
+    @Autowired
+    protected Logger logger;
 
-
-    @Autowired Logger logger;
 
     @PostMapping("/subcategories")
     public ResponseEntity<Subcategory> addSubcategory(@Valid @RequestBody SubcategoryDTO subcategoryDto) {

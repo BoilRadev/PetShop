@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController extends AbstractController{
     @Autowired
     private CategoryService categoryService;
-
+    @Autowired
+    protected Logger logger;
     @PostMapping("/categories/add")
     public ResponseEntity<Category> addCategory(@RequestBody @Valid CategoryDTO categoryDto) {
         if (!logger.isLogged()) {

@@ -19,7 +19,8 @@ public class MediaController extends AbstractController {
 
     @Autowired
     private MediaService mediaService;
-
+    @Autowired
+    protected Logger logger;
 
     @PostMapping("/products/{productId}/media")
     public ResponseEntity<?> upload(@PathVariable int productId, @RequestParam("file") MultipartFile file, HttpSession s) {

@@ -14,7 +14,8 @@ public class SupplierController extends AbstractController {
     @Autowired
     private SupplierService supplierService;
 
-
+    @Autowired
+    protected Logger logger;
     @PostMapping("/suppliers/add")
     public ResponseEntity<Void> addSupplier(@RequestBody SupplierDTO supplierDTO) {
 

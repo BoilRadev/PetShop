@@ -74,6 +74,4 @@ public abstract class AbstractController {
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @Autowired
-    protected Logger logger;
 }

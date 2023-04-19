@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class OrderController extends AbstractController {
-
+    @Autowired
+    protected Logger logger;
     @Autowired
     private OrderService orderService;
 /*
@@ -29,7 +30,7 @@ public class OrderController extends AbstractController {
 
         return orderService.removeFromCart(dto);
     }
-
+/*
     @PutMapping("/orders/{id}/status")
     public OrderStatusDTO editStatus(@PathVariable int id){
         if (!logger.isLogged()) {
@@ -46,5 +47,5 @@ public class OrderController extends AbstractController {
         }
         return orderService.getStatus(id);
     }
-
+*/
 }

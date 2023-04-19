@@ -13,7 +13,8 @@ import java.util.List;
 
 @RestController
 public class UserController extends AbstractController {
-
+    @Autowired
+    protected Logger logger;
     @Autowired
     private UserService userService;
 
