@@ -18,5 +18,5 @@ public class SubcategoryDTO {
         private String name;
 
         @NotNull
-        private Integer categoryId;
+        private int categoryId;
 }

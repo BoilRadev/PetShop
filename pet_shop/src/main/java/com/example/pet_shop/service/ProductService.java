@@ -1,8 +1,7 @@
 package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.DTOS.productDTOs.*;
-import com.example.pet_shop.model.entities.Product;
-import com.example.pet_shop.model.entities.User;
+import com.example.pet_shop.model.entities.*;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
@@ -76,22 +75,41 @@ public class ProductService extends AbstractService{
 
         if (ses.getAttribute("LOGGED") == null || !((Boolean) ses.getAttribute("LOGGED"))) {
             throw new BadRequestException("You have to be logged in!");
-        } else {
-            int loggedUserId = (int) ses.getAttribute("LOGGED_ID");
-            User u = getUserById(loggedUserId);
-
-            if (!u.isAdmin()) {
-                throw new UnauthorizedException("You are not admin");
-            } else {
-
-                product.setName(dto.getName());
-                product.setDescription(dto.getDescription());
-                product.setQuantity(dto.getQuantity());
-                product.setPrice(dto.getPrice());
-                productRepository.save(product);
-            }
-            return mapper.convertValue(product, ProductInfoDTO.class);
         }
+
+        int loggedUserId = (int) ses.getAttribute("LOGGED_ID");
+        User u = getUserById(loggedUserId);
+
+        if (!u.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
+
+        Optional<Supplier> optionalSupplier = supplierRepository.findById(dto.getSupplierId());
+        if (optionalSupplier.isEmpty()) {
+            throw new NotFoundException("Supplier not found. Please add a new supplier here: /suppliers");
+        }
+
+        Optional<Subcategory> optionalSubcategory = subcategoryRepository.findById(dto.getSubcategoryId());
+        if (optionalSubcategory.isEmpty()) {
+            throw new NotFoundException("Subcategory not found. Please add a new subcategory here: /subcategories");
+        }
+
+        Optional<Category> optionalCategory = categoryRepository.findById(dto.getCategoryId());
+        if (optionalCategory.isEmpty()) {
+            throw new NotFoundException("Category not found. Please add a new category here: /categories");
+        }
+
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setQuantity(dto.getQuantity());
+        product.setPrice(dto.getPrice());
+        product.setSupplier(optionalSupplier.get());
+        product.setSubcategory(optionalSubcategory.get());
+        product.setCategory(optionalCategory.get());
+
+        ProductInfoDTO productInfoDTO = mapper.convertValue(product, ProductInfoDTO.class);
+        productRepository.save(product);
+        return productInfoDTO;
     }
 
     public void deleteProduct(int id) {

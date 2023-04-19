@@ -1,6 +1,7 @@
 package com.example.pet_shop.model.DTOS.productDTOs;
 
 
+import com.example.pet_shop.model.entities.Category;
 import com.example.pet_shop.model.entities.Subcategory;
 import com.example.pet_shop.model.entities.Supplier;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class ProductInfoDTO {
     private String description;
     private Supplier supplier;
     private Subcategory subcategory;
+    private Category category;
     private int quantity;
     private BigDecimal price;
 

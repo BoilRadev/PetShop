@@ -1,10 +1,12 @@
 package com.example.pet_shop.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -29,8 +31,13 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "subcategory_id")
+    @JsonIgnoreProperties("products")
     private Subcategory subcategory;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties("subcategories")
+    private Category category;
     @Column
     private int quantity;
 
@@ -38,7 +45,7 @@ public class Product {
     private BigDecimal price;
 
     @OneToMany(mappedBy = "product")
-    private Set<Image> images;
+    private List<Image> images;
 
     @ManyToOne
     @JoinColumn(name = "discount_id")

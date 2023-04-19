@@ -1,5 +1,6 @@
 package com.example.pet_shop.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,5 +32,6 @@ public class Subcategory {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties("categories")
     private Category category;
 }
