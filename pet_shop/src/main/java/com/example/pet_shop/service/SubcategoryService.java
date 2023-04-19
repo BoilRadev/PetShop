@@ -1,16 +1,18 @@
 package com.example.pet_shop.service;
 
+import com.example.pet_shop.model.DTOS.SubcategoryDTO;
 import com.example.pet_shop.model.entities.Category;
 import com.example.pet_shop.model.entities.Subcategory;
-import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.repositories.CategoryRepository;
 import com.example.pet_shop.model.repositories.SubcategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 @Service
-public class SubcategoryService extends AbstractService{
+public class SubcategoryService {
+
     private final SubcategoryRepository subcategoryRepository;
     private final CategoryRepository categoryRepository;
 
@@ -20,21 +22,25 @@ public class SubcategoryService extends AbstractService{
         this.categoryRepository = categoryRepository;
     }
 
-    public Subcategory addSubcategory(Subcategory subcategory) {
-        Category category = subcategory.getCategoryId();
-        Optional<Category> optionalCategory = categoryRepository.findById(category.getId());
+    public Subcategory createSubcategory(SubcategoryDTO subcategoryDto) {
+        Subcategory subcategory = new Subcategory();
+        subcategory.setName(subcategoryDto.getName());
+
+        Optional<Category> optionalCategory = categoryRepository.findById(subcategoryDto.getCategoryId());
         if (optionalCategory.isEmpty()) {
-            throw new NotFoundException("Category not found. Please add a new category here: /category/add");
+            throw new EntityNotFoundException("Category with ID " + subcategoryDto.getCategoryId() + " not found");
         }
-        subcategory.setCategoryId(optionalCategory.get());
+
+        subcategory.setCategory(optionalCategory.get());
+
         return subcategoryRepository.save(subcategory);
     }
 
-    public Subcategory getSubcategoryById(int id) {
-        Optional<Subcategory> optionalSubcategory = subcategoryRepository.findById(id);
-        if (optionalSubcategory.isEmpty()) {
-            throw new NotFoundException("Subcategory not found");
-        }
-        return optionalSubcategory.get();
+    public void deleteSubcategory(Integer subcategoryId) {
+        subcategoryRepository.deleteById(subcategoryId);
+    }
+
+    public Optional<Subcategory> getSubcategoryById(Integer subcategoryId) {
+        return subcategoryRepository.findById(subcategoryId);
     }
 }

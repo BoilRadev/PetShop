@@ -1,13 +1,18 @@
 package com.example.pet_shop.service;
 
+import com.example.pet_shop.model.DTOS.CategoryDTO;
 import com.example.pet_shop.model.entities.Category;
-import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.repositories.CategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
-public class CategoryService extends AbstractService {
+public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
@@ -16,15 +21,17 @@ public class CategoryService extends AbstractService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Category addCategory(Category category) {
+    public Category createCategory(CategoryDTO categoryDto) {
+        Category category = new Category();
+        category.setName(categoryDto.getName());
         return categoryRepository.save(category);
     }
 
-    public Category getCategoryById(int id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found with id: " + id));
+    public void deleteCategory(Integer categoryId) {
+        categoryRepository.deleteById(categoryId);
     }
 
-    // other methods...
-
+    public Optional<Category> getCategoryById(Integer categoryId) {
+        return categoryRepository.findById(categoryId);
+    }
 }

@@ -19,15 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 @RestController
 public class SupplierController extends AbstractController {
-
-    private final UserService userService;
-    private final SupplierRepository supplierRepository;
-
     @Autowired
-    public SupplierController(UserService userService, SupplierRepository supplierRepository) {
-        this.userService = userService;
-        this.supplierRepository = supplierRepository;
-    }
+    private UserService userService;
+    @Autowired
+    private SupplierRepository supplierRepository;
+
+
 
     @PostMapping("/suppliers/add")
     public ResponseEntity<Void> addSupplier(@RequestBody SupplierDTO supplierDTO, HttpSession ses) {
@@ -44,7 +41,7 @@ public class SupplierController extends AbstractController {
         }
         //TODO да търси по ид понеже имена може да съвпадат или да са фирми ?
         Supplier supplier = new Supplier();
-        supplier.setSupplier_name(supplierDTO.getSupplier_name());
+        supplier.setSupplierName(supplierDTO.getSupplierName());
         supplierRepository.save(supplier);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

@@ -23,13 +23,13 @@ public class Product {
     @Column
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "suppliers")
-    private Supplier supplierId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
 
     @ManyToOne
-    @JoinColumn(name = "subcategories")
-    private Subcategory subcategoryId;
+    @JoinColumn(name = "subcategory_id")
+    private Subcategory subcategory;
 
     @Column
     private int quantity;
@@ -41,6 +41,6 @@ public class Product {
     private Set<Image> images;
 
     @ManyToOne
-    @JoinColumn(name = "discounts")
-    private Discount discountId;
+    @JoinColumn(name = "discount_id")
+    private Discount discount;
 }

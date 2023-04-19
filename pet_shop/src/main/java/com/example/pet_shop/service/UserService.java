@@ -31,7 +31,7 @@ public class UserService extends AbstractService{
         User u = mapper.convertValue(dto, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
         u.setCreatedAt(LocalDateTime.now());
-        u.setAdmin(false);
+        u.setAdmin(true);
         u.setSubscribed(false);
         userRepository.save(u);
         return mapper.convertValue(u, UserWithoutPassDTO.class);

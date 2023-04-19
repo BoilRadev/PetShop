@@ -3,39 +3,29 @@ package com.example.pet_shop.controller;
 import com.example.pet_shop.model.DTOS.CategoryDTO;
 import com.example.pet_shop.model.entities.Category;
 import com.example.pet_shop.service.CategoryService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
-@RequestMapping("/categories")
 public class CategoryController {
-
-    private final CategoryService categoryService;
-    private final ObjectMapper mapper;
-
     @Autowired
-    public CategoryController(CategoryService categoryService, ObjectMapper mapper) {
-        this.categoryService = categoryService;
-        this.mapper = mapper;
+    private CategoryService categoryService;
+
+    @PostMapping("/categories/add")
+    public ResponseEntity<Category> addCategory(@RequestBody @Valid CategoryDTO categoryDto) {
+        Category category = categoryService.createCategory(categoryDto);
+        return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<CategoryDTO> addCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
-        Category category = categoryService.addCategory(mapper.convertValue(categoryDTO, Category.class));
-        return ResponseEntity.ok(mapper.convertValue(category, CategoryDTO.class));
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable int categoryId) {
+        categoryService.deleteCategory(categoryId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable int id) {
-        Category category = categoryService.getCategoryById(id);
-        return ResponseEntity.ok(mapper.convertValue(category, CategoryDTO.class));
-    }
-
-    // other endpoints...
 
 }
 

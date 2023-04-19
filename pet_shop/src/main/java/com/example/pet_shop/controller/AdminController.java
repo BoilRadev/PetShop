@@ -13,9 +13,6 @@ public class AdminController extends AbstractController{
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private NotificationService notificationService;
-
 
 
     @DeleteMapping("/admin/users/{user-id}")
