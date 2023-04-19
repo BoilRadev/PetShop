@@ -1,6 +1,5 @@
 package com.example.pet_shop.model.DTOS.productDTOs;
 
-import com.example.pet_shop.model.entities.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

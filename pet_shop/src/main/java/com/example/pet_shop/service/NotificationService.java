@@ -1,6 +1,5 @@
 package com.example.pet_shop.service;
 
-import com.example.pet_shop.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,8 +8,7 @@ public class NotificationService extends AbstractService {
 
     @Autowired
     private EmailSenderService senderService;
-    @Autowired
-    private UserRepository userRepository;
+
 /*
 
         @EventListener(ApplicationReadyEvent.class)

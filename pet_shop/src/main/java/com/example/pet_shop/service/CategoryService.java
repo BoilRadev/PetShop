@@ -3,18 +3,14 @@ package com.example.pet_shop.service;
 import com.example.pet_shop.model.DTOS.CategoryDTO;
 import com.example.pet_shop.model.entities.Category;
 import com.example.pet_shop.model.repositories.CategoryRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-public class CategoryService {
+public class CategoryService extends AbstractService {
 
-    private final CategoryRepository categoryRepository;
 
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) {

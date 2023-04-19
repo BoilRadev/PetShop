@@ -11,16 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 @Service
-public class SubcategoryService {
+public class SubcategoryService extends AbstractService{
 
-    private final SubcategoryRepository subcategoryRepository;
-    private final CategoryRepository categoryRepository;
-
-    @Autowired
-    public SubcategoryService(SubcategoryRepository subcategoryRepository, CategoryRepository categoryRepository) {
-        this.subcategoryRepository = subcategoryRepository;
-        this.categoryRepository = categoryRepository;
-    }
 
     public Subcategory createSubcategory(SubcategoryDTO subcategoryDto) {
         Subcategory subcategory = new Subcategory();

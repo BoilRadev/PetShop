@@ -1,12 +1,9 @@
 package com.example.pet_shop.model.DTOS.userDTOs;
-
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 @Setter
 @Getter

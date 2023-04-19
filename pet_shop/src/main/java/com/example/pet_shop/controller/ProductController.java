@@ -1,7 +1,6 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.productDTOs.*;
-import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.ProductService;
@@ -13,7 +12,8 @@ import java.util.List;
 
 @RestController
 public class ProductController extends AbstractController {
-
+    @Autowired
+    protected Logger logger;
     @Autowired
     private ProductService productService;
 
@@ -38,7 +38,7 @@ public class ProductController extends AbstractController {
     }
 
     @GetMapping("/products/order")
-    public List<ProductInfoDTO> sort(@RequestParam(value = "order", defaultValue = "asc") String order) {
+    public List<ProductInfoDTO> sortProductsByOrder(@RequestParam(value = "order", defaultValue = "asc") String order) {
         if (order.equalsIgnoreCase("asc")) {
             return productService.sortAscending();
         } else if (order.equalsIgnoreCase("desc")) {
@@ -50,16 +50,34 @@ public class ProductController extends AbstractController {
 
     @PostMapping("/products")
     public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto, HttpSession ses){
-        return productService.addProduct(dto,ses);
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!logger.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
+        return productService.addProduct(dto);
     }
 
     @PutMapping("/products/{id}")
-    public void editProduct(@RequestBody ProductEditRequestDTO productDto, @PathVariable int id) {
+    public void editProduct(@RequestBody ProductAddDTO productDto, @PathVariable int id) {
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!logger.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
         productService.editProduct(productDto, id);
     }
 
     @DeleteMapping("/products/{id}")
     public void deleteProduct(@PathVariable int id){
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!logger.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
         productService.deleteProduct(id);
     }
 

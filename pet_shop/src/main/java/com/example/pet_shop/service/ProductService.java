@@ -2,16 +2,9 @@ package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.DTOS.productDTOs.*;
 import com.example.pet_shop.model.entities.*;
-import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
-import com.example.pet_shop.model.exceptions.UnauthorizedException;
-import com.example.pet_shop.model.repositories.ProductRepository;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -69,19 +62,9 @@ public class ProductService extends AbstractService{
                 .collect(Collectors.toList());
     }
 
-    public ProductInfoDTO addProduct(ProductAddDTO dto, HttpSession ses) {
+    public ProductInfoDTO addProduct(ProductAddDTO dto) {
         Product product = mapper.convertValue(dto, Product.class);
 
-        if (ses.getAttribute("LOGGED") == null || !((Boolean) ses.getAttribute("LOGGED"))) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-
-        int loggedUserId = (int) ses.getAttribute("LOGGED_ID");
-        User u = getUserById(loggedUserId);
-
-        if (!u.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
 
         Optional<Supplier> optionalSupplier = supplierRepository.findById(dto.getSupplierId());
         if (optionalSupplier.isEmpty()) {
@@ -121,20 +104,8 @@ public class ProductService extends AbstractService{
     }
 
 
-
-        public void editProduct(ProductEditRequestDTO productDto, int id) {
-
-            Optional<Product> optionalProduct = productRepository.findById(id);
-            if (optionalProduct.isEmpty()) {
-                throw new NotFoundException("Product not found!");
-            }
-            Product product = optionalProduct.get();
-            product.setName(productDto.getName());
-            product.setDescription(productDto.getDescription());
-            product.setSubcategory(productDto.getSubcategory());
-            product.setQuantity(productDto.getQuantity());
-            product.setPrice(productDto.getPrice());
-            productRepository.save(product);
+        public void editProduct(ProductAddDTO productDto, int id) {
+        addProduct(productDto);
         }
 
     }
