@@ -1,21 +1,22 @@
 package com.example.pet_shop.model.DTOS;
 
-
 import com.example.pet_shop.model.entities.Product;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class CartDTO {
+public class ViewCartDTO {
 
-    private Map<Product , Integer> cart = new HashMap<>();
+    private List<ViewProductCartDTO> checkCart = new ArrayList<>();
+    private BigDecimal grossValue;
+
+
 }

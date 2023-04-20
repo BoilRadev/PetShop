@@ -1,14 +1,18 @@
 package com.example.pet_shop.service;
 
 
-import com.example.pet_shop.model.DTOS.OrderInfoDTO;
+import com.example.pet_shop.model.DTOS.*;
 import com.example.pet_shop.model.entities.Order;
 import com.example.pet_shop.model.entities.OrderStatus;
+import com.example.pet_shop.model.entities.Product;
 import com.example.pet_shop.model.exceptions.BadRequestException;
+import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.repositories.OrderRepository;
+import com.example.pet_shop.model.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -16,32 +20,21 @@ public class OrderService extends AbstractService {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
+  public CartDTO addToCart(AddToCartDTO dto, CartDTO cart) {
 
-//  public OrderInfoDTO addToCart(Product product) {
-//      Map<Product, Integer> cart = session.getAtributte()
-//      if (!cart.containsKey(product.getName())){
-//          cart.put(product.getName()) , new LinkedList<>();
-//      }
-//      cart.get(product.getName()).add(product);
-//
-//        return null;
-//
-//    }
-//public OrderInfoDTO addToCart(AddToCartDTO productInfo) {
-//    Product product = getProductById(productInfo.getId());
-//    int quantity = productInfo.getQuantity();
-//
-//    // Get the user's cart or create a new one if it doesn't exist
-//    Cart cart = getOrCreateCartForUser(currentUser);
-//
-//    // Add the product and quantity to the cart
-//    cart.addProduct(product, quantity);
-//
-//    // Create and return an OrderInfoDTO object representing the updated cart
-//    OrderInfoDTO orderInfo = new OrderInfoDTO(cart);
-//    return orderInfo;
-//}
+      Product product = productRepository.getProductByName(dto.getName()).orElseThrow(() -> new NotFoundException("Nfasfd"));
+      if (!cart.getCart().containsKey(product)){
+          cart.getCart().put(product , 1 );
+      }
+      cart.getCart().put(product,cart.getCart().get(product)+1);
+
+        return cart;
+
+    }
+
 
     public OrderInfoDTO removeFromCart(OrderInfoDTO dto) {
         return null;
@@ -65,5 +58,23 @@ public class OrderService extends AbstractService {
         }
         Order o = opt.get();
         return o.getOrderStatus();
+    }
+
+    public ViewCartDTO viewCart(Map<Product, Integer> cart) {
+
+        ViewCartDTO vcDTO = new ViewCartDTO();
+        ViewProductCartDTO viewProductCartDTO = new ViewProductCartDTO();
+        for (Product p : cart.keySet()) {
+            viewProductCartDTO.setName(p.getName());
+            viewProductCartDTO.setPrice(p.getPrice());
+            viewProductCartDTO.setQuantity(cart.get(p));
+            vcDTO.getCheckCart().add(viewProductCartDTO);
+        }
+
+        vcDTO.setGrossValue( vcDTO.getCheckCart().stream()
+                .map(p -> p.getPrice())
+                .reduce(BigDecimal::add )
+                .get());
+        return vcDTO;
     }
 }
