@@ -2,6 +2,7 @@ package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.CategoryDTO;
 import com.example.pet_shop.model.entities.Category;
+import com.example.pet_shop.model.entities.Subcategory;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.CategoryService;
@@ -11,14 +12,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
-public class CategoryController extends AbstractController{
+@RequestMapping("/categories")
+public class CategoryController extends AbstractController {
+
     @Autowired
     private CategoryService categoryService;
     @Autowired
     protected Logger logger;
-    @PostMapping("/categories")
+
+    @PostMapping
     public ResponseEntity<Category> addCategory(@RequestBody @Valid CategoryDTO categoryDto) {
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
@@ -42,5 +48,10 @@ public class CategoryController extends AbstractController{
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/{categoryId}/subcategories")
+    public ResponseEntity<List<Subcategory>> getSubcategoriesByCategoryId(@PathVariable int categoryId) {
+        List<Subcategory> subcategories = categoryService.getSubcategoriesByCategoryId(categoryId);
+        return new ResponseEntity<>(subcategories, HttpStatus.OK);
+    }
 }
 

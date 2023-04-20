@@ -2,7 +2,9 @@ package com.example.pet_shop.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +16,8 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "products")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product implements Comparable{
 
     @Id
@@ -69,4 +73,5 @@ public class Product implements Comparable{
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

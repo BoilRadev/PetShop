@@ -23,43 +23,40 @@ public class OrderService extends AbstractService {
     @Autowired
     private ProductRepository productRepository;
 
-  public CartDTO addToCart(AddToCartDTO dto, CartDTO cart) {
-
-      Product product = productRepository.getProductsById(dto.getProductId()).orElseThrow(()
-              -> new NotFoundException("Product not found"));
-
-      if(product.getQuantity() > 0) {
-          if (!cart.getCart().containsKey(product)) {
-              cart.getCart().put(product, 1);
-          }
-          cart.getCart().put(product, cart.getCart().get(product) + 1);
-          }
-      return cart;
-    }
-
-
-    public CartDTO removeFromCart(AddToCartDTO dto,CartDTO cart)  {
+    public CartDTO addToCart(AddToCartDTO dto, CartDTO cart) {
 
         Product product = productRepository.getProductsById(dto.getProductId()).orElseThrow(()
                 -> new NotFoundException("Product not found"));
 
+        if (product.getQuantity() > 0) {
+            if (!cart.getCart().containsKey(product)) {
+                cart.getCart().put(product, 1);
+            }
+            cart.getCart().put(product, cart.getCart().get(product) + 1);
+        } else {
+            throw new NotFoundException("Not enough products.");
+        }
+        return cart;
+    }
+
+
+    public void removeFromCart(int productId, CartDTO cart)  {
+
+        Product product = productRepository.getProductsById(productId).orElseThrow(()
+                -> new NotFoundException("Product not found"));
+
         if (cart.getCart().containsKey(product)) {
-            int currentQuantity = cart.getCart().get(product);
-            if (currentQuantity > 1) {
-                cart.getCart().put(product, currentQuantity - 1);
+            if (cart.getCart().get(product) > 1) {
+                cart.getCart().put(product,cart.getCart().get(product) - 1);
             } else {
                 cart.getCart().remove(product);
             }
-        } else {
-            throw new NotFoundException("Product not found in cart");
         }
-
-        return cart;
     }
 
     public void editStatus(int id) {
         Optional<Order> opt = orderRepository.findById(id);
-        if(opt.isEmpty()){
+        if (opt.isEmpty()) {
             throw new BadRequestException("No order found with id: " + id);
         }
 
@@ -70,7 +67,7 @@ public class OrderService extends AbstractService {
 
     public OrderStatus getStatus(int id) {
         Optional<Order> opt = orderRepository.findById(id);
-        if(!opt.isPresent()){
+        if (!opt.isPresent()) {
             throw new BadRequestException("No order found with id: " + id);
         }
         Order o = opt.get();
@@ -78,20 +75,20 @@ public class OrderService extends AbstractService {
     }
 
     public ViewCartDTO viewCart(Map<Product, Integer> cart) {
-
         ViewCartDTO vcDTO = new ViewCartDTO();
-        ViewProductCartDTO viewProductCartDTO = new ViewProductCartDTO();
+        BigDecimal totalGrossValue = BigDecimal.ZERO;
+
         for (Product p : cart.keySet()) {
+            ViewProductCartDTO viewProductCartDTO = new ViewProductCartDTO();
             viewProductCartDTO.setName(p.getName());
             viewProductCartDTO.setPrice(p.getPrice());
             viewProductCartDTO.setQuantity(cart.get(p));
+
             vcDTO.getCheckCart().add(viewProductCartDTO);
+            totalGrossValue = totalGrossValue.add(p.getPrice().multiply(BigDecimal.valueOf(cart.get(p))));
         }
 
-        vcDTO.setGrossValue( vcDTO.getCheckCart().stream()
-                .map(p -> p.getPrice())
-                .reduce(BigDecimal::add )
-                .get());
+        vcDTO.setGrossValue(totalGrossValue);
         return vcDTO;
     }
 }

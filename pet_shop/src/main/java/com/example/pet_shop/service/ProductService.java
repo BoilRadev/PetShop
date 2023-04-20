@@ -104,7 +104,7 @@ public class ProductService extends AbstractService{
             throw new NotFoundException("Product not found");
         }
         Product product = optionalProduct.get();
-
+        product.setSupplier(getSupplierById(dto.getSupplierId()));
         product.setSubcategory(getSubcategoryById(dto.getSubcategoryId()));
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
@@ -134,4 +134,7 @@ public class ProductService extends AbstractService{
         return optionalSubcategory.get();
     }
 
+    public Optional<Product> getProductById(int productId) {
+        return productRepository.getProductsById(productId);
     }
+}

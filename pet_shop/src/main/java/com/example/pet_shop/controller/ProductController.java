@@ -25,10 +25,6 @@ public class ProductController extends AbstractController {
         return productService.viewProductById(id);
     }
 
-//    @GetMapping("/products/all")
-//    public List<ProductInfoDTO> viewAllProducts(){
-//        return productService.viewAll();
-//    }
     @GetMapping("/products/all")
     public ResponseEntity<Page<ProductInfoDTO>> viewAllProducts(Pageable pageable){
         Page<ProductInfoDTO> productPage = productService.viewAll(pageable);

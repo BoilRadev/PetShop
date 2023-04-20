@@ -2,11 +2,11 @@ package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.DTOS.SubcategoryDTO;
 import com.example.pet_shop.model.entities.Category;
+import com.example.pet_shop.model.entities.Product;
 import com.example.pet_shop.model.entities.Subcategory;
-import com.example.pet_shop.model.repositories.CategoryRepository;
-import com.example.pet_shop.model.repositories.SubcategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,5 +34,9 @@ public class SubcategoryService extends AbstractService{
 
     public Optional<Subcategory> getSubcategoryById(Integer subcategoryId) {
         return subcategoryRepository.findById(subcategoryId);
+    }
+
+    public Page<Product> getProductsBySubcategoryId(int subcategoryId, Pageable pageable) {
+        return productRepository.findAllBySubcategoryId(subcategoryId,pageable);
     }
 }
