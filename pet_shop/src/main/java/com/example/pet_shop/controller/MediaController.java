@@ -23,7 +23,7 @@ public class MediaController extends AbstractController {
     protected Logger logger;
 
     @PostMapping("/products/{productId}/media")
-    public ResponseEntity<?> upload(@PathVariable int productId, @RequestParam("file") MultipartFile file, HttpSession s) {
+    public ResponseEntity<?> upload(@PathVariable int productId, @RequestParam("file") MultipartFile file) {
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }

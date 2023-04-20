@@ -1,23 +1,15 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.*;
-import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
 import com.example.pet_shop.model.entities.OrderStatus;
-import com.example.pet_shop.model.entities.Product;
+import com.example.pet_shop.model.DTOS.OrderInfoDTO;
 import com.example.pet_shop.model.exceptions.BadRequestException;
-import com.example.pet_shop.model.exceptions.UnauthorizedException;
 
 import com.example.pet_shop.service.OrderService;
-import com.example.pet_shop.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
 
 @RestController
 public class OrderController extends AbstractController {
@@ -47,7 +39,7 @@ public class OrderController extends AbstractController {
         return orderService.removeFromCart(dto);
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/orders/view")
     public ViewCartDTO viewCart( HttpSession session  ){
 
         if (session.getAttribute("cart") != null) {

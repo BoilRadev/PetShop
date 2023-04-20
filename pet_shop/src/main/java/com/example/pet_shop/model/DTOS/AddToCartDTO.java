@@ -9,6 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AddToCartDTO {
 
-    private String name;
+    private int productId;
 
 }

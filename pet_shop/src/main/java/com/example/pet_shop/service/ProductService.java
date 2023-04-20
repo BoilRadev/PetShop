@@ -40,19 +40,19 @@ public class ProductService extends AbstractService{
 //                .map( product -> mapper.convertValue(product, ProductInfoDTO.class))
 //                .collect(Collectors.toList());    }
 
-    public List<ProductInfoDTO> filter(Subcategory subcategory){
+    public List<ProductInfoDTO> filter(int subId){
         return productRepository.findAll()
                 .stream()
-                .filter(product -> product.getSubcategory().getId().equals(subcategory.getId()))
+                .filter(product -> product.getSubcategory().getId().equals(subId))
                 .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
                 .collect(Collectors.toList());
     }
 
 
-    public List<ProductInfoDTO> search(SearchDTO dto) {
+    public List<ProductInfoDTO> search(String name) {
         return productRepository.findAll()
                 .stream()
-                .filter(product -> product.getName().toLowerCase(Locale.ROOT).contains(dto.getName().toLowerCase(Locale.ROOT)))
+                .filter(product -> product.getName().toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT)))
                 .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
                 .collect(Collectors.toList());
     }
@@ -68,7 +68,7 @@ public class ProductService extends AbstractService{
         return productRepository.findAll()
                 .stream()
                 .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
-                .sorted()
+                .sorted((o1, o2) -> o2.getPrice().compareTo(o1.getPrice()))
                 .collect(Collectors.toList());
     }
 
@@ -77,7 +77,6 @@ public class ProductService extends AbstractService{
 
         product.setSupplier(getSupplierById(dto.getSupplierId()));
         product.setSubcategory(getSubcategoryById(dto.getSubcategoryId()));
-        product.setCategory(getCategoryById(dto.getCategoryId()));
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setQuantity(dto.getQuantity());
@@ -106,9 +105,7 @@ public class ProductService extends AbstractService{
         }
         Product product = optionalProduct.get();
 
-        product.setSupplier(getSupplierById(dto.getSupplierId()));
         product.setSubcategory(getSubcategoryById(dto.getSubcategoryId()));
-        product.setCategory(getCategoryById(dto.getCategoryId()));
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setQuantity(dto.getQuantity());
@@ -137,11 +134,4 @@ public class ProductService extends AbstractService{
         return optionalSubcategory.get();
     }
 
-    private Category getCategoryById(int categoryId) {
-        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
-        if (optionalCategory.isEmpty()) {
-            throw new NotFoundException("Category not found. Please add a new category here: /categories");
-        }
-        return optionalCategory.get();
-    }
     }

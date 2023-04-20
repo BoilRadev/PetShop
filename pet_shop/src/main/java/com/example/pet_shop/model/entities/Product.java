@@ -4,16 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product implements Comparable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +36,7 @@ public class Product {
     @JsonIgnoreProperties("products")
     private Subcategory subcategory;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    @JsonIgnoreProperties("subcategories")
-    private Category category;
+
     @Column
     private int quantity;
 
@@ -46,9 +44,29 @@ public class Product {
     private BigDecimal price;
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnoreProperties("images")
     private List<Image> images;
 
     @ManyToOne
     @JoinColumn(name = "discount_id")
     private Discount discount;
+
+
+    @Override
+    public int compareTo(@NotNull Object o) {
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

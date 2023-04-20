@@ -28,17 +28,17 @@ public class User {
     @Column
     private String password;
 
-    @Column(name = "first_name")
+    @Column
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column
     private String lastName;
 
-    @Column(name = "phone_number")
+    @Column
     private String phoneNumber;
 
 
-    @Column(name = "personal_discount", columnDefinition = "DECIMAL(5,2) DEFAULT '0.00'")
+    @Column
     private BigDecimal personalDiscount;
 
     @Column

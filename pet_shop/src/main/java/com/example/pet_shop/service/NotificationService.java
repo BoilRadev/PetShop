@@ -1,14 +1,21 @@
 package com.example.pet_shop.service;
 
+import com.example.pet_shop.model.DTOS.userDTOs.RegisterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Service
 public class NotificationService extends AbstractService {
 
     @Autowired
     private EmailSenderService senderService;
-
 /*
 
         @EventListener(ApplicationReadyEvent.class)
@@ -17,7 +24,7 @@ public class NotificationService extends AbstractService {
             .stream()
             .map(u -> mapper.convertValue(u, RegisterDTO.class))
             .filter(RegisterDTO::isSubscribed)
-            .collect(Collectors.toList());
+            .toList();
 
     ExecutorService executorService = Executors.newFixedThreadPool(subscribedUsers.size());
 
@@ -30,7 +37,5 @@ public class NotificationService extends AbstractService {
 
     executorService.shutdown();
 }
-
- */
-
+*/
 }

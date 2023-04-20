@@ -16,7 +16,6 @@ public class ProductEditRequestDTO {
     private String description;
     private int supplierId;
     private int subcategoryId;
-    private int categoryId;
     private int quantity;
     private BigDecimal price;
 

@@ -1,11 +1,14 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.productDTOs.*;
+import com.example.pet_shop.model.entities.Subcategory;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.ProductService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,17 +35,18 @@ public class ProductController extends AbstractController {
         return ResponseEntity.ok(productPage);
     }
 
-    @GetMapping("/product/filter")
-    public List<ProductInfoDTO> filter(@RequestBody Subcategory subcategory){
-        return productService.filter(subcategory);
+    @GetMapping("/products/filter/{subcategory-id}")
+    public List<ProductInfoDTO> filter(@PathVariable("subcategory-id") int subId){
+
+        return productService.filter(subId);
     }
 
     @GetMapping("/products/search")
-    public List<ProductInfoDTO> search(@RequestBody SearchDTO dto){
-        return productService.search(dto);
+    public List<ProductInfoDTO> search(@RequestParam(value = "name") String name){
+        return productService.search(name);
     }
 
-    @GetMapping("/products/order")
+    @GetMapping("/products/sort")
     public List<ProductInfoDTO> sortProductsByOrder(@RequestParam(value = "order", defaultValue = "asc") String order) {
         if (order.equalsIgnoreCase("asc")) {
             return productService.sortAscending();
@@ -54,7 +58,7 @@ public class ProductController extends AbstractController {
     }
 
     @PostMapping("/products")
-    public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto, HttpSession ses){
+    public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto){
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }

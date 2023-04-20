@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class DiscountEditDTO {
 
-    private String description;
     private BigDecimal percent;
+    private String description;
     private LocalDateTime fromDate;
     private LocalDateTime toDate;
     private boolean isActive;

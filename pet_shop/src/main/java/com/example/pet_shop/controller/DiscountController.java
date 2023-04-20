@@ -8,6 +8,7 @@ import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,7 +41,7 @@ public class DiscountController extends AbstractController {
     }
 
     @DeleteMapping("/discounts/{id}")
-    public void deleteDiscount(@PathVariable int id){
+    public ResponseEntity<String> deleteDiscount(@PathVariable int id){
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
@@ -48,5 +49,7 @@ public class DiscountController extends AbstractController {
             throw new UnauthorizedException("You are not admin");
         }
 
+        discountService.delete(id);
+        return ResponseEntity.ok("Discount deleted successfully.");
     }
 }

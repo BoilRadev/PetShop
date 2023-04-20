@@ -6,6 +6,7 @@ import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractController {
+
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -52,13 +54,6 @@ public abstract class AbstractController {
                 .time(LocalDateTime.now())
                 .status(s.value())
                 .build();
-    }
-
-    protected int getLoggedId(HttpSession s){
-        if(s.getAttribute("LOGGED_ID") == null){
-            throw new UnauthorizedException("You have to login first");
-        }
-        return (int) s.getAttribute("LOGGED_ID");
     }
 
 

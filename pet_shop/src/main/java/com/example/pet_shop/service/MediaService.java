@@ -20,35 +20,34 @@ public class MediaService extends AbstractService {
 
     @Autowired
     private MediaRepository mediaRepository;
-
     public void upload(MultipartFile file, int productId) {
         try {
+            Product p = getProductByID(productId);
+            if (p == null) {
+                throw new NotFoundException("Product not found");
+            }
+
             String ext = FilenameUtils.getExtension(file.getOriginalFilename());
             String name = UUID.randomUUID() + "." + ext;
-            File dir = new File("uploads");
+            String path = "uploads/";
+            File dir = new File(path);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
             File f = new File(dir, name);
             Files.copy(file.getInputStream(), f.toPath());
-            String url = dir.getName() + File.separator + f.getName();
-            Product p = getProductByID(productId);
+            String url = path + f.getName();
+
             Image image = new Image();
             image.setUrl(url);
             image.setProduct(p);
 
-            p.getImages().add(image);
-            //TODO Краси, трябва ли да сейфам снимката в листа и после продукта в репоситори ?
             mediaRepository.save(image);
-            productRepository.save(p);
-
         } catch (IOException e) {
             e.printStackTrace();
             throw new BadRequestException(e.getMessage());
         }
-
     }
-
     public File download(String fileName) {
         File dir = new File("uploads");
         File f = new File(dir, fileName);

@@ -18,11 +18,11 @@ public class Payment {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn
     private User userId;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn
     private Order orderId;
 
     @Column
@@ -34,7 +34,7 @@ public class Payment {
     @Column(name = "transaction_id")
     private String description;
 
-    @Column(name = "processed_at")
+    @Column
     private LocalDateTime processedAt;
 
     @Column

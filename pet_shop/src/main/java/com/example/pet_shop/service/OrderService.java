@@ -25,7 +25,7 @@ public class OrderService extends AbstractService {
 
   public CartDTO addToCart(AddToCartDTO dto, CartDTO cart) {
 
-      Product product = productRepository.getProductByName(dto.getName()).orElseThrow(() -> new NotFoundException("Nfasfd"));
+      Product product = productRepository.getProductsById(dto.getProductId()).orElseThrow(() -> new NotFoundException("Nfasfd"));
       if (!cart.getCart().containsKey(product)){
           cart.getCart().put(product , 1 );
       }
@@ -42,7 +42,7 @@ public class OrderService extends AbstractService {
 
     public void editStatus(int id) {
         Optional<Order> opt = orderRepository.findById(id);
-        if(!opt.isPresent()){
+        if(opt.isEmpty()){
             throw new BadRequestException("No order found with id: " + id);
         }
 

@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 
 
 @Component
@@ -38,12 +37,7 @@ public class Logger extends AbstractController {
         return user.isAdmin();
     }
 
-    public Optional<User> asUser() {
-        if (!isLogged()) {
-            return Optional.empty();
-        }
-        return repository.getUserById(id());
-    }
+
 
     public void login(User user) {
         session.setAttribute("LOGGED_ID", user.getId());
