@@ -3,6 +3,9 @@ package com.example.pet_shop.service;
 import com.example.pet_shop.model.DTOS.productDTOs.*;
 import com.example.pet_shop.model.entities.*;
 import com.example.pet_shop.model.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,18 +25,25 @@ public class ProductService extends AbstractService{
         }
         throw new NotFoundException("Product not found");
     }
+    public Page<ProductInfoDTO> viewAll(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
+        List<ProductInfoDTO> productInfoDTOList = productPage.getContent()
+                .stream()
+                .map(product -> mapper.convertValue(product, ProductInfoDTO.class))
+                .collect(Collectors.toList());
+        return new PageImpl<>(productInfoDTOList, pageable, productPage.getTotalElements());
+    }
 
-    public List<ProductInfoDTO> viewAll() {
+//    public List<ProductInfoDTO> viewAll() {
+//        return productRepository.findAll()
+//                .stream()
+//                .map( product -> mapper.convertValue(product, ProductInfoDTO.class))
+//                .collect(Collectors.toList());    }
+
+    public List<ProductInfoDTO> filter(Subcategory subcategory){
         return productRepository.findAll()
                 .stream()
-                .map( product -> mapper.convertValue(product, ProductInfoDTO.class))
-                .collect(Collectors.toList());    }
-
-    public List<ProductInfoDTO> filter(FilterDTO dto){
-        return productRepository.findAll()
-                .stream()
-                .filter(p -> p.getCategory().getName().equals(dto.getCategory()))
-                .filter(product -> product.getSubcategory().getName().equals(dto.getSubcategory()))
+                .filter(product -> product.getSubcategory().getId().equals(subcategory.getId()))
                 .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
                 .collect(Collectors.toList());
     }

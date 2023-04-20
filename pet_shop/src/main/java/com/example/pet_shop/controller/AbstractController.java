@@ -1,15 +1,19 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.ErrorDTO;
+import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
@@ -18,28 +22,24 @@ import java.util.Map;
 
 public abstract class AbstractController {
 
-    //400
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleBadRequest(Exception e){
         return generateErrorDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    //401
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorDTO handleUnauthorized(Exception e){
         return generateErrorDTO(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
-    //404
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDTO handleNotFound(Exception e){
         return generateErrorDTO(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    //500
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleRest(Exception e){
@@ -73,5 +73,6 @@ public abstract class AbstractController {
         });
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
+
 
 }

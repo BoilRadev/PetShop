@@ -22,14 +22,19 @@ public class ProductController extends AbstractController {
         return productService.viewProductById(id);
     }
 
+//    @GetMapping("/products/all")
+//    public List<ProductInfoDTO> viewAllProducts(){
+//        return productService.viewAll();
+//    }
     @GetMapping("/products/all")
-    public List<ProductInfoDTO> viewAllProducts(){
-        return productService.viewAll();
+    public ResponseEntity<Page<ProductInfoDTO>> viewAllProducts(Pageable pageable){
+        Page<ProductInfoDTO> productPage = productService.viewAll(pageable);
+        return ResponseEntity.ok(productPage);
     }
 
-    @GetMapping("/products/filter")
-    public List<ProductInfoDTO> filter(@RequestBody FilterDTO dto){
-        return productService.filter(dto);
+    @GetMapping("/product/filter")
+    public List<ProductInfoDTO> filter(@RequestBody Subcategory subcategory){
+        return productService.filter(subcategory);
     }
 
     @GetMapping("/products/search")
