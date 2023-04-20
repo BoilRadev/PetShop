@@ -25,7 +25,9 @@ public class OrderService extends AbstractService {
 
   public CartDTO addToCart(AddToCartDTO dto, CartDTO cart) {
 
-      Product product = productRepository.getProductsById(dto.getProductId()).orElseThrow(() -> new NotFoundException("Nfasfd"));
+      Product product = productRepository.getProductsById(dto.getProductId()).orElseThrow(()
+              -> new NotFoundException("Product not found"));
+
       if(product.getQuantity() > 0) {
           if (!cart.getCart().containsKey(product)) {
               cart.getCart().put(product, 1);
@@ -36,8 +38,23 @@ public class OrderService extends AbstractService {
     }
 
 
-    public OrderInfoDTO removeFromCart(OrderInfoDTO dto) {
-        return null;
+    public CartDTO removeFromCart(AddToCartDTO dto,CartDTO cart)  {
+
+        Product product = productRepository.getProductsById(dto.getProductId()).orElseThrow(()
+                -> new NotFoundException("Product not found"));
+
+        if (cart.getCart().containsKey(product)) {
+            int currentQuantity = cart.getCart().get(product);
+            if (currentQuantity > 1) {
+                cart.getCart().put(product, currentQuantity - 1);
+            } else {
+                cart.getCart().remove(product);
+            }
+        } else {
+            throw new NotFoundException("Product not found in cart");
+        }
+
+        return cart;
     }
 
     public void editStatus(int id) {

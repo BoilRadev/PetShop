@@ -22,6 +22,9 @@ public class OrderController extends AbstractController {
     @PostMapping("/orders")
     public void addToCart(@RequestBody AddToCartDTO dto, HttpSession session) {
 
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
         CartDTO cart = new CartDTO();
         if (session.getAttribute("cart") != null) {
             cart = (CartDTO) session.getAttribute("cart");
@@ -32,11 +35,17 @@ public class OrderController extends AbstractController {
 
 
     @DeleteMapping("/orders")
-    public OrderInfoDTO removeFromCart(@RequestBody OrderInfoDTO dto){
+    public CartDTO removeFromCart(@RequestBody AddToCartDTO dto,HttpSession session){
+
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
-        return orderService.removeFromCart(dto);
+        CartDTO cart = new CartDTO();
+        if (session.getAttribute("cart") != null) {
+            cart = (CartDTO) session.getAttribute("cart");
+        }
+        return orderService.removeFromCart(dto,cart);
+
     }
 
     @GetMapping("/orders/view")
