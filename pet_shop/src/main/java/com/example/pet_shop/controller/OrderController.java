@@ -35,7 +35,7 @@ public class OrderController extends AbstractController {
 
 
     @DeleteMapping("/orders")
-    public CartDTO removeFromCart(@RequestBody AddToCartDTO dto,HttpSession session){
+    public void removeFromCart(@RequestBody AddToCartDTO dto,HttpSession session){
 
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
@@ -44,8 +44,8 @@ public class OrderController extends AbstractController {
         if (session.getAttribute("cart") != null) {
             cart = (CartDTO) session.getAttribute("cart");
         }
-        return orderService.removeFromCart(dto,cart);
-
+        orderService.removeFromCart(dto,cart);
+        session.setAttribute("cart",cart);
     }
 
     @GetMapping("/orders/view")
