@@ -1,11 +1,16 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.productDTOs.*;
+import com.example.pet_shop.model.entities.Subcategory;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,14 +27,19 @@ public class ProductController extends AbstractController {
         return productService.viewProductById(id);
     }
 
+//    @GetMapping("/products/all")
+//    public List<ProductInfoDTO> viewAllProducts(){
+//        return productService.viewAll();
+//    }
     @GetMapping("/products/all")
-    public List<ProductInfoDTO> viewAllProducts(){
-        return productService.viewAll();
+    public ResponseEntity<Page<ProductInfoDTO>> viewAllProducts(Pageable pageable){
+        Page<ProductInfoDTO> productPage = productService.viewAll(pageable);
+        return ResponseEntity.ok(productPage);
     }
 
     @GetMapping("/product/filter")
-    public List<ProductInfoDTO> filter(@RequestBody FilterDTO dto){
-        return productService.filter(dto);
+    public List<ProductInfoDTO> filter(@RequestBody Subcategory subcategory){
+        return productService.filter(subcategory);
     }
 
     @GetMapping("/products/search")
@@ -37,7 +47,7 @@ public class ProductController extends AbstractController {
         return productService.search(dto);
     }
 
-    @GetMapping("/products/order")
+    @GetMapping("/products/sort")
     public List<ProductInfoDTO> sortProductsByOrder(@RequestParam(value = "order", defaultValue = "asc") String order) {
         if (order.equalsIgnoreCase("asc")) {
             return productService.sortAscending();
