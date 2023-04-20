@@ -1,19 +1,16 @@
 package com.example.pet_shop.controller;
 
-import com.example.pet_shop.model.DTOS.CartDTO;
-import com.example.pet_shop.model.DTOS.OrderInfoDTO;
-import com.example.pet_shop.model.DTOS.OrderStatusDTO;
+import com.example.pet_shop.model.DTOS.*;
 import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
-<<<<<<< HEAD
 import com.example.pet_shop.model.entities.OrderStatus;
 import com.example.pet_shop.model.entities.Product;
-=======
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.UnauthorizedException;
->>>>>>> df84e874dcb07d6076a4b57c57f83cc85519e55c
+
 import com.example.pet_shop.service.OrderService;
 import com.example.pet_shop.service.ProductService;
 import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,37 +26,53 @@ public class OrderController extends AbstractController {
     @Autowired
     private OrderService orderService;
 
-/*
+
     @PostMapping("/orders")
-    public OrderInfoDTO addToCart(@RequestBody OrderInfoDTO dto){
-        return orderService.addToCart(dto);
+    public void addToCart(@RequestBody AddToCartDTO dto, HttpSession session) {
+
+        CartDTO cart = new CartDTO();
+        if (session.getAttribute("cart") != null) {
+            cart = (CartDTO) session.getAttribute("cart");
+        }
+        orderService.addToCart(dto,cart);
+        session.setAttribute("cart",cart);
     }
-*/
+
 
     @DeleteMapping("/orders")
     public OrderInfoDTO removeFromCart(@RequestBody OrderInfoDTO dto){
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
-
         return orderService.removeFromCart(dto);
     }
-/*
+
+    @GetMapping("/orders")
+    public ViewCartDTO viewCart( HttpSession session  ){
+
+        if (session.getAttribute("cart") != null) {
+            CartDTO cart = (CartDTO) session.getAttribute("cart");
+            return orderService.viewCart(cart.getCart());
+        }
+        else {
+            throw new BadRequestException("Nothing in cart");
+        }
+    }
+
     @PutMapping("/orders/{id}/status")
-    public OrderStatusDTO editStatus(@PathVariable int id){
+    public void editStatus(@PathVariable int id){
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
-
-        return orderService.editStatus(id);
+        orderService.editStatus(id);
     }
 
     @GetMapping("/orders/{id}/status")
-    public OrderStatusDTO getStatus(@PathVariable int id){
+    public OrderStatus getStatus(@PathVariable int id){
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
         return orderService.getStatus(id);
     }
-*/
+
 }
