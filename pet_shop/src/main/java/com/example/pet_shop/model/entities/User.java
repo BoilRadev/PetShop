@@ -38,7 +38,6 @@ public class User {
     @Column
     private String phoneNumber;
 
-
     @Column
     private BigDecimal personalDiscount;
 

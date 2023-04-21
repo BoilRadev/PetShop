@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService extends AbstractService{
 
-
-
     public ProductInfoDTO viewProductById(int id) {
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){
@@ -34,12 +32,6 @@ public class ProductService extends AbstractService{
         return new PageImpl<>(productInfoDTOList, pageable, productPage.getTotalElements());
     }
 
-//    public List<ProductInfoDTO> viewAll() {
-//        return productRepository.findAll()
-//                .stream()
-//                .map( product -> mapper.convertValue(product, ProductInfoDTO.class))
-//                .collect(Collectors.toList());    }
-
     public List<ProductInfoDTO> filter(int subId){
         return productRepository.findAll()
                 .stream()
@@ -47,7 +39,6 @@ public class ProductService extends AbstractService{
                 .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
                 .collect(Collectors.toList());
     }
-
 
     public List<ProductInfoDTO> search(String name) {
         return productRepository.findAll()
@@ -97,7 +88,6 @@ public class ProductService extends AbstractService{
         }
     }
 
-
     public ProductInfoDTO editProduct(ProductAddDTO dto, int id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) {
@@ -117,7 +107,6 @@ public class ProductService extends AbstractService{
         return mapper.convertValue(product, ProductInfoDTO.class);
     }
 
-
     private Supplier getSupplierById(int supplierId) {
         Optional<Supplier> optionalSupplier = supplierRepository.findById(supplierId);
         if (optionalSupplier.isEmpty()) {
@@ -132,9 +121,5 @@ public class ProductService extends AbstractService{
             throw new NotFoundException("Subcategory not found. Please add a new subcategory here: /subcategories");
         }
         return optionalSubcategory.get();
-    }
-
-    public Optional<Product> getProductById(int productId) {
-        return productRepository.getProductsById(productId);
     }
 }

@@ -20,10 +20,6 @@ public class AdminController extends AbstractController {
         this.userService = userService;
     }
 
-
-
-
-
     @DeleteMapping("/admin/users/{user-id}")
     public ResponseEntity<?> deleteUserById(@PathVariable("user-id") int userId) {
         if (!logger.isLogged()) {
@@ -35,12 +31,13 @@ public class AdminController extends AbstractController {
         userService.deleteUser(userId);
         return ResponseEntity.ok("User deleted successfully.");
     }
-/*
+
     @PostMapping("/admin/notify-subscribers")
-    public void notifySubscribers(){
-        notificationService.sendAllSubscribed();
+    public ResponseEntity<Void> sendEmails() {
+        notificationService.sendSubscribedEmails();
+        return ResponseEntity.ok().build();
     }
-*/
+
 
 
 

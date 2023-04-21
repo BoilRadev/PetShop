@@ -9,9 +9,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -42,10 +40,5 @@ public class Discount {
 
     @OneToMany(mappedBy = "discount")
     private List<Product> products = new ArrayList<>();
-
-
-
-
-
 }
 

@@ -37,8 +37,6 @@ public class Logger extends AbstractController {
         return user.isAdmin();
     }
 
-
-
     public void login(User user) {
         session.setAttribute("LOGGED_ID", user.getId());
     }
@@ -46,6 +44,4 @@ public class Logger extends AbstractController {
     public void logout(){
         session.invalidate();
     }
-
-
 }

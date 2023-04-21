@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class SupplierService extends AbstractService {
 
-
     public Supplier addSupplier(SupplierDTO supplierDTO) {
         Supplier supplier = new Supplier();
         supplier.setSupplierName(supplierDTO.getSupplierName());

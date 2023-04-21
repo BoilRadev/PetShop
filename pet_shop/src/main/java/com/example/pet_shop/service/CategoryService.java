@@ -8,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryService extends AbstractService {
-
 
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) {
@@ -27,10 +25,6 @@ public class CategoryService extends AbstractService {
 
     public void deleteCategory(Integer categoryId) {
         categoryRepository.deleteById(categoryId);
-    }
-
-    public Optional<Category> getCategoryById(Integer categoryId) {
-        return categoryRepository.findById(categoryId);
     }
 
     public List<Subcategory> getSubcategoriesByCategoryId(int categoryId) {
