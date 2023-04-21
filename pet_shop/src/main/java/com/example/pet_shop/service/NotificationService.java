@@ -1,6 +1,8 @@
 package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.DTOS.userDTOs.RegisterDTO;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -16,9 +18,10 @@ public class NotificationService extends AbstractService {
 
     @Autowired
     private EmailSenderService senderService;
-/*
+
 
         @EventListener(ApplicationReadyEvent.class)
+        @Transactional
     public void sendAllSubscribed() {
     List<RegisterDTO> subscribedUsers = userRepository.findAll()
             .stream()
@@ -34,8 +37,7 @@ public class NotificationService extends AbstractService {
                     "Come and check the latest discount for the upcoming holidays");
         });
     }
-
     executorService.shutdown();
 }
-*/
+
 }

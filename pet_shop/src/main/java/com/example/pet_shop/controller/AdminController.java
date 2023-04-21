@@ -35,13 +35,13 @@ public class AdminController extends AbstractController {
         userService.deleteUser(userId);
         return ResponseEntity.ok("User deleted successfully.");
     }
-/*
+
     @PostMapping("/admin/notify-subscribers")
     public void notifySubscribers(){
         notificationService.sendAllSubscribed();
     }
 
-*/
+
 
 
 }
