@@ -39,7 +39,8 @@ public class Order implements Comparable{
     @JoinColumn(name = "payment_method_id")
     @JsonBackReference
     private PaymentMethod paymentMethod;
-
+    @OneToOne(mappedBy = "order")
+    private Payment payment;
     @Column
     private LocalDateTime createdAt;
 

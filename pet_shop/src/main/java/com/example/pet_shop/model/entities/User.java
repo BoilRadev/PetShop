@@ -1,5 +1,6 @@
 package com.example.pet_shop.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -59,9 +60,12 @@ public class User {
     @Column(name = "is_admin")
     private boolean isAdmin;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<Payment> payments;
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private Set<Order> orders;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

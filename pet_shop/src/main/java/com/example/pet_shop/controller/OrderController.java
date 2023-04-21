@@ -1,12 +1,16 @@
 package com.example.pet_shop.controller;
+import com.example.pet_shop.model.DTOS.OrderPayDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.AddToCartDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
+import com.example.pet_shop.model.DTOS.orderDTO.PaymentRequest;
 import com.example.pet_shop.model.DTOS.orderDTO.ViewCartDTO;
 import com.example.pet_shop.model.entities.OrderStatus;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.service.OrderService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +20,8 @@ public class OrderController extends AbstractController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/orders")
-    public void addToCart(@RequestBody AddToCartDTO dto, HttpSession session) {
+    @PutMapping("/orders/{productId}")
+    public void addToCart(@PathVariable int productId, HttpSession session) {
 
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
@@ -26,11 +30,22 @@ public class OrderController extends AbstractController {
         if (session.getAttribute("cart") != null) {
             cart = (CartDTO) session.getAttribute("cart");
         }
-        orderService.addToCart(dto,cart);
-        session.setAttribute("cart",cart);
+        orderService.addToCart(productId, cart);
+        session.setAttribute("cart", cart);
     }
 
+    @PostMapping("/orders/create")
+    public ResponseEntity<?> creatOrder(@Valid @RequestBody OrderPayDTO dto, HttpSession session) {
 
+        if (session.getAttribute("cart") != null) {
+            CartDTO cart = (CartDTO) session.getAttribute("cart");
+            orderService.createOrder(logger, cart, dto);
+
+        } else {
+            throw new BadRequestException("Nothing in cart");
+        }
+        return ResponseEntity.ok().body("Order created successfully.");
+    }
     @DeleteMapping("/orders/{productId}")
     public void removeFromCart(@PathVariable int productId,HttpSession session){
 
@@ -70,7 +85,18 @@ public class OrderController extends AbstractController {
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
-        return orderService.getStatus(id);
+        return orderService.getStatus(id,logger);
     }
+
+    @PostMapping("/orders/payments")
+    public ResponseEntity<?> payOrder(@RequestBody PaymentRequest paymentRequest){
+
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        orderService.payOrder(paymentRequest,logger);
+        return ResponseEntity.ok().body("Order successfully paid.");
+    }
+
 
 }

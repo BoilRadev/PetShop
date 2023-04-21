@@ -18,7 +18,7 @@ public class NotificationService extends AbstractService {
 
     @Autowired
     private EmailSenderService senderService;
-
+/*
 
         @EventListener(ApplicationReadyEvent.class)
         @Transactional
@@ -39,5 +39,5 @@ public class NotificationService extends AbstractService {
     }
     executorService.shutdown();
 }
-
+*/
 }

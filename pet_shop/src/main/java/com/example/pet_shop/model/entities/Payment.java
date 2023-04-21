@@ -1,7 +1,10 @@
 package com.example.pet_shop.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -11,6 +14,8 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "payments")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Payment {
 
     @Id
@@ -18,12 +23,14 @@ public class Payment {
     private int id;
 
     @ManyToOne
-    @JoinColumn
-    private User userId;
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
 
-    @ManyToOne
-    @JoinColumn
-    private Order orderId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @JsonBackReference
+    private Order order;
 
     @Column
     private LocalDateTime createdAt;
@@ -31,8 +38,8 @@ public class Payment {
     @Column
     private BigDecimal amount;
 
-    @Column(name = "transaction_id")
-    private String description;
+    @Column
+    private String transactionId;
 
     @Column
     private LocalDateTime processedAt;
