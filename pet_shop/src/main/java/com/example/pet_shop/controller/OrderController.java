@@ -1,13 +1,9 @@
 package com.example.pet_shop.controller;
-
 import com.example.pet_shop.model.DTOS.*;
 import com.example.pet_shop.model.entities.OrderStatus;
-import com.example.pet_shop.model.DTOS.OrderInfoDTO;
 import com.example.pet_shop.model.exceptions.BadRequestException;
-
 import com.example.pet_shop.service.OrderService;
 import jakarta.servlet.http.HttpSession;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +13,6 @@ public class OrderController extends AbstractController {
     protected Logger logger;
     @Autowired
     private OrderService orderService;
-
 
     @PostMapping("/orders")
     public void addToCart(@RequestBody AddToCartDTO dto, HttpSession session) {

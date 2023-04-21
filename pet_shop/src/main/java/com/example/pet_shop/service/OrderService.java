@@ -2,9 +2,7 @@ package com.example.pet_shop.service;
 
 
 import com.example.pet_shop.model.DTOS.*;
-import com.example.pet_shop.model.entities.Order;
-import com.example.pet_shop.model.entities.OrderStatus;
-import com.example.pet_shop.model.entities.Product;
+import com.example.pet_shop.model.entities.*;
 import com.example.pet_shop.model.exceptions.BadRequestException;
 import com.example.pet_shop.model.exceptions.NotFoundException;
 import com.example.pet_shop.model.repositories.OrderRepository;
