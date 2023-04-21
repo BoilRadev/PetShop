@@ -2,7 +2,6 @@ package com.example.pet_shop.service;
 
 
 import com.example.pet_shop.model.entities.Discount;
-import com.example.pet_shop.model.entities.PaymentMethod;
 import com.example.pet_shop.model.entities.Product;
 import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.exceptions.NotFoundException;
@@ -40,8 +39,4 @@ public abstract class AbstractService {
     public Product getProductByID(int id){
         return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
     }
-    public Discount getDiscountById(int id){
-        return discountRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-    }
-
 }

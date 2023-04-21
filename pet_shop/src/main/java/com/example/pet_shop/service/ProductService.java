@@ -122,8 +122,4 @@ public class ProductService extends AbstractService{
         }
         return optionalSubcategory.get();
     }
-
-    public Optional<Product> getProductById(int productId) {
-        return productRepository.getProductsById(productId);
-    }
 }
