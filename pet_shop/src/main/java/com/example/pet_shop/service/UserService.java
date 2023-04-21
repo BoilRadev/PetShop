@@ -5,6 +5,8 @@ import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.exceptions.UnauthorizedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ public class UserService extends AbstractService{
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+    @Autowired
+    private static Logger logger = LogManager.getLogger(UserService.class);
 
     public UserWithoutPassDTO register(RegisterDTO dto) {
         if(!dto.getPassword().equals(dto.getConfirmPassword())){
@@ -33,6 +37,7 @@ public class UserService extends AbstractService{
         u.setAdmin(true);
         u.setSubscribed(false);
         userRepository.save(u);
+        logger.info("User with email : "+ u.getEmail() + "have registered");
         return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
 
@@ -44,6 +49,7 @@ public class UserService extends AbstractService{
         if (!encoder.matches(dto.getPassword(), u.get().getPassword())) {
             throw new UnauthorizedException("Wrong credentials");
         }
+        logger.info(u.get().getEmail() + "have logged in");
         return mapper.convertValue(u.get(), UserWithoutPassDTO.class);
     }
 

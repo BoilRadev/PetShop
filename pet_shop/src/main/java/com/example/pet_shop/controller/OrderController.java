@@ -1,12 +1,15 @@
 package com.example.pet_shop.controller;
-import com.example.pet_shop.model.DTOS.orderDTO.AddToCartDTO;
+import com.example.pet_shop.model.DTOS.OrderPayDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
+import com.example.pet_shop.model.DTOS.orderDTO.PaymentRequest;
 import com.example.pet_shop.model.DTOS.orderDTO.ViewCartDTO;
 import com.example.pet_shop.model.entities.OrderStatus;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.service.OrderService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -81,7 +84,7 @@ public class OrderController extends AbstractController {
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
-        return orderService.getStatus(id);
+        return orderService.getStatus(id,logger);
     }
 
     @PostMapping("/orders/payments")

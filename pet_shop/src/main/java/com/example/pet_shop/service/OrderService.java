@@ -1,7 +1,8 @@
 package com.example.pet_shop.service;
 
 
-import com.example.pet_shop.model.DTOS.orderDTO.AddToCartDTO;
+import com.example.pet_shop.controller.Logger;
+import com.example.pet_shop.model.DTOS.OrderPayDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.PaymentRequest;
 import com.example.pet_shop.model.DTOS.orderDTO.ViewCartDTO;
@@ -11,7 +12,7 @@ import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.model.repositories.OrderRepository;
 import com.example.pet_shop.model.repositories.ProductRepository;
-import org.aspectj.weaver.ast.Or;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,7 @@ public class OrderService extends AbstractService {
             throw new NotFoundException("Not enough products.");
         }
     }
-    public void createOrder(Logger logger, CartDTO cart, OrderPayDTO dto) {
+    public void createOrder(Logger logger, CartDTO cart, @Valid OrderPayDTO dto) {
         Order order = new Order();
         order.setUser(userRepository.getUserById(logger.id()));
         order.setPaymentMethod(paymentMethodRepository.findById(dto.getPaymentMethodId()).get());
