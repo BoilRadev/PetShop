@@ -2,6 +2,7 @@ package com.example.pet_shop.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Getter
 @Entity
 @Table(name = "payment_methods")
+@NoArgsConstructor
 public class PaymentMethod {
 
     @Id
@@ -21,7 +23,6 @@ public class PaymentMethod {
     @Column
     private String type;
 
-   @OneToMany
-    @JoinColumn(name = "order_id" )
-    private List<Order> order = new ArrayList<>();
+   @OneToMany(mappedBy = "paymentMethod")
+    private List<Order> orders;
 }

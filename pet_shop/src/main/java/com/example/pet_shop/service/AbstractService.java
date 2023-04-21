@@ -2,6 +2,7 @@ package com.example.pet_shop.service;
 
 
 import com.example.pet_shop.model.entities.Discount;
+import com.example.pet_shop.model.entities.PaymentMethod;
 import com.example.pet_shop.model.entities.Product;
 import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.exceptions.NotFoundException;
@@ -19,6 +20,12 @@ public abstract class AbstractService {
     protected UserRepository userRepository;
     @Autowired
     protected ProductRepository productRepository;
+    @Autowired
+    protected PaymentRepository paymentRepository;
+    @Autowired
+    protected OrderStatusRepository orderStatusRepository;
+    @Autowired
+    protected PaymentMethodRepository paymentMethodRepository;
     @Autowired
     protected ObjectMapper mapper;
     @Autowired

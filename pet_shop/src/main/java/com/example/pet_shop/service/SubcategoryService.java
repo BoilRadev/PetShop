@@ -1,7 +1,9 @@
 package com.example.pet_shop.service;
 
+import com.example.pet_shop.controller.Logger;
 import com.example.pet_shop.model.DTOS.SubcategoryDTO;
 import com.example.pet_shop.model.entities.Category;
+import com.example.pet_shop.model.entities.Order;
 import com.example.pet_shop.model.entities.Product;
 import com.example.pet_shop.model.entities.Subcategory;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,4 +41,5 @@ public class SubcategoryService extends AbstractService{
     public Page<Product> getProductsBySubcategoryId(int subcategoryId, Pageable pageable) {
         return productRepository.findAllBySubcategoryId(subcategoryId,pageable);
     }
+
 }

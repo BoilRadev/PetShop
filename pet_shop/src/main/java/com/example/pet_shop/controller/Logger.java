@@ -47,4 +47,5 @@ public class Logger extends AbstractController {
         session.invalidate();
     }
 
+
 }
