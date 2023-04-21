@@ -1,4 +1,4 @@
-package com.example.pet_shop.model.exceptions;
+package com.example.pet_shop.exceptions;
 
 public class UnauthorizedException extends RuntimeException {
 

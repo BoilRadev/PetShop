@@ -2,15 +2,14 @@ package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.entities.Image;
 import com.example.pet_shop.model.entities.Product;
-import com.example.pet_shop.model.exceptions.BadRequestException;
-import com.example.pet_shop.model.exceptions.NotFoundException;
+import com.example.pet_shop.exceptions.BadRequestException;
+import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.model.repositories.MediaRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.print.attribute.standard.Media;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

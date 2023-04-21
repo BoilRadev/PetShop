@@ -3,9 +3,9 @@ package com.example.pet_shop.service;
 import com.example.pet_shop.model.DTOS.discountDTO.DiscountAddDTO;
 import com.example.pet_shop.model.DTOS.discountDTO.DiscountInfoDTO;
 import com.example.pet_shop.model.entities.Discount;
-import com.example.pet_shop.model.exceptions.BadRequestException;
+import com.example.pet_shop.exceptions.BadRequestException;
 
-import com.example.pet_shop.model.exceptions.NotFoundException;
+import com.example.pet_shop.exceptions.NotFoundException;
 
 import org.springframework.stereotype.Service;
 

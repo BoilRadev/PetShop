@@ -1,7 +1,9 @@
 package com.example.pet_shop.controller;
-import com.example.pet_shop.model.DTOS.*;
+import com.example.pet_shop.model.DTOS.orderDTO.AddToCartDTO;
+import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
+import com.example.pet_shop.model.DTOS.orderDTO.ViewCartDTO;
 import com.example.pet_shop.model.entities.OrderStatus;
-import com.example.pet_shop.model.exceptions.BadRequestException;
+import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.service.OrderService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,7 @@ public class OrderController extends AbstractController {
     }
 
     @GetMapping("/orders/view")
-    public ViewCartDTO viewCart( HttpSession session  ){
+    public ViewCartDTO viewCart(HttpSession session  ){
 
         if (session.getAttribute("cart") != null) {
             CartDTO cart = (CartDTO) session.getAttribute("cart");

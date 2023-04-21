@@ -2,11 +2,9 @@ package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.DTOS.userDTOs.*;
 import com.example.pet_shop.model.entities.User;
-import com.example.pet_shop.model.exceptions.BadRequestException;
-import com.example.pet_shop.model.exceptions.NotFoundException;
-import com.example.pet_shop.model.exceptions.UnauthorizedException;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import com.example.pet_shop.exceptions.BadRequestException;
+import com.example.pet_shop.exceptions.NotFoundException;
+import com.example.pet_shop.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

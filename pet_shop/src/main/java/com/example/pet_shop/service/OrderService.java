@@ -1,10 +1,13 @@
 package com.example.pet_shop.service;
 
 
-import com.example.pet_shop.model.DTOS.*;
+import com.example.pet_shop.model.DTOS.orderDTO.AddToCartDTO;
+import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
+import com.example.pet_shop.model.DTOS.orderDTO.ViewCartDTO;
+import com.example.pet_shop.model.DTOS.orderDTO.ViewProductCartDTO;
 import com.example.pet_shop.model.entities.*;
-import com.example.pet_shop.model.exceptions.BadRequestException;
-import com.example.pet_shop.model.exceptions.NotFoundException;
+import com.example.pet_shop.exceptions.BadRequestException;
+import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.model.repositories.OrderRepository;
 import com.example.pet_shop.model.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,16 +1,12 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.SubcategoryDTO;
-import com.example.pet_shop.model.entities.Category;
 import com.example.pet_shop.model.entities.Product;
 import com.example.pet_shop.model.entities.Subcategory;
-import com.example.pet_shop.model.exceptions.BadRequestException;
-import com.example.pet_shop.model.exceptions.UnauthorizedException;
-import com.example.pet_shop.model.repositories.SubcategoryRepository;
+import com.example.pet_shop.exceptions.BadRequestException;
+import com.example.pet_shop.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.SubcategoryService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController

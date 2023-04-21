@@ -2,7 +2,7 @@ package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.DTOS.productDTOs.*;
 import com.example.pet_shop.model.entities.*;
-import com.example.pet_shop.model.exceptions.NotFoundException;
+import com.example.pet_shop.exceptions.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

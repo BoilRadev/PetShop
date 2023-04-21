@@ -1,4 +1,4 @@
-package com.example.pet_shop.model.DTOS;
+package com.example.pet_shop.model.DTOS.orderDTO;
 
 import com.example.pet_shop.model.entities.Product;
 import jakarta.persistence.criteria.CriteriaBuilder;

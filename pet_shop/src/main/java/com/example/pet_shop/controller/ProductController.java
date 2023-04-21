@@ -1,9 +1,8 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.productDTOs.*;
-import com.example.pet_shop.model.entities.Subcategory;
-import com.example.pet_shop.model.exceptions.BadRequestException;
-import com.example.pet_shop.model.exceptions.UnauthorizedException;
+import com.example.pet_shop.exceptions.BadRequestException;
+import com.example.pet_shop.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

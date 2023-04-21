@@ -1,7 +1,7 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.userDTOs.*;
-import com.example.pet_shop.model.exceptions.BadRequestException;
+import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

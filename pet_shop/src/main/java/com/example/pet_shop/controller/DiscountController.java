@@ -4,8 +4,8 @@ package com.example.pet_shop.controller;
 import com.example.pet_shop.model.DTOS.discountDTO.DiscountAddDTO;
 import com.example.pet_shop.model.DTOS.discountDTO.DiscountInfoDTO;
 
-import com.example.pet_shop.model.exceptions.BadRequestException;
-import com.example.pet_shop.model.exceptions.UnauthorizedException;
+import com.example.pet_shop.exceptions.BadRequestException;
+import com.example.pet_shop.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
