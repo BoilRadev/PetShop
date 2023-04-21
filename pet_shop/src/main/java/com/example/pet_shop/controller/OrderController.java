@@ -30,7 +30,6 @@ public class OrderController extends AbstractController {
         session.setAttribute("cart",cart);
     }
 
-
     @DeleteMapping("/orders/{productId}")
     public void removeFromCart(@PathVariable int productId,HttpSession session){
 
@@ -72,5 +71,4 @@ public class OrderController extends AbstractController {
         }
         return orderService.getStatus(id);
     }
-
 }

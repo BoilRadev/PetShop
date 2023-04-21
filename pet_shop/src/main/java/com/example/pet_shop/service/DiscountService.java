@@ -17,8 +17,6 @@ import java.util.Optional;
 @Service
 public class DiscountService extends AbstractService {
 
-
-
     public DiscountInfoDTO addDiscount(DiscountAddDTO dto) {
 
         Discount discount = mapper.convertValue(dto, Discount.class);

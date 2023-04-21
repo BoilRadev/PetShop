@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;

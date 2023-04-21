@@ -20,7 +20,6 @@ public class UserService extends AbstractService{
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-
     public UserWithoutPassDTO register(RegisterDTO dto) {
         if(!dto.getPassword().equals(dto.getConfirmPassword())){
             throw new BadRequestException("Passwords mismatch!");
@@ -47,8 +46,6 @@ public class UserService extends AbstractService{
         }
         return mapper.convertValue(u.get(), UserWithoutPassDTO.class);
     }
-
-
 
     public UserWithoutPassDTO edit(RegisterDTO dto, int userId) {
 
@@ -83,7 +80,6 @@ public class UserService extends AbstractService{
                 .collect(Collectors.toList());
     }
 
-
     public void deleteUser(int id){
         userRepository.deleteById(id);
     }
@@ -94,12 +90,9 @@ public class UserService extends AbstractService{
         userRepository.save(user);
     }
 
-
     public void unSubscribeUser(int userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         user.setSubscribed(false);
         userRepository.save(user);
     }
-
-
 }

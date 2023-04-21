@@ -9,13 +9,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractController {
-
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -49,7 +47,6 @@ public abstract class AbstractController {
                 .build();
     }
 
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorDTO handleValidationExceptions(
             MethodArgumentNotValidException ex) {
@@ -61,6 +58,4 @@ public abstract class AbstractController {
         });
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
-
-
 }

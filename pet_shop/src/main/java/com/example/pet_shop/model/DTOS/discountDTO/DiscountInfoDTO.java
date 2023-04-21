@@ -1,6 +1,5 @@
 package com.example.pet_shop.model.DTOS.discountDTO;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

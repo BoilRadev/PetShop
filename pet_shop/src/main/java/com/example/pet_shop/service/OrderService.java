@@ -40,7 +40,6 @@ public class OrderService extends AbstractService {
         return cart;
     }
 
-
     public void removeFromCart(int productId, CartDTO cart)  {
 
         Product product = productRepository.getProductsById(productId).orElseThrow(()

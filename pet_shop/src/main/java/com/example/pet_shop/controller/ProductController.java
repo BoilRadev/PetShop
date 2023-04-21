@@ -84,5 +84,4 @@ public class ProductController extends AbstractController {
         }
         productService.deleteProduct(id);
     }
-
 }

@@ -1,6 +1,8 @@
 package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.DTOS.userDTOs.RegisterDTO;
+import com.example.pet_shop.model.repositories.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,25 +21,28 @@ public class NotificationService extends AbstractService {
     @Autowired
     private EmailSenderService senderService;
 
+    @Autowired
+    private UserRepository userRepository;
 
-        @EventListener(ApplicationReadyEvent.class)
-        @Transactional
-    public void sendAllSubscribed() {
-    List<RegisterDTO> subscribedUsers = userRepository.findAll()
-            .stream()
-            .map(u -> mapper.convertValue(u, RegisterDTO.class))
-            .filter(RegisterDTO::isSubscribed)
-            .toList();
+    @Autowired
+    private ObjectMapper mapper;
 
-    ExecutorService executorService = Executors.newFixedThreadPool(subscribedUsers.size());
+    @Transactional
+    public void sendSubscribedEmails() {
+        List<RegisterDTO> subscribedUsers = userRepository.findAll()
+                .stream()
+                .map(u -> mapper.convertValue(u, RegisterDTO.class))
+                .filter(RegisterDTO::isSubscribed)
+                .toList();
 
-    for (RegisterDTO user : subscribedUsers) {
-        executorService.submit(() -> {
-            senderService.sendEmail(user.getEmail(), "New discount at our shop",
-                    "Come and check the latest discount for the upcoming holidays");
-        });
+        ExecutorService executorService = Executors.newFixedThreadPool(subscribedUsers.size());
+
+        for (RegisterDTO user : subscribedUsers) {
+            executorService.submit(() -> {
+                senderService.sendEmail(user.getEmail(), "New discount at our shop",
+                        "Come and check the latest discount for the upcoming holidays");
+            });
+        }
+        executorService.shutdown();
     }
-    executorService.shutdown();
-}
-
 }

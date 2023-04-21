@@ -15,7 +15,6 @@ import java.util.Optional;
 @Service
 public class SubcategoryService extends AbstractService{
 
-
     public Subcategory createSubcategory(SubcategoryDTO subcategoryDto) {
         Subcategory subcategory = new Subcategory();
         subcategory.setName(subcategoryDto.getName());
@@ -24,9 +23,7 @@ public class SubcategoryService extends AbstractService{
         if (optionalCategory.isEmpty()) {
             throw new EntityNotFoundException("Category with ID " + subcategoryDto.getCategoryId() + " not found");
         }
-
         subcategory.setCategory(optionalCategory.get());
-
         return subcategoryRepository.save(subcategory);
     }
 
@@ -41,5 +38,4 @@ public class SubcategoryService extends AbstractService{
     public Page<Product> getProductsBySubcategoryId(int subcategoryId, Pageable pageable) {
         return productRepository.findAllBySubcategoryId(subcategoryId,pageable);
     }
-
 }

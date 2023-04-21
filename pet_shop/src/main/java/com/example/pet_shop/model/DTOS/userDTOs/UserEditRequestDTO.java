@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserEditRequestDTO {
+
     private String email;
     private String password;
     private String confirmPassword;

@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.List;
 
 @Setter
@@ -21,7 +20,6 @@ public class OrderStatus {
 
     @Column
     private String type;
-
 
     @OneToMany(mappedBy = "orderStatus")
     @JsonManagedReference

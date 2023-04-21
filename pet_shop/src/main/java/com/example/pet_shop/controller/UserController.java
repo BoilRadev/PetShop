@@ -31,7 +31,6 @@ public class UserController extends AbstractController {
         return respDto;
     }
 
-
     @PutMapping("/users")
     public UserWithoutPassDTO editUser(@Valid @RequestBody RegisterDTO userDto) {
         if (!logger.isLogged()) {

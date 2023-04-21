@@ -3,7 +3,6 @@ package com.example.pet_shop.model.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -39,6 +38,4 @@ public class Payment {
 
     @Column
     private String status;
-
-
 }

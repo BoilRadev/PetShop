@@ -13,7 +13,6 @@ import java.util.Optional;
 @Service
 public class CategoryService extends AbstractService {
 
-
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
