@@ -1,11 +1,10 @@
 package com.example.pet_shop.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -18,34 +17,35 @@ import java.util.Objects;
 @Table(name = "products")
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Product implements Comparable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
-    @Column
+    @Column(name = "description")
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "supplier_id")
-    @JsonIgnoreProperties("supplier")
+    @JsonIgnore
+    @JsonBackReference
     private Supplier supplier;
 
     @ManyToOne
     @JoinColumn(name = "subcategory_id")
-    @JsonIgnoreProperties("products")
     private Subcategory subcategory;
 
 
-    @Column
+    @Column(name = "quantity")
     private int quantity;
 
-    @Column
-    private BigDecimal price;
+    @Column(name = "price")
+    private Double price;
 
     @OneToMany(mappedBy = "product")
     @JsonIgnoreProperties("images")

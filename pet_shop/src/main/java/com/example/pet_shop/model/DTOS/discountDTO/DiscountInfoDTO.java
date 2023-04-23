@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class DiscountInfoDTO {
 
-    private BigDecimal percent;
+    private Double percent;
     private String description;
     private LocalDate fromDate;
     private LocalDate toDate;

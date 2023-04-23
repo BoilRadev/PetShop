@@ -1,6 +1,8 @@
 package com.example.pet_shop.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,11 +20,15 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(name = "supplier_name")
     private String supplierName;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReference
     private List<Product> products = new ArrayList<>();
 
+    @Override
+    public String toString() {
+        return  supplierName;
+    }
 }

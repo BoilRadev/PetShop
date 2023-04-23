@@ -31,18 +31,18 @@ public class Payment {
     @JsonBackReference
     private Order order;
 
-    @Column
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column
-    private BigDecimal amount;
+    @Column(name = "amount")
+    private Double amount;
 
-    @Column
+    @Column(name = "transaction_id")
     private String transactionId;
 
-    @Column
+    @Column(name = "processed_at")
     private LocalDateTime processedAt;
 
-    @Column
+    @Column(name = "status")
     private String status;
 }

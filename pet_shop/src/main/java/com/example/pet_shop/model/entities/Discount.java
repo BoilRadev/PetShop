@@ -23,19 +23,19 @@ public class Discount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(name = "description")
     private String description;
 
-    @Column
-    private BigDecimal percent;
+    @Column(name = "percent")
+    private Double percent;
 
-    @Column
+    @Column(name = "from_date")
     private LocalDate fromDate;
 
-    @Column
+    @Column(name = "to_date")
     private LocalDate toDate;
 
-    @Column
+    @Column(name = "is_active")
     private boolean isActive;
 
     @OneToMany(mappedBy = "discount")

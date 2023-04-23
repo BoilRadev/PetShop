@@ -18,7 +18,7 @@ public class PaymentMethod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(name = "type")
     private String type;
 
    @OneToMany(mappedBy = "paymentMethod")

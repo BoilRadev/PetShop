@@ -23,28 +23,28 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(name = "email")
     private String email;
 
-    @Column
+    @Column(name = "password")
     private String password;
 
-    @Column
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column
-    private BigDecimal personalDiscount;
+    @Column(name = "personal_discount")
+    private Double personalDiscount;
 
-    @Column
+    @Column(name = "town")
     private String town;
 
-    @Column
+    @Column(name = "address")
     private String address;
 
     @Column(name = "created_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -60,9 +60,10 @@ public class User {
     private boolean isAdmin;
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private Set<Payment> payments;
-    @OneToMany(mappedBy = "user")
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     @JsonManagedReference
     private Set<Order> orders;
     @Override

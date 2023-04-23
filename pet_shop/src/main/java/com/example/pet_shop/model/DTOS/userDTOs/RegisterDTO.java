@@ -1,14 +1,13 @@
 package com.example.pet_shop.model.DTOS.userDTOs;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
 import java.time.LocalDateTime;
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class RegisterDTO {
 
     @NotBlank(message = "Email cannot be blank")

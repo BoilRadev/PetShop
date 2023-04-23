@@ -2,10 +2,7 @@ package com.example.pet_shop.model.DTOS.productDTOs;
 
 import com.example.pet_shop.model.entities.Subcategory;
 import com.example.pet_shop.model.entities.Supplier;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -15,15 +12,14 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ProductInfoDTO implements Comparable{
 
     private int id;
     private String name;
     private String description;
-    private Supplier supplier;
-    private Subcategory subcategory;
     private int quantity;
-    private BigDecimal price;
+    private Double price;
 
     @Override
     public int compareTo(@NotNull Object o) {

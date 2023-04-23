@@ -7,6 +7,7 @@ import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.PaymentRequest;
 import com.example.pet_shop.model.DTOS.orderDTO.ViewCartDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.ViewProductCartDTO;
+import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
 import com.example.pet_shop.model.entities.*;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.NotFoundException;
@@ -30,67 +31,72 @@ public class OrderService extends AbstractService {
 
     public void addToCart(int productId, CartDTO cart) {
 
-        Product product = productRepository.getProductsById(productId).orElseThrow(()
-                -> new NotFoundException("Product not found"));
+        ProductInfoDTO product = mapper.map(productRepository.getProductsById(productId).orElseThrow(()
+                -> new NotFoundException("Product not found")), ProductInfoDTO.class);
 
         if (product.getQuantity() > 0) {
             if (!cart.getCart().containsKey(product)) {
                 cart.getCart().put(product, 1);
             }
-            cart.getCart().put(product, cart.getCart().get(product) + 1);
+            else {
+                cart.getCart().put(product, cart.getCart().get(product) + 1);
+            }
         } else {
             throw new NotFoundException("Not enough products.");
         }
+
     }
-    public void createOrder(Logger logger, CartDTO cart, @Valid OrderPayDTO dto) {
-        Order order = new Order();
-        order.setUser(userRepository.getUserById(logger.id()));
-        order.setPaymentMethod(paymentMethodRepository.findById(dto.getPaymentMethodId()).get());
-        order.setOrderStatus(orderStatusRepository.findByType("CREATED"));
-        order.setAddress(userRepository.getUserById(logger.id()).getAddress());
-        order.setCreatedAt(LocalDateTime.now());
-
-        // calculate gross value, discount amount and net value using streams
-        BigDecimal grossValue = cart.getCart().entrySet().stream()
-                .map(entry -> {
-                    Product product = entry.getKey();
-                    int quantity = entry.getValue();
-                    BigDecimal productPrice = product.getPrice();
-
-                    if (product.getDiscount() != null) {
-                        BigDecimal discountPercent = product.getDiscount().getPercent();
-                        productPrice = productPrice.multiply(BigDecimal.ONE.subtract(discountPercent.divide(BigDecimal.valueOf(100))));
-                    }
-
-                    return productPrice.multiply(BigDecimal.valueOf(quantity));
-                })
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal discountAmount = cart.getCart().entrySet().stream()
-                .filter(entry -> entry.getKey().getDiscount() != null)
-                .map(entry -> {
-                    BigDecimal productValue = entry.getKey().getPrice()
-                            .multiply(BigDecimal.valueOf(entry.getValue()));
-                    BigDecimal discountPercent = entry.getKey().getDiscount().getPercent();
-                    return productValue.multiply(discountPercent.divide(BigDecimal.valueOf(100)));
-                })
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal netValue = grossValue.subtract(discountAmount);
-
-        // set order values
-        order.setGrossValue(grossValue);
-        order.setDiscountAmount(discountAmount);
-        order.setNetValue(netValue);
-        order.setPaid(false);
-
-        orderRepository.save(order);
-    }
+//    public void createOrder(Logger logger, CartDTO cart, @Valid OrderPayDTO dto) {
+//        System.out.println("starting");
+//        Order order = Order.builder()
+//                .user(userRepository.getUserById(logger.id()))
+//                .paymentMethod(paymentMethodRepository.findById(dto.getPaymentMethodId()).get())
+//                .orderStatus(orderStatusRepository.findByType("CONFIRMED"))
+//                .address(userRepository.getUserById(logger.id()).getAddress())
+//                .createdAt(LocalDateTime.now())
+//                .build();
+//
+//        BigDecimal grossValue = cart.getCart().entrySet().stream()
+//                .map(entry -> {
+//                    ProductInfoDTO product = entry.getKey();
+//                    int quantity = entry.getValue();
+//                    BigDecimal productPrice = product.getPrice();
+//
+//                    if (product.getDiscount() != null) {
+//                        Product theProduct = productRepository.getProductsById(product.getId()).get();
+//                        BigDecimal discountPercent = theProduct.getDiscount().getPercent();
+//                        productPrice = productPrice.multiply(BigDecimal.ONE.subtract(discountPercent.divide(BigDecimal.valueOf(100))));
+//                    }
+//
+//                    return productPrice.multiply(BigDecimal.valueOf(quantity));
+//                })
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//        BigDecimal discountAmount = cart.getCart().entrySet().stream()
+//                .filter(entry -> entry.getKey().getDiscount() != null)
+//                .map(entry -> {
+//                    BigDecimal productValue = entry.getKey().getPrice()
+//                            .multiply(BigDecimal.valueOf(entry.getValue()));
+//                    Product theProduct1 = productRepository.getProductsById(entry.getKey().getId()).get();
+//                    BigDecimal discountPercent = theProduct1.getDiscount().getPercent();
+//                    return productValue.multiply(discountPercent.divide(BigDecimal.valueOf(100)));
+//                })
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//        BigDecimal netValue = grossValue.subtract(discountAmount);
+//
+//        order.setGrossValue(grossValue);
+//        order.setDiscountAmount(discountAmount);
+//        order.setNetValue(netValue);
+//        order.setPaid(false);
+//
+//        orderRepository.save(order);
+//    }
 
     public void removeFromCart(int productId, CartDTO cart)  {
 
-        Product product = productRepository.getProductsById(productId).orElseThrow(()
-                -> new NotFoundException("Product not found"));
+        ProductInfoDTO product = mapper.map(productRepository.getProductsById(productId).orElseThrow(()
+                -> new NotFoundException("Product not found")),ProductInfoDTO.class);
 
         if (cart.getCart().containsKey(product)) {
             if (cart.getCart().get(product) > 1) {
@@ -124,18 +130,18 @@ public class OrderService extends AbstractService {
         return o.getOrderStatus();
     }
 
-    public ViewCartDTO viewCart(Map<Product, Integer> cart) {
+    public ViewCartDTO viewCart(Map<ProductInfoDTO, Integer> cart) {
         ViewCartDTO vcDTO = new ViewCartDTO();
-        BigDecimal totalGrossValue = BigDecimal.ZERO;
+        double totalGrossValue = 0;
 
-        for (Product p : cart.keySet()) {
+        for (ProductInfoDTO p : cart.keySet()) {
             ViewProductCartDTO viewProductCartDTO = new ViewProductCartDTO();
             viewProductCartDTO.setName(p.getName());
             viewProductCartDTO.setPrice(p.getPrice());
             viewProductCartDTO.setQuantity(cart.get(p));
 
             vcDTO.getCheckCart().add(viewProductCartDTO);
-            totalGrossValue = totalGrossValue.add(p.getPrice().multiply(BigDecimal.valueOf(cart.get(p))));
+            totalGrossValue = totalGrossValue + (p.getPrice() * (cart.get(p)));
         }
 
         vcDTO.setGrossValue(totalGrossValue);
@@ -166,7 +172,7 @@ public class OrderService extends AbstractService {
         payment.setStatus("PAID");
 
         // update netValue of the order
-        BigDecimal newNetValue = order.getNetValue().subtract(payment.getAmount());
+        double newNetValue = order.getNetValue()/(payment.getAmount());
         order.setNetValue(newNetValue);
 
         order.setOrderStatus(orderStatusRepository.findByType("PAID"));

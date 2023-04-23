@@ -16,7 +16,7 @@ public class DiscountService extends AbstractService {
 
     public DiscountInfoDTO addDiscount(DiscountAddDTO dto) {
 
-        Discount discount = mapper.convertValue(dto, Discount.class);
+        Discount discount = mapper.map(dto, Discount.class);
         discount.setPercent(dto.getPercent());
         discount.setDescription(dto.getDescription());
         discount.setFromDate(LocalDate.from(dto.getFromDate()));
@@ -24,7 +24,7 @@ public class DiscountService extends AbstractService {
         discount.setActive(dto.isActive());
         discountRepository.save(discount);
 
-        return mapper.convertValue(discount, DiscountInfoDTO.class);
+        return mapper.map(discount, DiscountInfoDTO.class);
     }
 
     public DiscountInfoDTO editDiscount(int id) {
@@ -41,12 +41,12 @@ public class DiscountService extends AbstractService {
         d.setActive(d.isActive());
         discountRepository.save(d);
 
-        return mapper.convertValue(d , DiscountInfoDTO.class);
+        return mapper.map(d , DiscountInfoDTO.class);
     }
     public DiscountInfoDTO getById(int id) {
         Optional<Discount> discount = discountRepository.findById(id);
         if (discount.isPresent()) {
-            return mapper.convertValue(discount.get(), DiscountInfoDTO.class);
+            return mapper.map(discount.get(), DiscountInfoDTO.class);
         }
         throw new NotFoundException("User not found");
     }

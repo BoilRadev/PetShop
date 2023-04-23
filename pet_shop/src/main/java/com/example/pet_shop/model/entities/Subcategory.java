@@ -20,7 +20,7 @@ public class Subcategory {
 
     @NotBlank
     @Size(min = 2, max = 50)
-    @Column
+    @Column(name = "name")
     private String name;
 
     @NotNull
@@ -28,4 +28,9 @@ public class Subcategory {
     @JoinColumn(name = "category_id")
     @JsonIgnoreProperties("categories")
     private Category category;
+
+    @Override
+    public String toString() {
+        return  name;
+    }
 }

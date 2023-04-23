@@ -18,5 +18,5 @@ public class ProductAddDTO {
     private int supplierId;
     private int subcategoryId;
     private int quantity;
-    private BigDecimal price;
+    private Double price;
 }

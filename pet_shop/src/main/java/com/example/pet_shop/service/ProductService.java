@@ -3,6 +3,8 @@ package com.example.pet_shop.service;
 import com.example.pet_shop.model.DTOS.productDTOs.*;
 import com.example.pet_shop.model.entities.*;
 import com.example.pet_shop.exceptions.NotFoundException;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +21,7 @@ public class ProductService extends AbstractService{
     public ProductInfoDTO viewProductById(int id) {
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){
-            return mapper.convertValue(product.get(), ProductInfoDTO.class);
+            return mapper.map(product.get(), ProductInfoDTO.class);
         }
         throw new NotFoundException("Product not found");
     }
@@ -27,7 +29,7 @@ public class ProductService extends AbstractService{
         Page<Product> productPage = productRepository.findAll(pageable);
         List<ProductInfoDTO> productInfoDTOList = productPage.getContent()
                 .stream()
-                .map(product -> mapper.convertValue(product, ProductInfoDTO.class))
+                .map(product -> mapper.map(product, ProductInfoDTO.class))
                 .collect(Collectors.toList());
         return new PageImpl<>(productInfoDTOList, pageable, productPage.getTotalElements());
     }
@@ -36,7 +38,7 @@ public class ProductService extends AbstractService{
         return productRepository.findAll()
                 .stream()
                 .filter(product -> product.getSubcategory().getId().equals(subId))
-                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
+                .map( product -> mapper.map( product ,ProductInfoDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -44,27 +46,12 @@ public class ProductService extends AbstractService{
         return productRepository.findAll()
                 .stream()
                 .filter(product -> product.getName().toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT)))
-                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    public List<ProductInfoDTO> sortAscending() {
-        return productRepository.findAll()
-                .stream()
-                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
-                .sorted()
-                .collect(Collectors.toList());
-    }
-    public List<ProductInfoDTO> sortDescending() {
-        return productRepository.findAll()
-                .stream()
-                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
-                .sorted((o1, o2) -> o2.getPrice().compareTo(o1.getPrice()))
+                .map( product -> mapper.map( product ,ProductInfoDTO.class))
                 .collect(Collectors.toList());
     }
 
     public ProductInfoDTO addProduct(ProductAddDTO dto) {
-        Product product = mapper.convertValue(dto, Product.class);
+        Product product = mapper.map(dto, Product.class);
 
         product.setSupplier(getSupplierById(dto.getSupplierId()));
         product.setSubcategory(getSubcategoryById(dto.getSubcategoryId()));
@@ -73,7 +60,7 @@ public class ProductService extends AbstractService{
         product.setQuantity(dto.getQuantity());
         product.setPrice(dto.getPrice());
 
-        ProductInfoDTO productInfoDTO = mapper.convertValue(product, ProductInfoDTO.class);
+        ProductInfoDTO productInfoDTO = mapper.map(product, ProductInfoDTO.class);
         productRepository.save(product);
         productInfoDTO.setId(product.getId());
         return productInfoDTO;
@@ -104,7 +91,7 @@ public class ProductService extends AbstractService{
         productRepository.save(product);
         ProductInfoDTO infoDto  = new ProductInfoDTO();
         infoDto.setId(id);
-        return mapper.convertValue(product, ProductInfoDTO.class);
+        return mapper.map(product, ProductInfoDTO.class);
     }
 
     private Supplier getSupplierById(int supplierId) {

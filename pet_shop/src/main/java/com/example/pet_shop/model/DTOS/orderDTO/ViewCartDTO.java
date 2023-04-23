@@ -14,7 +14,7 @@ import java.util.List;
 public class ViewCartDTO {
 
     private List<ViewProductCartDTO> checkCart = new ArrayList<>();
-    private BigDecimal grossValue;
+    private Double grossValue;
 
 
 }

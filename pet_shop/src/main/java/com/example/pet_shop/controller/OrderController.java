@@ -33,18 +33,20 @@ public class OrderController extends AbstractController {
         session.setAttribute("cart", cart);
     }
 
-    @PostMapping("/orders/create")
-    public ResponseEntity<?> creatOrder(@Valid @RequestBody OrderPayDTO dto, HttpSession session) {
-
-        if (session.getAttribute("cart") != null) {
-            CartDTO cart = (CartDTO) session.getAttribute("cart");
-            orderService.createOrder(logger, cart, dto);
-
-        } else {
-            throw new BadRequestException("Nothing in cart");
-        }
-        return ResponseEntity.ok().body("Order created successfully.");
-    }
+//    @PostMapping("/orders/create")
+//    public ResponseEntity<?> creatOrder(@Valid @RequestBody OrderPayDTO dto, HttpSession session) {
+//
+//        if (session.getAttribute("cart") != null) {
+//            System.out.println(session.getAttribute("cart"));
+//            CartDTO cart = (CartDTO) session.getAttribute("cart");
+//            System.out.println(cart.getCart().entrySet());
+//            orderService.createOrder(logger, cart, dto);
+//
+//        } else {
+//            throw new BadRequestException("Nothing in cart");
+//        }
+//        return ResponseEntity.ok().body("Order created successfully.");
+//    }
     @DeleteMapping("/orders/{productId}")
     public void removeFromCart(@PathVariable int productId,HttpSession session){
 

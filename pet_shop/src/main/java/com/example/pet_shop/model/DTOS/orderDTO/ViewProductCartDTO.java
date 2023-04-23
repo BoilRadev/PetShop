@@ -13,5 +13,5 @@ public class ViewProductCartDTO {
 
     private String name;
     private int quantity;
-    private BigDecimal price;
+    private Double price;
 }

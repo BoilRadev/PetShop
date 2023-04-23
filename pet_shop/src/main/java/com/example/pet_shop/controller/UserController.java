@@ -20,6 +20,7 @@ public class UserController extends AbstractController {
 
     @PostMapping("/users")
     public ResponseEntity<UserWithoutPassDTO> registerUser(@Valid @RequestBody RegisterDTO dto) {
+        System.out.println(dto);
         UserWithoutPassDTO user = userService.register(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }

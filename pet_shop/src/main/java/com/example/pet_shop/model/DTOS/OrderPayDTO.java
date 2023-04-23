@@ -17,12 +17,12 @@ public class OrderPayDTO {
 
         @DecimalMin(value = "1", message = "Payment method ID should be 1 for Cash.")
         @DecimalMax(value = "2", message = "Payment method ID should be 2 for MasterCard.")
-        private BigDecimal paymentMethodId;
+        private int paymentMethodId;
 
         public String getPaymentMethodName() {
-            if (paymentMethodId.intValue() == 1) {
+            if (paymentMethodId == 1) {
                 return "Cash";
-            } else if (paymentMethodId.intValue() == 2) {
+            } else if (paymentMethodId == 2) {
                 return "MasterCard";
             } else {
                 return "Unknown";

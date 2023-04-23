@@ -18,8 +18,8 @@ public class OrderInfoDTO {
     private int statusId;
     private int paymentMethodId;
     private LocalDateTime createdAt;
-    private BigDecimal grossValue;
-    private BigDecimal discountAmount;
+    private Double grossValue;
+    private Double discountAmount;
     private Map<Product , Integer> userCart;
     private boolean isPaid;
 }

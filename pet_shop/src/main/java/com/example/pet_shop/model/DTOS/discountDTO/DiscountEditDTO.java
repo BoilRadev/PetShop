@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class DiscountEditDTO {
 
-    private BigDecimal percent;
+    private Double percent;
     private String description;
     private LocalDateTime fromDate;
     private LocalDateTime toDate;

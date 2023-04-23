@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -31,25 +32,23 @@ public class ProductController extends AbstractController {
     }
 
     @GetMapping("/products/filter/{subcategory-id}")
-    public List<ProductInfoDTO> filter(@PathVariable("subcategory-id") int subId){
+    public List<ProductInfoDTO> filter(@PathVariable("subcategory-id") int subId, @RequestParam(value = "order", defaultValue = "asc") String order) {
+        List<ProductInfoDTO> filteredProducts = productService.filter(subId);
 
-        return productService.filter(subId);
+        if (order.equalsIgnoreCase("asc")) {
+            filteredProducts.sort(Comparator.comparing(ProductInfoDTO::getPrice));
+        } else if (order.equalsIgnoreCase("desc")) {
+            filteredProducts.sort(Comparator.comparing(ProductInfoDTO::getPrice).reversed());
+        } else {
+            throw new BadRequestException("Invalid sort order");
+        }
+
+        return filteredProducts;
     }
 
     @GetMapping("/products/search")
     public List<ProductInfoDTO> search(@RequestParam(value = "name") String name){
         return productService.search(name);
-    }
-
-    @GetMapping("/products/sort")
-    public List<ProductInfoDTO> sortProductsByOrder(@RequestParam(value = "order", defaultValue = "asc") String order) {
-        if (order.equalsIgnoreCase("asc")) {
-            return productService.sortAscending();
-        } else if (order.equalsIgnoreCase("desc")) {
-            return productService.sortDescending();
-        } else {
-            throw new BadRequestException("Invalid sort order");
-        }
     }
 
     @PostMapping("/products")

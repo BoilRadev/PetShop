@@ -3,10 +3,7 @@ package com.example.pet_shop.model.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,6 +15,7 @@ import java.util.Set;
 @Table(name = "orders")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Order implements Comparable{
 
     @Id
@@ -40,22 +38,22 @@ public class Order implements Comparable{
     private PaymentMethod paymentMethod;
     @OneToOne(mappedBy = "order")
     private Payment payment;
-    @Column
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column
-    private BigDecimal grossValue;
+    @Column(name = "gross_value")
+    private Double grossValue;
 
     @Column(name = "discount_amount")
-    private BigDecimal discountAmount;
+    private Double discountAmount;
 
-    @Column
-    private BigDecimal netValue;
+    @Column(name = "net_value")
+    private Double netValue;
 
-    @Column
+    @Column(name = "address")
     private String address;
 
-    @Column
+    @Column(name = "is_paid")
     private boolean isPaid;
     @ManyToMany
     @JoinTable(
