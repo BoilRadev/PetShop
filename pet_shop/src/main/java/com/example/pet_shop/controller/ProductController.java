@@ -1,5 +1,6 @@
 package com.example.pet_shop.controller;
 
+import com.example.pet_shop.model.DTOS.discountDTO.DiscountAddDTO;
 import com.example.pet_shop.model.DTOS.productDTOs.*;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.UnauthorizedException;
@@ -83,4 +84,6 @@ public class ProductController extends AbstractController {
         }
         productService.deleteProduct(id);
     }
+
+
 }

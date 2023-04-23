@@ -53,6 +53,7 @@ public class Product implements Comparable{
 
     @ManyToOne
     @JoinColumn(name = "discount_id")
+    @JsonIgnoreProperties("discounts")
     private Discount discount;
 
 
@@ -73,5 +74,6 @@ public class Product implements Comparable{
     public int hashCode() {
         return Objects.hash(id);
     }
+
 
 }

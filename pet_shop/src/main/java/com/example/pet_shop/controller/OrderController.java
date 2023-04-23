@@ -3,12 +3,16 @@ import com.example.pet_shop.model.DTOS.OrderPayDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.PaymentRequest;
 import com.example.pet_shop.model.DTOS.orderDTO.ViewCartDTO;
+import com.example.pet_shop.model.entities.Order;
 import com.example.pet_shop.model.entities.OrderStatus;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.service.OrderService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,11 +96,18 @@ public class OrderController extends AbstractController {
     @PostMapping("/orders/payments")
     public ResponseEntity<?> payOrder(@RequestBody PaymentRequest paymentRequest){
 
+
+        orderService.payOrder(paymentRequest,logger);
+        return ResponseEntity.ok().body("Order successfully paid.");
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<Page<Order>> viewOrders(@PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
-        orderService.payOrder(paymentRequest,logger);
-        return ResponseEntity.ok().body("Order successfully paid.");
+        Page<Order> orders = orderService.getOrdersBy(logger.id(), pageable);
+        return ResponseEntity.ok(orders);
     }
 
 

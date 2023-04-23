@@ -1,5 +1,7 @@
 package com.example.pet_shop.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +41,7 @@ public class Discount {
     private boolean isActive;
 
     @OneToMany(mappedBy = "discount")
+    @JsonIgnore
     private List<Product> products = new ArrayList<>();
 }
 

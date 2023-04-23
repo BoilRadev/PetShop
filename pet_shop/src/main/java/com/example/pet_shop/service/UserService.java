@@ -5,13 +5,15 @@ import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.exceptions.UnauthorizedException;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,8 +23,6 @@ public class UserService extends AbstractService{
 
     @Autowired
     private BCryptPasswordEncoder encoder;
-    @Autowired
-    protected ModelMapper mapperTest;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -33,22 +33,20 @@ public class UserService extends AbstractService{
         if(userRepository.existsByEmail(dto.getEmail())){
             throw new BadRequestException("Email already exists!");
         }
-//        User u = mapper.convertValue(dto, User.class);
-        User u = mapperTest.map(dto, User.class);
-        System.out.println(u);
+        User u = mapper.convertValue(dto, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
-        u.setCreatedAt(LocalDateTime.now());
-//        u.setAdmin(false);
-        u.setSubscribed(false);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        u.setCreatedAt(LocalDateTime.parse(LocalDateTime.now().format(formatter)));
+        u.setAdmin(dto.isAdmin());
+        u.setSubscribed(dto.isSubscribed());
+        u.setPersonalDiscount(BigDecimal.valueOf(dto.isSubscribed() ? 5 : 0));
         userRepository.save(u);
         logger.info("User with email : "+ u.getEmail() + "have registered");
-        return mapper.map(u, UserWithoutPassDTO.class);
+        return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
 
     public UserWithoutPassDTO login(LoginDTO dto) {
-        System.out.println("before");
         Optional<User> u = userRepository.getByEmail(dto.getEmail());
-        System.out.println("after");
         if (u.isEmpty()) {
             throw new UnauthorizedException("Wrong credentials");
         }
@@ -56,7 +54,7 @@ public class UserService extends AbstractService{
             throw new UnauthorizedException("Wrong credentials");
         }
         logger.info(u.get().getEmail() + "have logged in");
-        return mapper.map(u.get(), UserWithoutPassDTO.class);
+        return mapper.convertValue(u.get(), UserWithoutPassDTO.class);
     }
 
     public UserWithoutPassDTO edit(RegisterDTO dto, int userId) {
@@ -75,12 +73,12 @@ public class UserService extends AbstractService{
         u.setSubscribed(dto.isSubscribed());
 
         userRepository.save(u);
-        return mapper.map(u, UserWithoutPassDTO.class);
+        return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
     public UserWithoutPassDTO getById(int id) {
         Optional<User> u = userRepository.findById(id);
         if(u.isPresent()){
-            return mapper.map(u.get(), UserWithoutPassDTO.class);
+            return mapper.convertValue(u.get(), UserWithoutPassDTO.class);
         }
         throw new NotFoundException("User not found");
     }
@@ -88,7 +86,7 @@ public class UserService extends AbstractService{
     public List<UserWithoutPassDTO> getAll() {
         return userRepository.findAll()
                 .stream()
-                .map( u -> mapper.map(u, UserWithoutPassDTO.class))
+                .map( u -> mapper.convertValue(u, UserWithoutPassDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -99,12 +97,14 @@ public class UserService extends AbstractService{
     public void subscribeUser(int userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         user.setSubscribed(true);
+        user.setPersonalDiscount(BigDecimal.valueOf(5));
         userRepository.save(user);
     }
 
     public void unSubscribeUser(int userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         user.setSubscribed(false);
+        user.setPersonalDiscount(BigDecimal.valueOf(5));
         userRepository.save(user);
     }
 }

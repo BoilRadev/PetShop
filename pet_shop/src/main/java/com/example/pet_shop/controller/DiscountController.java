@@ -5,6 +5,7 @@ import com.example.pet_shop.model.DTOS.discountDTO.DiscountAddDTO;
 import com.example.pet_shop.model.DTOS.discountDTO.DiscountInfoDTO;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.UnauthorizedException;
+import com.example.pet_shop.model.DTOS.productDTOs.ProductInfoDTO;
 import com.example.pet_shop.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +18,17 @@ public class DiscountController extends AbstractController {
     private DiscountService discountService;
     @Autowired
     protected Logger logger;
-    @PostMapping("/discounts")
-    public DiscountInfoDTO addDiscount(@RequestBody DiscountAddDTO dto){
+
+    @PostMapping("/products/{productId}/discounts")
+    public DiscountInfoDTO addDiscountToProduct(@PathVariable int productId, @RequestBody DiscountAddDTO dto){
         if (!logger.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
         if (!logger.isAdmin()) {
             throw new UnauthorizedException("You are not admin");
         }
-        return discountService.addDiscount(dto);
+
+        return discountService.addDiscount(dto,productId);
     }
 
     @PutMapping("/discounts/{id}")
