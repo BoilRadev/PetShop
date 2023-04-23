@@ -1,6 +1,9 @@
 package com.example.pet_shop.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,17 +23,13 @@ public class Subcategory {
 
     @NotBlank
     @Size(min = 2, max = 50)
-    @Column(name = "name")
+    @Column
     private String name;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @JsonIgnoreProperties("categories")
+    @JsonBackReference
     private Category category;
 
-    @Override
-    public String toString() {
-        return  name;
-    }
 }

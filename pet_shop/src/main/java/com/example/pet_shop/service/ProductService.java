@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class ProductService extends AbstractService{
     public ProductInfoDTO viewProductById(int id) {
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){
-            return mapper.map(product.get(), ProductInfoDTO.class);
+            return mapper.convertValue(product.get(), ProductInfoDTO.class);
         }
         throw new NotFoundException("Product not found");
     }
@@ -29,7 +30,7 @@ public class ProductService extends AbstractService{
         Page<Product> productPage = productRepository.findAll(pageable);
         List<ProductInfoDTO> productInfoDTOList = productPage.getContent()
                 .stream()
-                .map(product -> mapper.map(product, ProductInfoDTO.class))
+                .map(product -> mapper.convertValue(product, ProductInfoDTO.class))
                 .collect(Collectors.toList());
         return new PageImpl<>(productInfoDTOList, pageable, productPage.getTotalElements());
     }
@@ -38,7 +39,7 @@ public class ProductService extends AbstractService{
         return productRepository.findAll()
                 .stream()
                 .filter(product -> product.getSubcategory().getId().equals(subId))
-                .map( product -> mapper.map( product ,ProductInfoDTO.class))
+                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -46,21 +47,21 @@ public class ProductService extends AbstractService{
         return productRepository.findAll()
                 .stream()
                 .filter(product -> product.getName().toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT)))
-                .map( product -> mapper.map( product ,ProductInfoDTO.class))
+                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
                 .collect(Collectors.toList());
     }
 
     public ProductInfoDTO addProduct(ProductAddDTO dto) {
-        Product product = mapper.map(dto, Product.class);
+        Product product = mapper.convertValue(dto, Product.class);
 
         product.setSupplier(getSupplierById(dto.getSupplierId()));
         product.setSubcategory(getSubcategoryById(dto.getSubcategoryId()));
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setQuantity(dto.getQuantity());
-        product.setPrice(dto.getPrice());
+        product.setPrice(BigDecimal.valueOf(dto.getPrice()));
 
-        ProductInfoDTO productInfoDTO = mapper.map(product, ProductInfoDTO.class);
+        ProductInfoDTO productInfoDTO = mapper.convertValue(product, ProductInfoDTO.class);
         productRepository.save(product);
         productInfoDTO.setId(product.getId());
         return productInfoDTO;
@@ -81,17 +82,16 @@ public class ProductService extends AbstractService{
             throw new NotFoundException("Product not found");
         }
         Product product = optionalProduct.get();
-        product.setSupplier(getSupplierById(dto.getSupplierId()));
         product.setSubcategory(getSubcategoryById(dto.getSubcategoryId()));
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setQuantity(dto.getQuantity());
-        product.setPrice(dto.getPrice());
-
+        product.setPrice(BigDecimal.valueOf(dto.getPrice()));
+        product.setSupplier(getSupplierById(dto.getSupplierId()));
         productRepository.save(product);
         ProductInfoDTO infoDto  = new ProductInfoDTO();
         infoDto.setId(id);
-        return mapper.map(product, ProductInfoDTO.class);
+        return mapper.convertValue(product, ProductInfoDTO.class);
     }
 
     private Supplier getSupplierById(int supplierId) {

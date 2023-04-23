@@ -20,11 +20,11 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "supplier_name")
+    @Column
     private String supplierName;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Product> products = new ArrayList<>();
 
     @Override

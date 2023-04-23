@@ -1,5 +1,7 @@
 package com.example.pet_shop.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,48 +25,49 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "email")
+    @Column
     private String email;
 
-    @Column(name = "password")
+    @Column
     private String password;
 
-    @Column(name = "first_name")
+    @Column
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column
     private String lastName;
 
-    @Column(name = "phone_number")
+    @Column
     private String phoneNumber;
 
-    @Column(name = "personal_discount")
-    private Double personalDiscount;
+    @Column
+    private BigDecimal personalDiscount;
 
-    @Column(name = "town")
+    @Column
     private String town;
 
-    @Column(name = "address")
+    @Column
     private String address;
 
-    @Column(name = "created_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column
     private LocalDateTime createdAt;
 
-    @Column(name = "deleted_at")
+    @Column
     private LocalDateTime deletedAt;
 
-    @Column(name = "is_subscribed")
+    @Column
     private boolean isSubscribed;
 
-    @Column(name = "is_admin")
+    @Column
     private boolean isAdmin;
 
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    @JsonIgnoreProperties
     private Set<Payment> payments;
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonIgnoreProperties
     private Set<Order> orders;
     @Override
     public boolean equals(Object o) {

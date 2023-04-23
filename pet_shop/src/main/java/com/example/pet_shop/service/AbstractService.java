@@ -27,7 +27,7 @@ public abstract class AbstractService {
     @Autowired
     protected PaymentMethodRepository paymentMethodRepository;
     @Autowired
-    protected ModelMapper mapper;
+    protected ObjectMapper mapper;
     @Autowired
     protected CategoryRepository categoryRepository;
     @Autowired

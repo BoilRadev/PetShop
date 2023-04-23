@@ -16,5 +16,5 @@ import java.util.Map;
 @ToString
 public class CartDTO {
 
-    private Map<ProductInfoDTO, Integer> cart = new HashMap<>();
+    private Map<Product, Integer> cart = new HashMap<>();
 }

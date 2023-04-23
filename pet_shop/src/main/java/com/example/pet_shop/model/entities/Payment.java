@@ -1,6 +1,8 @@
 package com.example.pet_shop.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,26 +25,26 @@ public class Payment {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonIgnore
     private Order order;
 
-    @Column(name = "created_at")
+    @Column
     private LocalDateTime createdAt;
 
-    @Column(name = "amount")
-    private Double amount;
+    @Column
+    private BigDecimal amount;
 
-    @Column(name = "transaction_id")
+    @Column
     private String transactionId;
 
-    @Column(name = "processed_at")
+    @Column
     private LocalDateTime processedAt;
 
-    @Column(name = "status")
+    @Column
     private String status;
 }

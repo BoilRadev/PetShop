@@ -20,7 +20,7 @@ public class DiscountService extends AbstractService {
 
     public DiscountInfoDTO addDiscount(DiscountAddDTO dto, int productId) {
         Discount discount = mapper.convertValue(dto, Discount.class);
-        discount.setPercent(dto.getPercent());
+        discount.setPercent(BigDecimal.valueOf(dto.getPercent()));
         discount.setDescription(dto.getDescription());
         discount.setFromDate(LocalDate.from(dto.getFromDate()));
         discount.setToDate(LocalDate.from(dto.getToDate()));

@@ -48,10 +48,10 @@ public class RegisterDTO {
 
     private LocalDateTime createdAt;
 
-    @NotBlank
+    @NotNull
     private boolean isSubscribed;
 
-    @NotBlank
+    @NotNull
     private boolean isAdmin;
 }
 

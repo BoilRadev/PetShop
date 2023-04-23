@@ -35,8 +35,7 @@ public class UserService extends AbstractService{
         }
         User u = mapper.convertValue(dto, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        u.setCreatedAt(LocalDateTime.parse(LocalDateTime.now().format(formatter)));
+        u.setCreatedAt(LocalDateTime.now());
         u.setAdmin(dto.isAdmin());
         u.setSubscribed(dto.isSubscribed());
         u.setPersonalDiscount(BigDecimal.valueOf(dto.isSubscribed() ? 5 : 0));

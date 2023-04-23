@@ -37,20 +37,18 @@ public class OrderController extends AbstractController {
         session.setAttribute("cart", cart);
     }
 
-//    @PostMapping("/orders/create")
-//    public ResponseEntity<?> creatOrder(@Valid @RequestBody OrderPayDTO dto, HttpSession session) {
-//
-//        if (session.getAttribute("cart") != null) {
-//            System.out.println(session.getAttribute("cart"));
-//            CartDTO cart = (CartDTO) session.getAttribute("cart");
-//            System.out.println(cart.getCart().entrySet());
-//            orderService.createOrder(logger, cart, dto);
-//
-//        } else {
-//            throw new BadRequestException("Nothing in cart");
-//        }
-//        return ResponseEntity.ok().body("Order created successfully.");
-//    }
+    @PostMapping("/orders/create")
+    public ResponseEntity<?> creatOrder(@Valid @RequestBody OrderPayDTO dto, HttpSession session) {
+
+        if (session.getAttribute("cart") != null) {
+            CartDTO cart = (CartDTO) session.getAttribute("cart");
+            orderService.createOrder(logger, cart, dto);
+
+        } else {
+            throw new BadRequestException("Nothing in cart");
+        }
+        return ResponseEntity.ok().body("Order created successfully.");
+    }
     @DeleteMapping("/orders/{productId}")
     public void removeFromCart(@PathVariable int productId,HttpSession session){
 
@@ -96,19 +94,17 @@ public class OrderController extends AbstractController {
     @PostMapping("/orders/payments")
     public ResponseEntity<?> payOrder(@RequestBody PaymentRequest paymentRequest){
 
-
+        if (!logger.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
         orderService.payOrder(paymentRequest,logger);
         return ResponseEntity.ok().body("Order successfully paid.");
     }
 
     @GetMapping("/orders")
     public ResponseEntity<Page<Order>> viewOrders(@PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
         Page<Order> orders = orderService.getOrdersBy(logger.id(), pageable);
         return ResponseEntity.ok(orders);
     }
-
 
 }

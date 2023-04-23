@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -86,8 +87,7 @@ public class OrderService extends AbstractService {
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-// calculate net value
-        BigDecimal netValue = grossValue.multiply(BigDecimal.valueOf(0.8)); // net value is 20% less than gross value
+        BigDecimal netValue = grossValue.multiply(BigDecimal.valueOf(0.8));
 
         BigDecimal personalDiscount = order.getUser().getPersonalDiscount();
         if (personalDiscount != null) {
@@ -95,7 +95,6 @@ public class OrderService extends AbstractService {
             grossValue = grossValue.subtract(personalDiscountAmount);
         }
 
-// set order values
         order.setGrossValue(grossValue);
         order.setDiscountAmount(discountAmount);
         order.setNetValue(netValue);
@@ -106,13 +105,11 @@ public class OrderService extends AbstractService {
     }
 
     public void clearCart(CartDTO cart) {
-        Map<Product, Integer> products = cart.getCart();
 
-        for (Product p : products.keySet()) {
-            p.setQuantity(p.getQuantity() + products.get(p));
+        cart.getCart().forEach((p, quantity) -> {
+            p.setQuantity(p.getQuantity() + quantity);
             productRepository.save(p);
-        }
-
+        });
         cart.getCart().clear();
     }
 

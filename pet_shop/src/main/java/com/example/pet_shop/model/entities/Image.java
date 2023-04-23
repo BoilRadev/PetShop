@@ -16,11 +16,11 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "url")
+    @Column
     private String url;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonIgnoreProperties
+    @JsonIgnore
     private Product product;
 }

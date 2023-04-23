@@ -1,6 +1,8 @@
 package com.example.pet_shop.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,44 +26,48 @@ public class Order implements Comparable{
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "status_id")
-    @JsonBackReference
+    @JsonIgnore
     private OrderStatus orderStatus;
 
     @ManyToOne
     @JoinColumn(name = "payment_method_id")
-    @JsonBackReference
+    @JsonIgnore
     private PaymentMethod paymentMethod;
+
     @OneToOne(mappedBy = "order")
+    @JsonIgnore
     private Payment payment;
-    @Column(name = "created_at")
+
+    @Column
     private LocalDateTime createdAt;
 
-    @Column(name = "gross_value")
-    private Double grossValue;
+    @Column
+    private BigDecimal grossValue;
 
-    @Column(name = "discount_amount")
-    private Double discountAmount;
+    @Column
+    private BigDecimal discountAmount;
 
-    @Column(name = "net_value")
-    private Double netValue;
+    @Column
+    private BigDecimal netValue;
 
-    @Column(name = "address")
+    @Column
     private String address;
 
-    @Column(name = "is_paid")
+    @Column
     private boolean isPaid;
+
     @ManyToMany
     @JoinTable(
             name = "orders_have_products",
             joinColumns = {@JoinColumn(name = "order_id")},
             inverseJoinColumns = {@JoinColumn(name = "product_id")}
     )
-    @JsonManagedReference
+    @JsonIgnoreProperties
     private Set<Product> products;
 
     @Override

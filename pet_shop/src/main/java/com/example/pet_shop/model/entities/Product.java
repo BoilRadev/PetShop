@@ -3,6 +3,7 @@ package com.example.pet_shop.model.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,28 +26,28 @@ public class Product implements Comparable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name")
+    @Column
     private String name;
 
-    @Column(name = "description")
+    @Column
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "supplier_id")
-    @JsonIgnore
-    @JsonBackReference
+    @JsonIgnoreProperties
     private Supplier supplier;
 
     @ManyToOne
     @JoinColumn(name = "subcategory_id")
+    @JsonIgnoreProperties
     private Subcategory subcategory;
 
 
-    @Column(name = "quantity")
+    @Column
     private int quantity;
 
-    @Column(name = "price")
-    private Double price;
+    @Column
+    private BigDecimal price;
 
     @OneToMany(mappedBy = "product")
     @JsonIgnoreProperties("images")
@@ -56,6 +58,9 @@ public class Product implements Comparable{
     @JsonIgnoreProperties("discounts")
     private Discount discount;
 
+    @ManyToMany(mappedBy = "products")
+    @JsonBackReference
+    private Set<Order> orders;
 
     @Override
     public int compareTo(@NotNull Object o) {
