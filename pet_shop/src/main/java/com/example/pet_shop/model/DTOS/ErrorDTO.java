@@ -13,5 +13,5 @@ public class ErrorDTO{
 
     private Object msg;
     private int status;
-    private LocalDateTime time;
+    private String time;
 }

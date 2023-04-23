@@ -1,17 +1,15 @@
 package com.example.pet_shop.service;
 
 import com.example.pet_shop.model.DTOS.discountDTO.DiscountAddDTO;
+import com.example.pet_shop.model.DTOS.discountDTO.DiscountEditDTO;
 import com.example.pet_shop.model.DTOS.discountDTO.DiscountInfoDTO;
 import com.example.pet_shop.model.entities.Discount;
 import com.example.pet_shop.exceptions.BadRequestException;
-import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.model.entities.Product;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,28 +40,21 @@ public class DiscountService extends AbstractService {
             throw new BadRequestException("Product not found");
         }
     }
-    public DiscountInfoDTO editDiscount(int id) {
+    public DiscountInfoDTO editDiscount(int id, DiscountEditDTO dto) {
         Optional<Discount> opt = discountRepository.findById(id);
         if(opt.isEmpty()){
             throw new BadRequestException("No discount found with id: " + id);
         }
 
         Discount d = opt.get();
-        d.setDescription(d.getDescription());
-        d.setFromDate(d.getFromDate());
-        d.setToDate(d.getToDate());
-        d.setPercent(d.getPercent());
-        d.setActive(d.isActive());
+        d.setDescription(dto.getDescription());
+        d.setFromDate(dto.getFromDate());
+        d.setToDate(dto.getToDate());
+        d.setPercent(dto.getPercent());
+        d.setActive(dto.isActive());
         discountRepository.save(d);
 
         return mapper.convertValue(d , DiscountInfoDTO.class);
-    }
-    public DiscountInfoDTO getById(int id) {
-        Optional<Discount> discount = discountRepository.findById(id);
-        if (discount.isPresent()) {
-            return mapper.convertValue(discount.get(), DiscountInfoDTO.class);
-        }
-        throw new NotFoundException("User not found");
     }
 
     public void delete(int id) {

@@ -20,28 +20,20 @@ public class CategoryController extends AbstractController {
     @Autowired
     private CategoryService categoryService;
     @Autowired
-    protected Logger logger;
+    protected LoginManager loginManager;
 
     @PostMapping
     public ResponseEntity<Category> addCategory(@RequestBody @Valid CategoryDTO categoryDto) {
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!logger.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
+
+        checkLoggedInUser();
         Category category = categoryService.createCategory(categoryDto);
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(@PathVariable int categoryId) {
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!logger.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
+
+        checkLoggedInUser();
         categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -50,6 +42,14 @@ public class CategoryController extends AbstractController {
     public ResponseEntity<List<Subcategory>> getSubcategoriesByCategoryId(@PathVariable int categoryId) {
         List<Subcategory> subcategories = categoryService.getSubcategoriesByCategoryId(categoryId);
         return new ResponseEntity<>(subcategories, HttpStatus.OK);
+    }
+    private void checkLoggedInUser() {
+        if (!loginManager.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!loginManager.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
     }
 }
 

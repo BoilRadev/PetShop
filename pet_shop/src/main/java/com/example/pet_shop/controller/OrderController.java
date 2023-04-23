@@ -19,16 +19,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class OrderController extends AbstractController {
     @Autowired
-    protected Logger logger;
+    protected LoginManager loginManager;
     @Autowired
     private OrderService orderService;
 
     @PutMapping("/orders/{productId}")
     public void addToCart(@PathVariable int productId, HttpSession session) {
 
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
+        getLoggedUserId();
         CartDTO cart = new CartDTO();
         if (session.getAttribute("cart") != null) {
             cart = (CartDTO) session.getAttribute("cart");
@@ -42,7 +40,7 @@ public class OrderController extends AbstractController {
 
         if (session.getAttribute("cart") != null) {
             CartDTO cart = (CartDTO) session.getAttribute("cart");
-            orderService.createOrder(logger, cart, dto);
+            orderService.createOrder(loginManager, cart, dto);
 
         } else {
             throw new BadRequestException("Nothing in cart");
@@ -52,9 +50,7 @@ public class OrderController extends AbstractController {
     @DeleteMapping("/orders/{productId}")
     public void removeFromCart(@PathVariable int productId,HttpSession session){
 
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
+        getLoggedUserId();
         CartDTO cart = new CartDTO();
         if (session.getAttribute("cart") != null) {
             cart = (CartDTO) session.getAttribute("cart");
@@ -77,34 +73,36 @@ public class OrderController extends AbstractController {
 
     @PutMapping("/orders/{id}/status")
     public void editStatus(@PathVariable int id){
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
+        getLoggedUserId();
         orderService.editStatus(id);
     }
 
     @GetMapping("/orders/{id}/status")
     public OrderStatus getStatus(@PathVariable int id){
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        return orderService.getStatus(id,logger);
+        getLoggedUserId();
+        return orderService.getStatus(id, loginManager);
     }
 
     @PostMapping("/orders/payments")
     public ResponseEntity<?> payOrder(@RequestBody PaymentRequest paymentRequest){
 
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        orderService.payOrder(paymentRequest,logger);
+        getLoggedUserId();
+        orderService.payOrder(paymentRequest, loginManager);
         return ResponseEntity.ok().body("Order successfully paid.");
     }
 
     @GetMapping("/orders")
     public ResponseEntity<Page<Order>> viewOrders(@PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
-        Page<Order> orders = orderService.getOrdersBy(logger.id(), pageable);
+        Page<Order> orders = orderService.getOrdersBy(loginManager.id(), pageable);
         return ResponseEntity.ok(orders);
+    }
+
+    private int getLoggedUserId() {
+        if (!loginManager.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        } else {
+            return loginManager.id();
+        }
     }
 
 }

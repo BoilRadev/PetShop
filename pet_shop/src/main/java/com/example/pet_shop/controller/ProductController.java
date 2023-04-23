@@ -1,6 +1,5 @@
 package com.example.pet_shop.controller;
 
-import com.example.pet_shop.model.DTOS.discountDTO.DiscountAddDTO;
 import com.example.pet_shop.model.DTOS.productDTOs.*;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.UnauthorizedException;
@@ -17,7 +16,7 @@ import java.util.List;
 @RestController
 public class ProductController extends AbstractController {
     @Autowired
-    protected Logger logger;
+    protected LoginManager loginManager;
     @Autowired
     private ProductService productService;
 
@@ -54,36 +53,28 @@ public class ProductController extends AbstractController {
 
     @PostMapping("/products")
     public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto){
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!logger.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
+        checkAuthorization();
         return productService.addProduct(dto);
     }
 
     @PutMapping("/products/{id}")
     public void editProduct(@RequestBody ProductAddDTO productDto, @PathVariable int id) {
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!logger.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
+        checkAuthorization();
         productService.editProduct(productDto, id);
     }
 
     @DeleteMapping("/products/{id}")
     public void deleteProduct(@PathVariable int id){
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!logger.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
+        checkAuthorization();
         productService.deleteProduct(id);
     }
 
-
+    private void checkAuthorization() {
+        if (!loginManager.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!loginManager.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
+    }
 }

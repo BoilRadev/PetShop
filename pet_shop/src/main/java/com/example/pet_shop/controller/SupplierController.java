@@ -15,29 +15,28 @@ public class SupplierController extends AbstractController {
     private SupplierService supplierService;
 
     @Autowired
-    protected Logger logger;
+    protected LoginManager loginManager;
+
     @PostMapping("/suppliers")
     public ResponseEntity<Void> addSupplier(@RequestBody SupplierDTO supplierDTO) {
-
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!logger.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
+        checkLoggedInUser();
         supplierService.addSupplier(supplierDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
     @DeleteMapping("/suppliers/{supplier-id}")
     public ResponseEntity<String> deleteSupplier(@PathVariable("supplier-id") int supplierId) {
-
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!logger.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
+        checkLoggedInUser();
         supplierService.deleteById(supplierId);
         return ResponseEntity.ok("successfully deleted");
+    }
+
+    private void checkLoggedInUser() {
+        if (!loginManager.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!loginManager.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
     }
 }

@@ -44,7 +44,7 @@ public abstract class AbstractController {
     private ErrorDTO generateErrorDTO(Object o, HttpStatus s){
         return ErrorDTO.builder()
                 .msg(o)
-                .time(LocalDateTime.now())
+                .time(LocalDateTime.now().toString())
                 .status(s.value())
                 .build();
     }

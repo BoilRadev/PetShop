@@ -23,28 +23,18 @@ public class SubcategoryController extends AbstractController {
     @Autowired
     private SubcategoryService subcategoryService;
     @Autowired
-    protected Logger logger;
+    protected LoginManager loginManager;
 
     @PostMapping
     public ResponseEntity<Subcategory> addSubcategory(@Valid @RequestBody SubcategoryDTO subcategoryDto) {
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!logger.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
+        checkLoggedInUser();
         Subcategory subcategory = subcategoryService.createSubcategory(subcategoryDto);
         return new ResponseEntity<>(subcategory, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{subcategoryId}")
     public ResponseEntity<Void> deleteSubcategory(@PathVariable int subcategoryId) {
-        if (!logger.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!logger.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
+        checkLoggedInUser();
         subcategoryService.deleteSubcategory(subcategoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -54,8 +44,18 @@ public class SubcategoryController extends AbstractController {
                                                                     @RequestParam(defaultValue = "0") int page,
                                                                     @RequestParam(defaultValue = "10") int size,
                                                                     @RequestParam(defaultValue = "id") String[] sort) {
+        checkLoggedInUser();
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         Page<Product> products = subcategoryService.getProductsBySubcategoryId(subcategoryId, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    private void checkLoggedInUser() {
+        if (!loginManager.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!loginManager.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
     }
 }

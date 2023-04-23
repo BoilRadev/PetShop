@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AdminController extends AbstractController {
     @Autowired
-    protected Logger logger;
+    protected LoginManager loginManager;
     @Autowired
     private final UserService userService;
     @Autowired
@@ -22,10 +22,10 @@ public class AdminController extends AbstractController {
 
     @DeleteMapping("/admin/users/{user-id}")
     public ResponseEntity<?> deleteUserById(@PathVariable("user-id") int userId) {
-        if (!logger.isLogged()) {
+        if (!loginManager.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
-        if (!logger.isAdmin()) {
+        if (!loginManager.isAdmin()) {
             throw new UnauthorizedException("You are not admin");
         }
         userService.deleteUser(userId);

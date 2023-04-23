@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class Logger extends AbstractController {
+public class LoginManager {
 
     private final HttpSession session;
 
     @Autowired
     private UserRepository repository;
 
-    public Logger(HttpSession session) {
+    public LoginManager(HttpSession session) {
         this.session = session;
     }
 

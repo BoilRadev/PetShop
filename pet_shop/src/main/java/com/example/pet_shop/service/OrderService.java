@@ -1,7 +1,6 @@
 package com.example.pet_shop.service;
 
-
-import com.example.pet_shop.controller.Logger;
+import com.example.pet_shop.controller.LoginManager;
 import com.example.pet_shop.model.DTOS.OrderPayDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
 import com.example.pet_shop.model.DTOS.orderDTO.PaymentRequest;
@@ -12,16 +11,15 @@ import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.model.repositories.OrderRepository;
 import com.example.pet_shop.model.repositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,12 +49,12 @@ public class OrderService extends AbstractService {
     }
 
 
-    public void createOrder(Logger logger, CartDTO cart, @Valid OrderPayDTO dto) {
+    public void createOrder(LoginManager loginManager, CartDTO cart, @Valid OrderPayDTO dto) {
         Order order = new Order();
-        order.setUser(userRepository.getUserById(logger.id()));
+        order.setUser(userRepository.getUserById(loginManager.id()));
         order.setPaymentMethod(paymentMethodRepository.findById(dto.getPaymentMethodId()).get());
         order.setOrderStatus(getOrderStatus("ACCEPTED"));
-        order.setAddress(userRepository.getUserById(logger.id()).getAddress());
+        order.setAddress(userRepository.getUserById(loginManager.id()).getAddress());
         order.setCreatedAt(LocalDateTime.now());
 
         // calculate gross value and discount amount
@@ -148,12 +146,12 @@ public class OrderService extends AbstractService {
         orderRepository.save(o);
     }
 
-    public OrderStatus getStatus(int id, Logger logger) {
+    public OrderStatus getStatus(int id, LoginManager loginManager) {
         Optional<Order> opt = orderRepository.findById(id);
         if (opt.isEmpty()) {
             throw new BadRequestException("No order found with id: " + id);
         }
-        if (logger.id() != orderRepository.findOrderByUserId(logger.id()).getId()) {
+        if (loginManager.id() != orderRepository.findOrderByUserId(loginManager.id()).getId()) {
             throw new BadRequestException("You can see only your own order status.");
         }
         Order o = opt.get();
@@ -199,13 +197,13 @@ public class OrderService extends AbstractService {
         }
         return optionalOrder.get();
     }
+        @Transactional
+    public void payOrder(PaymentRequest pm, LoginManager loginManager) {
 
-    public void payOrder(PaymentRequest pm, Logger logger) {
-
-        Order order = getOrderById(pm.getOrderId(),logger.id());
+        Order order = getOrderById(pm.getOrderId(),loginManager.id());
 
         Payment payment = new Payment();
-        payment.setUser(userRepository.getUserById(logger.id()));
+        payment.setUser(userRepository.getUserById(loginManager.id()));
 
         payment.setOrder(order);
         payment.setAmount(order.getGrossValue());
@@ -227,12 +225,12 @@ public class OrderService extends AbstractService {
     }
 
     public String transactionIdGenerator() {
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        String saltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
         while (salt.length() < 18) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
+            int index = (int) (rnd.nextFloat() * saltChars.length());
+            salt.append(saltChars.charAt(index));
         }
         String saltStr = salt.toString();
         return saltStr;

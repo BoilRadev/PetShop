@@ -7,6 +7,5 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface PaymentMethodRepository extends JpaRepository<PaymentMethod,Integer> {
-
-    Optional<PaymentMethod> findById(BigDecimal methodId);
+    
 }

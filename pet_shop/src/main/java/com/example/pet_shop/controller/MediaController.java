@@ -19,14 +19,14 @@ public class MediaController extends AbstractController {
     @Autowired
     private MediaService mediaService;
     @Autowired
-    protected Logger logger;
+    protected LoginManager loginManager;
 
     @PostMapping("/products/{productId}/media")
     public ResponseEntity<?> upload(@PathVariable int productId, @RequestParam("file") MultipartFile file) {
-        if (!logger.isLogged()) {
+        if (!loginManager.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
-        if (!logger.isAdmin()) {
+        if (!loginManager.isAdmin()) {
             throw new UnauthorizedException("You are not admin");
         }
         mediaService.upload(file, productId);
@@ -36,7 +36,7 @@ public class MediaController extends AbstractController {
     @SneakyThrows
     @GetMapping("/media/{fileName}")
     public void download(@PathVariable("fileName") String fileName, HttpServletResponse resp){
-        if (!logger.isLogged()) {
+        if (!loginManager.isLogged()) {
             throw new BadRequestException("You have to be logged in!");
         }
         File f = mediaService.download(fileName);
