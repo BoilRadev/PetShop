@@ -39,7 +39,7 @@ public class OrderService extends AbstractService {
         if (product.getQuantity() > 0) {
             if (!cart.getCart().containsKey(product)) {
                 cart.getCart().put(product, 1);
-            }else {
+            } else {
                 cart.getCart().put(product, cart.getCart().get(product) + 1);
             }
 
@@ -105,7 +105,7 @@ public class OrderService extends AbstractService {
     public void clearCart(CartDTO cart) {
 
         cart.getCart().forEach((p, quantity) -> {
-            p.setQuantity(p.getQuantity() + quantity);
+            p.setQuantity(p.getQuantity() - quantity);
             productRepository.save(p);
         });
         cart.getCart().clear();
@@ -183,24 +183,25 @@ public class OrderService extends AbstractService {
         return vcDTO;
     }
 
-    private Order getOrderById(int orderId,int loggerId) {
+    private Order getOrderById(int orderId, int loggerId) {
         System.out.println(orderId);
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isEmpty()) {
             throw new NotFoundException("Order not found.");
         }
-        if( optionalOrder.get().isPaid()){
+        if (optionalOrder.get().isPaid()) {
             throw new BadRequestException("Order is already paid");
         }
-        if (loggerId != optionalOrder.get().getUser().getId()){
+        if (loggerId != optionalOrder.get().getUser().getId()) {
             throw new BadRequestException("You can pay only your own orders.");
         }
         return optionalOrder.get();
     }
-        @Transactional
+
+    @Transactional
     public void payOrder(PaymentRequest pm, LoginManager loginManager) {
 
-        Order order = getOrderById(pm.getOrderId(),loginManager.id());
+        Order order = getOrderById(pm.getOrderId(), loginManager.id());
 
         Payment payment = new Payment();
         payment.setUser(userRepository.getUserById(loginManager.id()));
@@ -237,7 +238,7 @@ public class OrderService extends AbstractService {
     }
 
     public Page<Order> getOrdersBy(int id, Pageable pageable) {
-            return orderRepository.findAllByUserId(id,pageable);
+        return orderRepository.findAllByUserId(id, pageable);
 
     }
 }
