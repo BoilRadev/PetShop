@@ -19,9 +19,17 @@ public class UserController extends AbstractController {
     private UserService userService;
 
     @PostMapping("/users")
-    public ResponseEntity<UserWithoutPassDTO> registerUser(@Valid @RequestBody RegisterDTO dto) {
+    public ResponseEntity<UserWithoutPassDTO> register(@Valid @RequestBody RegisterDTO dto) {
         UserWithoutPassDTO user = userService.register(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
+    @GetMapping("/confirm")
+    public String confirmEmail(@RequestParam("token") String token){
+        if(userService.confirmEmail(token)){
+            return "Email confirmed";
+        }else {
+            return "Invalid confirmation";
+        }
     }
 
     @PostMapping("/users/login")

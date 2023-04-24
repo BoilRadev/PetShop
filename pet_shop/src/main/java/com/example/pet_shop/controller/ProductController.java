@@ -63,7 +63,7 @@ public class ProductController extends AbstractController {
         productService.editProduct(productDto, id);
     }
 
-    @DeleteMapping("/products/{product-id}")
+    @DeleteMapping("/products/{id}")
     public void deleteProduct(@PathVariable int id){
         checkAuthorization();
         productService.deleteProduct(id);

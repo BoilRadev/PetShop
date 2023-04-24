@@ -61,6 +61,12 @@ public class User {
     @Column
     private boolean isAdmin;
 
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+
+    @Column(name = "enable")
+    private boolean enable;
+
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     @JsonIgnoreProperties

@@ -7,6 +7,9 @@ import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.exceptions.UnauthorizedException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +26,8 @@ public class UserService extends AbstractService{
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+    @Autowired
+    JavaMailSender mailSender;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -71,8 +77,37 @@ public class UserService extends AbstractService{
         u.setSubscribed(dto.isSubscribed());
 
         userRepository.save(u);
+        sendConfirmationEmail(u);
         return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
+    private String generateConfirmationToken(){
+        return UUID.randomUUID().toString();
+    }
+    private void sendConfirmationEmail(User user){
+        SimpleMailMessage message =new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("Confirm your email");
+        message.setText("To confirm your email, please click the link below:\n\n" +
+                "http://localhost:8000/confirm?token=" + user.getConfirmationToken());
+        new Thread(()->  mailSender.send(message)).start();
+
+    }
+    public boolean confirmEmail(String token){
+        User user=userRepository.findAllByConfirmationToken(token).orElseThrow(()->new NotFoundException("Token not found"));
+        user.setConfirmationToken(null);
+        user.setEnable(true);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Scheduled(fixedRate = 1000*60*5)
+    public void deleteUnverifiedUsers() {
+
+        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(5);
+        List<User> unverifiedUsers = userRepository.findAllByEnableFalseAAndDateTimeRegistration(cutoffTime);
+        userRepository.deleteAll(unverifiedUsers);
+    }
+
     public UserWithoutPassDTO getById(int id) {
         Optional<User> u = userRepository.findById(id);
         if(u.isPresent()){
