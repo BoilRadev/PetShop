@@ -8,7 +8,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -67,8 +69,9 @@ public class Order implements Comparable{
             joinColumns = {@JoinColumn(name = "order_id")},
             inverseJoinColumns = {@JoinColumn(name = "product_id")}
     )
-    @JsonIgnoreProperties
-    private Set<Product> products;
+    @JsonManagedReference("order-products")
+    @JsonIgnore
+    private Set<Product> products = new HashSet<>();
 
     @Override
     public int compareTo(@NotNull Object o) {

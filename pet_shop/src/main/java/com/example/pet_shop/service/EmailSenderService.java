@@ -14,7 +14,7 @@ public class EmailSenderService {
     public void sendEmail(String toEmail, String subject , String body){
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom("b.p.radev@gmail.com");
+        mailMessage.setFrom("georgikalachev44@gmail.com");
         mailMessage.setTo(toEmail);
         mailMessage.setText(body);
         mailMessage.setSubject(subject);
@@ -23,4 +23,6 @@ public class EmailSenderService {
 
         System.out.println("Mail sent successfully...");
     }
+
+
 }

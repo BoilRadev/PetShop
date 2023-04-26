@@ -3,8 +3,6 @@ package com.example.pet_shop.controller;
 import com.example.pet_shop.model.DTOS.SubcategoryDTO;
 import com.example.pet_shop.model.entities.Product;
 import com.example.pet_shop.model.entities.Subcategory;
-import com.example.pet_shop.exceptions.BadRequestException;
-import com.example.pet_shop.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.SubcategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,22 +19,22 @@ import org.springframework.web.bind.annotation.*;
 public class SubcategoryController extends AbstractController {
 
     @Autowired
-    private SubcategoryService subcategoryService;
-    @Autowired
     protected LoginManager loginManager;
+    @Autowired
+    private SubcategoryService subcategoryService;
 
     @PostMapping
-    public ResponseEntity<Subcategory> addSubcategory(@Valid @RequestBody SubcategoryDTO subcategoryDto) {
-        checkLoggedInUser();
-        Subcategory subcategory = subcategoryService.createSubcategory(subcategoryDto);
+    public ResponseEntity<Subcategory> createSubcategory(@PathVariable int categoryId, @Valid @RequestBody SubcategoryDTO subcategoryDTO) {
+        checkAuthorization(loginManager);
+        Subcategory subcategory = subcategoryService.createSubcategory(subcategoryDTO, categoryId);
         return new ResponseEntity<>(subcategory, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{subcategoryId}")
-    public ResponseEntity<Void> deleteSubcategory(@PathVariable int subcategoryId) {
-        checkLoggedInUser();
+    public ResponseEntity<?> deleteSubcategory(@PathVariable int subcategoryId) {
+        checkAuthorization(loginManager);
         subcategoryService.deleteSubcategory(subcategoryId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok().body("Subcategory deleted.");
     }
 
     @GetMapping("/{subcategoryId}/products")
@@ -44,18 +42,8 @@ public class SubcategoryController extends AbstractController {
                                                                     @RequestParam(defaultValue = "0") int page,
                                                                     @RequestParam(defaultValue = "10") int size,
                                                                     @RequestParam(defaultValue = "id") String[] sort) {
-        checkLoggedInUser();
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         Page<Product> products = subcategoryService.getProductsBySubcategoryId(subcategoryId, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
-    }
-
-    private void checkLoggedInUser() {
-        if (!loginManager.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!loginManager.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
     }
 }

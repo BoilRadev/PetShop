@@ -12,8 +12,11 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     Optional<Product> getProductsById(int id);
-    Optional<Product> getProductByName(String name);
     Page<Product> findAll(Pageable pageable);
+    Page<Product> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    Page<Product> findAllBySubcategoryId(int id,Pageable pageble);
+    Page<Product> findAllBySubcategoryIdOrderByPriceAsc(int subcategoryId, Pageable pageable);
+    Page<Product> findAllBySubcategoryIdOrderByPriceDesc(int subcategoryId, Pageable pageable);
+
+
 }

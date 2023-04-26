@@ -20,16 +20,16 @@ public class DiscountService extends AbstractService {
         Discount discount = mapper.convertValue(dto, Discount.class);
         discount.setPercent(BigDecimal.valueOf(dto.getPercent()));
         discount.setDescription(dto.getDescription());
-        discount.setFromDate(LocalDate.from(dto.getFromDate()));
-        discount.setToDate(LocalDate.from(dto.getToDate()));
-        discount.setActive(dto.isActive());
-        discountRepository.save(discount);
+        discount.setFromDate(LocalDate.parse(LocalDate.from(dto.getFromDate()).toString()));
+        discount.setToDate(LocalDate.parse(LocalDate.from(dto.getToDate()).toString()));
+        discount.setActive(true);
 
         Product p = getProductById(productId);
         p.setDiscount(discount);
 
+        discountRepository.save(discount);
+        discount.getProducts().add(p);
         productRepository.save(p);
-
         return mapper.convertValue(discount, DiscountInfoDTO.class);
     }
     public Product getProductById(int id) {

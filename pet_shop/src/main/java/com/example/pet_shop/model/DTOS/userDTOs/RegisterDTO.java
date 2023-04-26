@@ -51,8 +51,6 @@ public class RegisterDTO {
     @NotNull
     private boolean isSubscribed;
 
-    @NotNull
-    private boolean isAdmin;
 }
 
 

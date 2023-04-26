@@ -19,4 +19,8 @@ public class DiscountAddDTO {
     private LocalDate fromDate;
     private LocalDate toDate;
     private boolean isActive;
+    public boolean isActive() {
+        LocalDate now = LocalDate.now();
+        return now.isEqual(fromDate) || (now.isAfter(fromDate) && now.isBefore(toDate));
+    }
 }

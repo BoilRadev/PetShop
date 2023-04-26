@@ -31,6 +31,12 @@ public class User {
     @Column
     private String password;
 
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+
+    @Column(name = "enable")
+    private boolean enable;
+
     @Column
     private String firstName;
 

@@ -1,10 +1,10 @@
 package com.example.pet_shop.service;
 
+import com.example.pet_shop.exceptions.BadRequestException;
+import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
 import com.example.pet_shop.model.DTOS.productDTOs.*;
 import com.example.pet_shop.model.entities.*;
 import com.example.pet_shop.exceptions.NotFoundException;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -12,13 +12,32 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductService extends AbstractService{
 
+    public synchronized void addToCart(int productId, CartDTO cart) {
+
+        Product product = productRepository.getProductsById(productId).orElseThrow(()
+                -> new NotFoundException("Product not found"));
+
+        if (product.getQuantity() > 0) {
+            if (!cart.getCart().containsKey(product)) {
+                cart.getCart().put(product, 1);
+            }else {
+                cart.getCart().put(product, cart.getCart().get(product) + 1);
+            }
+            if (cart.getCart().get(product) != null && product.getQuantity() < cart.getCart().get(product)){
+                cart.getCart().put(product, cart.getCart().get(product) - 1);
+                throw new  BadRequestException("Not enough products.");
+            }
+
+        } else {
+            throw new NotFoundException("Not enough products.");
+        }
+    }
     public ProductInfoDTO viewProductById(int id) {
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){
@@ -35,24 +54,25 @@ public class ProductService extends AbstractService{
         return new PageImpl<>(productInfoDTOList, pageable, productPage.getTotalElements());
     }
 
-    public List<ProductInfoDTO> filter(int subId){
-        return productRepository.findAll()
-                .stream()
-                .filter(product -> product.getSubcategory().getId().equals(subId))
-                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
-                .collect(Collectors.toList());
+    public Page<ProductInfoDTO> filter(int subId, Pageable pageable, String order) {
+        Page<Product> products;
+        if (order.equalsIgnoreCase("asc")) {
+            products = productRepository.findAllBySubcategoryIdOrderByPriceAsc(subId, pageable);
+        } else if (order.equalsIgnoreCase("desc")) {
+            products = productRepository.findAllBySubcategoryIdOrderByPriceDesc(subId, pageable);
+        } else {
+            throw new BadRequestException("Invalid sort order");
+        }
+        return products.map(product -> mapper.convertValue(product, ProductInfoDTO.class));
     }
 
-    public List<ProductInfoDTO> search(String name) {
-        return productRepository.findAll()
-                .stream()
-                .filter(product -> product.getName().toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT)))
-                .map( product -> mapper.convertValue( product ,ProductInfoDTO.class))
-                .collect(Collectors.toList());
+    public Page<ProductInfoDTO> search(String name, Pageable pageable) {
+        return productRepository.findAllByNameContainingIgnoreCase(name, pageable)
+                .map(product -> mapper.convertValue(product, ProductInfoDTO.class));
     }
 
     public ProductInfoDTO addProduct(ProductAddDTO dto) {
-        Product product = mapper.convertValue(dto, Product.class);
+        Product product = new Product();
 
         product.setSupplier(getSupplierById(dto.getSupplierId()));
         product.setSubcategory(getSubcategoryById(dto.getSubcategoryId()));
@@ -61,9 +81,13 @@ public class ProductService extends AbstractService{
         product.setQuantity(dto.getQuantity());
         product.setPrice(BigDecimal.valueOf(dto.getPrice()));
 
+
+
         ProductInfoDTO productInfoDTO = mapper.convertValue(product, ProductInfoDTO.class);
-        productRepository.save(product);
         productInfoDTO.setId(product.getId());
+        getSubcategoryById(dto.getSubcategoryId()).getProducts().add(product);
+
+        productRepository.save(product);
         return productInfoDTO;
     }
 
@@ -75,7 +99,21 @@ public class ProductService extends AbstractService{
             throw new NotFoundException("Product not found");
         }
     }
+    public void removeFromCart(int productId, CartDTO cart) {
 
+        Product product = productRepository.getProductsById(productId).orElseThrow(()
+                -> new NotFoundException("Product not found"));
+
+        if (cart.getCart().containsKey(product)) {
+            if (cart.getCart().get(product) > 1) {
+                cart.getCart().put(product, cart.getCart().get(product) - 1);
+            } else {
+                cart.getCart().remove(product);
+            }
+        } else {
+            throw new NotFoundException("Product not found in cart");
+        }
+    }
     public ProductInfoDTO editProduct(ProductAddDTO dto, int id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) {
@@ -93,6 +131,8 @@ public class ProductService extends AbstractService{
         infoDto.setId(id);
         return mapper.convertValue(product, ProductInfoDTO.class);
     }
+
+
 
     private Supplier getSupplierById(int supplierId) {
         Optional<Supplier> optionalSupplier = supplierRepository.findById(supplierId);

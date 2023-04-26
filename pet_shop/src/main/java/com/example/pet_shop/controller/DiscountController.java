@@ -20,33 +20,22 @@ public class DiscountController extends AbstractController {
     protected LoginManager loginManager;
 
     @PostMapping("/products/{productId}/discounts")
-    public DiscountInfoDTO addDiscountToProduct(@PathVariable int productId, @RequestBody DiscountAddDTO dto){
-
-        checkLoggedInUser();
-        return discountService.addDiscount(dto,productId);
+    public DiscountInfoDTO addDiscountToProduct(@PathVariable int productId, @RequestBody DiscountAddDTO dto) {
+        checkAuthorization(loginManager);
+        return discountService.addDiscount(dto, productId);
     }
 
     @PutMapping("/discounts/{id}")
-    public DiscountInfoDTO editDiscount(@PathVariable int id, DiscountEditDTO dto){
-
-        checkLoggedInUser();
+    public DiscountInfoDTO editDiscount(@PathVariable int id, DiscountEditDTO dto) {
+        checkAuthorization(loginManager);
         return discountService.editDiscount(id, dto);
     }
 
     @DeleteMapping("/discounts/{id}")
-    public ResponseEntity<String> deleteDiscount(@PathVariable int id){
-
-        checkLoggedInUser();
+    public ResponseEntity<String> deleteDiscount(@PathVariable int id) {
+        checkAuthorization(loginManager);
         discountService.delete(id);
         return ResponseEntity.ok("Discount deleted successfully.");
     }
 
-    private void checkLoggedInUser() {
-        if (!loginManager.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!loginManager.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
-    }
 }

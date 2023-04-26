@@ -4,6 +4,7 @@ import com.example.pet_shop.model.DTOS.ErrorDTO;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.exceptions.UnauthorizedException;
+import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
 import com.example.pet_shop.model.entities.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -60,4 +61,38 @@ public abstract class AbstractController {
         });
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
+    protected CartDTO getCart(HttpSession ses){
+        CartDTO cart;
+
+        if (ses.getAttribute("cart") == null) {
+            cart = new CartDTO();
+            ses.setAttribute("cart", cart);
+        }else {
+            cart = (CartDTO) ses.getAttribute("cart");
+        }
+
+        return cart;
+    }
+    protected void checkAuthorization(LoginManager log) {
+        if (!log.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+        if (!log.isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
+    }
+    protected void checkLogin(LoginManager log){
+        if (!log.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        }
+    }
+
+    protected int getLoggedUserId(LoginManager log) {
+        if (!log.isLogged()) {
+            throw new BadRequestException("You have to be logged in!");
+        } else {
+            return log.id();
+        }
+    }
+
 }

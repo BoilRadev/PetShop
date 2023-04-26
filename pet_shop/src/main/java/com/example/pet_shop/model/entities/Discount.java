@@ -2,6 +2,7 @@ package com.example.pet_shop.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,5 +44,10 @@ public class Discount {
     @OneToMany(mappedBy = "discount")
     @JsonIgnore
     private List<Product> products = new ArrayList<>();
+
+    public boolean isActive() {
+        LocalDate now = LocalDate.now();
+        return now.isEqual(fromDate) || (now.isAfter(fromDate) && now.isBefore(toDate));
+    }
 }
 

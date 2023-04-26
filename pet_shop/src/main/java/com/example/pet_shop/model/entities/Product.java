@@ -42,7 +42,6 @@ public class Product implements Comparable{
     @JsonIgnoreProperties
     private Subcategory subcategory;
 
-
     @Column
     private int quantity;
 
@@ -55,11 +54,13 @@ public class Product implements Comparable{
 
     @ManyToOne
     @JoinColumn(name = "discount_id")
+    @JsonBackReference("discount-products")
     @JsonIgnoreProperties("discounts")
     private Discount discount;
 
     @ManyToMany(mappedBy = "products")
     @JsonBackReference
+    @JsonIgnoreProperties
     private Set<Order> orders;
 
     @Override

@@ -1,80 +1,83 @@
 package com.example.pet_shop.controller;
-
+import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
 import com.example.pet_shop.model.DTOS.productDTOs.*;
-import com.example.pet_shop.exceptions.BadRequestException;
-import com.example.pet_shop.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.ProductService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
-import java.util.List;
-
 @RestController
+@RequestMapping("/products")
 public class ProductController extends AbstractController {
     @Autowired
     protected LoginManager loginManager;
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     public ProductInfoDTO viewProductById(@PathVariable int id){
         return productService.viewProductById(id);
     }
 
-    @GetMapping("/products/all")
+    @GetMapping("/all")
     public ResponseEntity<Page<ProductInfoDTO>> viewAllProducts(Pageable pageable){
         Page<ProductInfoDTO> productPage = productService.viewAll(pageable);
         return ResponseEntity.ok(productPage);
     }
 
-    @GetMapping("/products/filter/{subcategory-id}")
-    public List<ProductInfoDTO> filter(@PathVariable("subcategory-id") int subId, @RequestParam(value = "order", defaultValue = "asc") String order) {
-        List<ProductInfoDTO> filteredProducts = productService.filter(subId);
-
-        if (order.equalsIgnoreCase("asc")) {
-            filteredProducts.sort(Comparator.comparing(ProductInfoDTO::getPrice));
-        } else if (order.equalsIgnoreCase("desc")) {
-            filteredProducts.sort(Comparator.comparing(ProductInfoDTO::getPrice).reversed());
-        } else {
-            throw new BadRequestException("Invalid sort order");
-        }
-
-        return filteredProducts;
+    @GetMapping("/filter/{subcategory-id}")
+    public Page<ProductInfoDTO> filter(@PathVariable("subcategory-id") int subId,
+                                       @RequestParam(value = "order", defaultValue = "asc") String order,
+                                       @RequestParam(value = "page", defaultValue = "0") int page,
+                                       @RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productService.filter(subId, pageable, order);
     }
 
-    @GetMapping("/products/search")
-    public List<ProductInfoDTO> search(@RequestParam(value = "name") String name){
-        return productService.search(name);
+
+    @GetMapping("/search")
+    public Page<ProductInfoDTO> search(@RequestParam(value = "name") String name,
+                                       @RequestParam(value = "page", defaultValue = "0") int page,
+                                       @RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productService.search(name, pageable);
     }
 
-    @PostMapping("/products")
+    @PostMapping
     public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto){
-        checkAuthorization();
+        checkAuthorization(loginManager);
         return productService.addProduct(dto);
     }
 
-    @PutMapping("/products/{id}")
-    public void editProduct(@RequestBody ProductAddDTO productDto, @PathVariable int id) {
-        checkAuthorization();
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<?> editProduct(@RequestBody ProductAddDTO productDto, @PathVariable int id) {
+        checkAuthorization(loginManager);
         productService.editProduct(productDto, id);
+        return ResponseEntity.ok("Changes edited successfully.");
     }
 
-    @DeleteMapping("/products/{id}")
-    public void deleteProduct(@PathVariable int id){
-        checkAuthorization();
+    @PutMapping("/{productId}")
+    public void addToCart(@PathVariable int productId, HttpSession session) {
+        CartDTO cart = getCart(session);
+        productService.addToCart(productId,cart);
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<String> removeFromCart(@PathVariable int productId, HttpSession session){
+        CartDTO cart = getCart(session);
+        productService.removeFromCart(productId, cart);
+        return ResponseEntity.ok("Product removed from cart");
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<?> deleteProduct(@PathVariable int id){
+        checkAuthorization(loginManager);
         productService.deleteProduct(id);
+        return ResponseEntity.ok().body("Product deleted !");
     }
 
-    private void checkAuthorization() {
-        if (!loginManager.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!loginManager.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
-    }
 }

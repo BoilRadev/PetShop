@@ -17,6 +17,4 @@ public class SubcategoryDTO {
         @Size(min = 2, max = 255)
         private String name;
 
-        @NotNull
-        private int categoryId;
 }

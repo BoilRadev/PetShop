@@ -1,8 +1,5 @@
 package com.example.pet_shop.controller;
-
 import com.example.pet_shop.model.DTOS.SupplierDTO;
-import com.example.pet_shop.exceptions.BadRequestException;
-import com.example.pet_shop.exceptions.UnauthorizedException;
 import com.example.pet_shop.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/suppliers")
 public class SupplierController extends AbstractController {
     @Autowired
     private SupplierService supplierService;
@@ -17,26 +15,17 @@ public class SupplierController extends AbstractController {
     @Autowired
     protected LoginManager loginManager;
 
-    @PostMapping("/suppliers")
+    @PostMapping
     public ResponseEntity<Void> addSupplier(@RequestBody SupplierDTO supplierDTO) {
-        checkLoggedInUser();
+        checkAuthorization(loginManager);
         supplierService.addSupplier(supplierDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/suppliers/{supplier-id}")
+    @DeleteMapping("/{supplier-id}")
     public ResponseEntity<String> deleteSupplier(@PathVariable("supplier-id") int supplierId) {
-        checkLoggedInUser();
+        checkAuthorization(loginManager);
         supplierService.deleteById(supplierId);
-        return ResponseEntity.ok("successfully deleted");
-    }
-
-    private void checkLoggedInUser() {
-        if (!loginManager.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!loginManager.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
+        return ResponseEntity.ok("Successfully deleted");
     }
 }

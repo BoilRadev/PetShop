@@ -24,16 +24,14 @@ public class CategoryController extends AbstractController {
 
     @PostMapping
     public ResponseEntity<Category> addCategory(@RequestBody @Valid CategoryDTO categoryDto) {
-
-        checkLoggedInUser();
+        checkAuthorization(loginManager);
         Category category = categoryService.createCategory(categoryDto);
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(@PathVariable int categoryId) {
-
-        checkLoggedInUser();
+        checkAuthorization(loginManager);
         categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -43,13 +41,6 @@ public class CategoryController extends AbstractController {
         List<Subcategory> subcategories = categoryService.getSubcategoriesByCategoryId(categoryId);
         return new ResponseEntity<>(subcategories, HttpStatus.OK);
     }
-    private void checkLoggedInUser() {
-        if (!loginManager.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!loginManager.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
-    }
+
 }
 

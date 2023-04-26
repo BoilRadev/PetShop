@@ -8,13 +8,20 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "subcategories")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Subcategory {
 
     @Id
@@ -32,4 +39,7 @@ public class Subcategory {
     @JsonBackReference
     private Category category;
 
+    @OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Product> products = new ArrayList<>();
 }

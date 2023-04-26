@@ -2,10 +2,7 @@ package com.example.pet_shop.service;
 
 import com.example.pet_shop.controller.LoginManager;
 import com.example.pet_shop.model.DTOS.OrderPayDTO;
-import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
-import com.example.pet_shop.model.DTOS.orderDTO.PaymentRequest;
-import com.example.pet_shop.model.DTOS.orderDTO.ViewCartDTO;
-import com.example.pet_shop.model.DTOS.orderDTO.ViewProductCartDTO;
+import com.example.pet_shop.model.DTOS.orderDTO.*;
 import com.example.pet_shop.model.entities.*;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.NotFoundException;
@@ -19,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,33 +29,23 @@ public class OrderService extends AbstractService {
     @Autowired
     private ProductRepository productRepository;
 
-    public void addToCart(int productId, CartDTO cart) {
-
-        Product product = productRepository.getProductsById(productId).orElseThrow(()
-                -> new NotFoundException("Product not found"));
-
-        if (product.getQuantity() > 0) {
-            if (!cart.getCart().containsKey(product)) {
-                cart.getCart().put(product, 1);
-            }else {
-                cart.getCart().put(product, cart.getCart().get(product) + 1);
-            }
-
-        } else {
-            throw new NotFoundException("Not enough products.");
-        }
-    }
 
 
-    public void createOrder(LoginManager loginManager, CartDTO cart, @Valid OrderPayDTO dto) {
+
+    public OrderInfoDTO createOrder(int userId, CartDTO cart, @Valid OrderPayDTO dto) {
         Order order = new Order();
-        order.setUser(userRepository.getUserById(loginManager.id()));
+        order.setUser(userRepository.getUserById(userId));
         order.setPaymentMethod(paymentMethodRepository.findById(dto.getPaymentMethodId()).get());
         order.setOrderStatus(getOrderStatus("ACCEPTED"));
-        order.setAddress(userRepository.getUserById(loginManager.id()).getAddress());
-        order.setCreatedAt(LocalDateTime.now());
+        order.setAddress(userRepository.getUserById(userId).getAddress());
+        order.setCreatedAt(LocalDateTime.parse(LocalDateTime.now().toString()));
 
-        // calculate gross value and discount amount
+        cart.getCart().forEach((p, quantity) -> {
+            if (p.getQuantity() < quantity) {
+                throw new NotFoundException("Not enough products.");
+            }
+        });
+
         BigDecimal grossValue = cart.getCart().entrySet().stream()
                 .map(entry -> {
                     Product product = entry.getKey();
@@ -91,6 +79,7 @@ public class OrderService extends AbstractService {
         if (personalDiscount != null) {
             BigDecimal personalDiscountAmount = grossValue.multiply(personalDiscount.divide(BigDecimal.valueOf(100)));
             grossValue = grossValue.subtract(personalDiscountAmount);
+            discountAmount = discountAmount.add(personalDiscountAmount);
         }
 
         order.setGrossValue(grossValue);
@@ -98,15 +87,29 @@ public class OrderService extends AbstractService {
         order.setNetValue(netValue);
         order.setPaid(false);
 
-        clearCart(cart);
         orderRepository.save(order);
+        OrderInfoDTO orderInfoDTO = new OrderInfoDTO();
+        orderInfoDTO.setPaid(order.isPaid());
+        orderInfoDTO.setStatusType(order.getOrderStatus().getType());
+        orderInfoDTO.setDiscountAmount(order.getDiscountAmount());
+        orderInfoDTO.setOrderId(order.getId());
+        orderInfoDTO.setGrossValue(order.getGrossValue());
+
+        clearCart(cart,order);
+
+        return orderInfoDTO;
     }
 
-    public void clearCart(CartDTO cart) {
-
+    public void clearCart(CartDTO cart,Order order) {
         cart.getCart().forEach((p, quantity) -> {
-            p.setQuantity(p.getQuantity() + quantity);
-            productRepository.save(p);
+            synchronized (p) {
+                if (p.getQuantity() < quantity) {
+                    throw new NotFoundException("Not enough products.");
+                }
+                p.setQuantity(p.getQuantity() - quantity);
+                productRepository.save(p);
+                order.getProducts().add(p);
+            }
         });
         cart.getCart().clear();
     }
@@ -121,41 +124,23 @@ public class OrderService extends AbstractService {
         return acceptedOrderStatus;
     }
 
-    public void removeFromCart(int productId, CartDTO cart) {
 
-        Product product = productRepository.getProductsById(productId).orElseThrow(()
-                -> new NotFoundException("Product not found"));
-
-        if (cart.getCart().containsKey(product)) {
-            if (cart.getCart().get(product) > 1) {
-                cart.getCart().put(product, cart.getCart().get(product) - 1);
-            } else {
-                cart.getCart().remove(product);
-            }
-        }
-    }
-
-    public void editStatus(int id) {
-        Optional<Order> opt = orderRepository.findById(id);
+    public OrderInfoDTO getStatus(int orderId, int userId) {
+        Optional<Order> opt = orderRepository.findById(orderId);
         if (opt.isEmpty()) {
-            throw new BadRequestException("No order found with id: " + id);
+            throw new BadRequestException("No order found with id: " + orderId);
         }
-
-        Order o = opt.get();
-        o.setOrderStatus(o.getOrderStatus());
-        orderRepository.save(o);
-    }
-
-    public OrderStatus getStatus(int id, LoginManager loginManager) {
-        Optional<Order> opt = orderRepository.findById(id);
-        if (opt.isEmpty()) {
-            throw new BadRequestException("No order found with id: " + id);
-        }
-        if (loginManager.id() != orderRepository.findOrderByUserId(loginManager.id()).getId()) {
+        if (userId != orderRepository.findOrderByUserId(userId).getId()) {
             throw new BadRequestException("You can see only your own order status.");
         }
         Order o = opt.get();
-        return o.getOrderStatus();
+
+        OrderInfoDTO orderInfoDTO = new OrderInfoDTO();
+        orderInfoDTO.setStatusType(o.getOrderStatus().getType());
+        orderInfoDTO.setDiscountAmount(o.getDiscountAmount());
+        orderInfoDTO.setOrderId(o.getId());
+        orderInfoDTO.setPaid(o.isPaid());
+        return orderInfoDTO;
     }
 
     public ViewCartDTO viewCart(Map<Product, Integer> cart) {
@@ -183,58 +168,8 @@ public class OrderService extends AbstractService {
         return vcDTO;
     }
 
-    private Order getOrderById(int orderId,int loggerId) {
-        System.out.println(orderId);
-        Optional<Order> optionalOrder = orderRepository.findById(orderId);
-        if (optionalOrder.isEmpty()) {
-            throw new NotFoundException("Order not found.");
-        }
-        if( optionalOrder.get().isPaid()){
-            throw new BadRequestException("Order is already paid");
-        }
-        if (loggerId != optionalOrder.get().getUser().getId()){
-            throw new BadRequestException("You can pay only your own orders.");
-        }
-        return optionalOrder.get();
-    }
-        @Transactional
-    public void payOrder(PaymentRequest pm, LoginManager loginManager) {
-
-        Order order = getOrderById(pm.getOrderId(),loginManager.id());
-
-        Payment payment = new Payment();
-        payment.setUser(userRepository.getUserById(loginManager.id()));
-
-        payment.setOrder(order);
-        payment.setAmount(order.getGrossValue());
-
-        payment.setCreatedAt(LocalDateTime.now());
-
-        // try to pay
-
-        payment.setProcessedAt(LocalDateTime.now());
-        payment.setTransactionId(transactionIdGenerator());
-        payment.setStatus(getOrderStatus("PAID").getType());
 
 
-        order.setOrderStatus(orderStatusRepository.findByType("PAID"));
-        order.setPaid(true);
-
-        orderRepository.save(order);
-        paymentRepository.save(payment);
-    }
-
-    public String transactionIdGenerator() {
-        String saltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 18) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * saltChars.length());
-            salt.append(saltChars.charAt(index));
-        }
-        String saltStr = salt.toString();
-        return saltStr;
-    }
 
     public Page<Order> getOrdersBy(int id, Pageable pageable) {
             return orderRepository.findAllByUserId(id,pageable);
