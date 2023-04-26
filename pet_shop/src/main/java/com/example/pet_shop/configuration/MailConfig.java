@@ -16,8 +16,13 @@ public class MailConfig {
 
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
+<<<<<<< HEAD
         mailSender.setUsername("pet.shop.ittalents@gmail.com");
         mailSender.setPassword("741852963b");
+=======
+        mailSender.setUsername("your-email@gmail.com");
+        mailSender.setPassword("your-email-password");
+>>>>>>> origin/master
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
@@ -28,3 +33,7 @@ public class MailConfig {
         return mailSender;
     }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master

@@ -1,6 +1,7 @@
 package com.example.pet_shop.controller;
 
 import com.example.pet_shop.model.DTOS.userDTOs.*;
+import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -23,6 +26,7 @@ public class UserController extends AbstractController {
         UserWithoutPassDTO user = userService.register(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
+    
 
     @GetMapping("/confirm")
     public String confirmEmail(@RequestParam("token") String token) {
