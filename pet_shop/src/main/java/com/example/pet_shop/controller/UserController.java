@@ -1,8 +1,10 @@
 package com.example.pet_shop.controller;
 
+import com.example.pet_shop.exceptions.UnauthorizedException;
 import com.example.pet_shop.model.DTOS.userDTOs.*;
 import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,8 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController extends AbstractController {
-    @Autowired
-    protected LoginManager loginManager;
+
     @Autowired
     private UserService userService;
 
@@ -26,7 +27,10 @@ public class UserController extends AbstractController {
         UserWithoutPassDTO user = userService.register(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
+<<<<<<< Updated upstream
     
+=======
+>>>>>>> Stashed changes
 
     @GetMapping("/confirm")
     public String confirmEmail(@RequestParam("token") String token) {
@@ -37,6 +41,7 @@ public class UserController extends AbstractController {
         }
     }
 
+<<<<<<< Updated upstream
     @PostMapping("/login")
     public UserWithoutPassDTO login(@RequestBody LoginDTO dto) {
         UserWithoutPassDTO respDto = userService.login(dto);
@@ -55,6 +60,30 @@ public class UserController extends AbstractController {
     }
 
     @GetMapping("/{id}")
+=======
+    @PostMapping("/users/login")
+    public UserWithoutPassDTO login(@Valid @RequestBody LoginDTO loginData, HttpSession s) {
+        UserWithoutPassDTO u = userService.login(loginData);
+        s.setAttribute("LOGGED", true);
+        s.setAttribute("LOGGED_ID", u.getId());
+        return u;
+    }
+
+    @PutMapping("/users")
+    public UserWithoutPassDTO editUser(@Valid @RequestBody RegisterDTO userDto, HttpSession s) {
+        int loggedUserId = getLoggedId(s);
+        return userService.edit(userDto, loggedUserId);
+    }
+    @PostMapping("/users/logout")
+    public void logout(HttpSession s) {
+        if (s.isNew()) {
+            throw new UnauthorizedException("You have to login");
+        }
+        s.invalidate();
+
+    }
+    @GetMapping("/users/{id}")
+>>>>>>> Stashed changes
     public UserWithoutPassDTO getById(@PathVariable int id) {
         checkLogin(loginManager);
         return userService.getById(id);
@@ -67,6 +96,7 @@ public class UserController extends AbstractController {
     }
 
 
+<<<<<<< Updated upstream
     @DeleteMapping
     public void deleteUser() {
         userService.deleteUser(getLoggedUserId(loginManager));
@@ -85,4 +115,25 @@ public class UserController extends AbstractController {
     }
 
 
+=======
+    @DeleteMapping("/users")
+    public void deleteUser(HttpSession s) {
+        int loggedUserId = getLoggedId(s);
+        userService.deleteUser(loggedUserId);
+    }
+
+    @PutMapping("/users/subscribe")
+    public ResponseEntity<?> subscribeUser(HttpSession s) {
+        int userId = getLoggedId(s);
+        userService.subscribeUser(userId);
+        return ResponseEntity.ok("User subscribed successfully");
+    }
+
+    @PutMapping("/users/unsubscribe")
+    public ResponseEntity<?> unSubscribeUser(HttpSession s) {
+        int userId = getLoggedId(s);
+        userService.unSubscribeUser(userId);
+        return ResponseEntity.ok("User unsubscribed successfully");
+    }
+>>>>>>> Stashed changes
 }

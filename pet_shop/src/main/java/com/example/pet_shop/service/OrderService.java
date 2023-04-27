@@ -10,6 +10,8 @@ import com.example.pet_shop.model.repositories.OrderRepository;
 import com.example.pet_shop.model.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +30,27 @@ public class OrderService extends AbstractService {
     @Autowired
     private ProductRepository productRepository;
 
+<<<<<<< Updated upstream
 
+=======
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+
+    public void addToCart(int productId, CartDTO cart) {
+
+        Product product = productRepository.getProductsById(productId).orElseThrow(()
+                -> new NotFoundException("Product not found"));
+
+        if (product.getQuantity() > 0) {
+            if (!cart.getCart().containsKey(product)) {
+                cart.getCart().put(product, 1);
+            } else {
+                cart.getCart().put(product, cart.getCart().get(product) + 1);
+            }
+        } else {
+            throw new NotFoundException("Not enough products.");
+        }
+    }
+>>>>>>> Stashed changes
 
 
     public OrderInfoDTO createOrder(int userId, CartDTO cart, @Valid OrderPayDTO dto) {
@@ -87,12 +109,17 @@ public class OrderService extends AbstractService {
         order.setPaid(false);
 
         orderRepository.save(order);
+<<<<<<< Updated upstream
         OrderInfoDTO orderInfoDTO = new OrderInfoDTO();
         orderInfoDTO.setPaid(order.isPaid());
         orderInfoDTO.setStatusType(order.getOrderStatus().getType());
         orderInfoDTO.setDiscountAmount(order.getDiscountAmount());
         orderInfoDTO.setOrderId(order.getId());
         orderInfoDTO.setGrossValue(order.getGrossValue());
+=======
+        logger.info(order.getUser().getEmail()+ "have made an order");
+    }
+>>>>>>> Stashed changes
 
         clearCart(cart,order);
 
@@ -169,6 +196,37 @@ public class OrderService extends AbstractService {
 
 
 
+<<<<<<< Updated upstream
+=======
+        payment.setCreatedAt(LocalDateTime.now());
+
+        // try to pay
+
+        payment.setProcessedAt(LocalDateTime.now());
+        payment.setTransactionId(transactionIdGenerator());
+        payment.setStatus(getOrderStatus("PAID").getType());
+
+
+        order.setOrderStatus(orderStatusRepository.findByType("PAID"));
+        order.setPaid(true);
+
+        orderRepository.save(order);
+        paymentRepository.save(payment);
+        logger.info(order.getUser().getEmail()+ " paid the order");
+    }
+
+    public String transactionIdGenerator() {
+        String saltChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 18) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * saltChars.length());
+            salt.append(saltChars.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+    }
+>>>>>>> Stashed changes
 
     public Page<Order> getOrdersBy(int id, Pageable pageable) {
             return orderRepository.findAllByUserId(id,pageable);

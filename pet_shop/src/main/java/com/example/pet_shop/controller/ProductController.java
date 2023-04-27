@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/products")
 public class ProductController extends AbstractController {
-    @Autowired
-    protected LoginManager loginManager;
+
     @Autowired
     private ProductService productService;
 
@@ -47,6 +46,7 @@ public class ProductController extends AbstractController {
         return productService.search(name, pageable);
     }
 
+<<<<<<< Updated upstream
     @PostMapping
     public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto){
         checkAuthorization(loginManager);
@@ -56,10 +56,22 @@ public class ProductController extends AbstractController {
     @PutMapping("/{id}/edit")
     public ResponseEntity<?> editProduct(@RequestBody ProductAddDTO productDto, @PathVariable int id) {
         checkAuthorization(loginManager);
+=======
+    @PostMapping("/products")
+    public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto, HttpSession s){
+        isAdminLoggedIn(s);
+        return productService.addProduct(dto);
+    }
+
+    @PutMapping("/products/{id}")
+    public void editProduct(@RequestBody ProductAddDTO productDto, @PathVariable int id, HttpSession s) {
+        isAdminLoggedIn(s);
+>>>>>>> Stashed changes
         productService.editProduct(productDto, id);
         return ResponseEntity.ok("Changes edited successfully.");
     }
 
+<<<<<<< Updated upstream
     @PutMapping("/{productId}")
     public void addToCart(@PathVariable int productId, HttpSession session) {
         CartDTO cart = getCart(session);
@@ -80,4 +92,11 @@ public class ProductController extends AbstractController {
         return ResponseEntity.ok().body("Product deleted !");
     }
 
+=======
+    @DeleteMapping("/products/{id}")
+    public void deleteProduct(@PathVariable int id, HttpSession s){
+        isAdminLoggedIn(s);
+        productService.deleteProduct(id);
+    }
+>>>>>>> Stashed changes
 }

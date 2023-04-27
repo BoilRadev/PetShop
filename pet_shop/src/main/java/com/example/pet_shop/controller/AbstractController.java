@@ -6,7 +6,10 @@ import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.exceptions.UnauthorizedException;
 import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
 import com.example.pet_shop.model.entities.User;
+import com.example.pet_shop.model.repositories.UserRepository;
+import com.example.pet_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,8 +18,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class AbstractController {
+
+    @Autowired
+    protected UserService userService;
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -61,6 +68,7 @@ public abstract class AbstractController {
         });
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
+<<<<<<< Updated upstream
     protected CartDTO getCart(HttpSession ses){
         CartDTO cart;
 
@@ -95,4 +103,21 @@ public abstract class AbstractController {
         }
     }
 
+=======
+
+    protected void isAdminLoggedIn(HttpSession session) {
+        getLoggedId(session);
+        int userId = (int) session.getAttribute("LOGGED_ID");
+        if (!userService.findLoggedUser(userId).isAdmin()) {
+            throw new UnauthorizedException("You are not admin");
+        }
+    }
+
+    protected int getLoggedId(HttpSession s) {
+        if (s.getAttribute("LOGGED_ID") == null) {
+            throw new UnauthorizedException("You have to login first");
+        }
+        return (int) s.getAttribute("LOGGED_ID");
+    }
+>>>>>>> Stashed changes
 }

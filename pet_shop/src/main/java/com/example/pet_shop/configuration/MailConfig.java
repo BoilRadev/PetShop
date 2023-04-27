@@ -16,6 +16,7 @@ public class MailConfig {
 
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
+<<<<<<< Updated upstream
 <<<<<<< HEAD
         mailSender.setUsername("pet.shop.ittalents@gmail.com");
         mailSender.setPassword("741852963b");
@@ -23,6 +24,10 @@ public class MailConfig {
         mailSender.setUsername("your-email@gmail.com");
         mailSender.setPassword("your-email-password");
 >>>>>>> origin/master
+=======
+        mailSender.setUsername("pet.shop.ittalents@gmail.com");
+        mailSender.setPassword("rajvaeijncwypcri");
+>>>>>>> Stashed changes
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

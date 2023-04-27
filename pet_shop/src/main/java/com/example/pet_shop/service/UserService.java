@@ -25,9 +25,10 @@ public class UserService extends AbstractService{
     @Autowired
     private BCryptPasswordEncoder encoder;
     @Autowired
-    JavaMailSender mailSender;
+    private JavaMailSender mailSender;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
 
     public UserWithoutPassDTO register(RegisterDTO dto) {
         if(!dto.getPassword().equals(dto.getConfirmPassword())){
@@ -42,7 +43,9 @@ public class UserService extends AbstractService{
         u.setAdmin(dto.isAdmin());
         u.setSubscribed(dto.isSubscribed());
         u.setPersonalDiscount(BigDecimal.valueOf(dto.isSubscribed() ? 5 : 0));
+        u.setConfirmationToken(generateConfirmationToken());
         userRepository.save(u);
+        sendConfirmationEmail(u);
         logger.info("User with email : "+ u.getEmail() + "have registered");
         return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
@@ -74,26 +77,28 @@ public class UserService extends AbstractService{
         u.setAddress(dto.getAddress());
         u.setSubscribed(dto.isSubscribed());
 
+
         userRepository.save(u);
-        sendConfirmationEmail(u);
         return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
     private String generateConfirmationToken(){
         return UUID.randomUUID().toString();
     }
+
     private void sendConfirmationEmail(User user){
         SimpleMailMessage message =new SimpleMailMessage();
         message.setTo(user.getEmail());
         message.setSubject("Confirm your email");
         message.setText("To confirm your email, please click the link below:\n\n" +
-                "http://localhost:8000/confirm?token=" + user.getConfirmationToken());
-        new Thread(()->  mailSender.send(message)).start();
-
+                "http://localhost:2023/confirm?token=" + user.getConfirmationToken() );
+        mailSender.send(message);
     }
+
     public boolean confirmEmail(String token){
-        User user=userRepository.findAllByConfirmationToken(token).orElseThrow(()->new NotFoundException("Token not found"));
-        user.setConfirmationToken(null);
+        User user=userRepository.findAllByConfirmationToken(token).orElseThrow(()
+                -> new NotFoundException("Token not found"));
         user.setEnable(true);
+        user.setConfirmationToken(null);
         userRepository.save(user);
         return true;
     }
@@ -141,6 +146,7 @@ public class UserService extends AbstractService{
         user.setPersonalDiscount(BigDecimal.valueOf(5));
         userRepository.save(user);
     }
+<<<<<<< Updated upstream
 
     private String generateConfirmationToken(){
         return UUID.randomUUID().toString();
@@ -168,5 +174,9 @@ public class UserService extends AbstractService{
         LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(5);
         List<User> unverifiedUsers = userRepository.findAllByEnableFalseAAndDateTimeRegistration(cutoffTime);
         userRepository.deleteAll(unverifiedUsers);
+=======
+    public User findLoggedUser(int userId) {
+        return userRepository.getReferenceById(userId);
+>>>>>>> Stashed changes
     }
 }

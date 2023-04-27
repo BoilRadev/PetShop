@@ -4,6 +4,7 @@ import com.example.pet_shop.model.DTOS.SubcategoryDTO;
 import com.example.pet_shop.model.entities.Product;
 import com.example.pet_shop.model.entities.Subcategory;
 import com.example.pet_shop.service.SubcategoryService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class SubcategoryController extends AbstractController {
 
     @Autowired
+<<<<<<< Updated upstream
     protected LoginManager loginManager;
     @Autowired
     private SubcategoryService subcategoryService;
@@ -27,12 +29,25 @@ public class SubcategoryController extends AbstractController {
     public ResponseEntity<Subcategory> createSubcategory(@PathVariable int categoryId, @Valid @RequestBody SubcategoryDTO subcategoryDTO) {
         checkAuthorization(loginManager);
         Subcategory subcategory = subcategoryService.createSubcategory(subcategoryDTO, categoryId);
+=======
+    private SubcategoryService subcategoryService;
+
+    @PostMapping
+    public ResponseEntity<Subcategory> addSubcategory(@Valid @RequestBody SubcategoryDTO subcategoryDto, HttpSession s) {
+        isAdminLoggedIn(s);
+        Subcategory subcategory = subcategoryService.createSubcategory(subcategoryDto);
+>>>>>>> Stashed changes
         return new ResponseEntity<>(subcategory, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{subcategoryId}")
+<<<<<<< Updated upstream
     public ResponseEntity<?> deleteSubcategory(@PathVariable int subcategoryId) {
         checkAuthorization(loginManager);
+=======
+    public ResponseEntity<Void> deleteSubcategory(@PathVariable int subcategoryId, HttpSession s) {
+        isAdminLoggedIn(s);
+>>>>>>> Stashed changes
         subcategoryService.deleteSubcategory(subcategoryId);
         return ResponseEntity.ok().body("Subcategory deleted.");
     }
@@ -41,7 +56,13 @@ public class SubcategoryController extends AbstractController {
     public ResponseEntity<Page<Product>> getProductsBySubcategoryId(@PathVariable int subcategoryId,
                                                                     @RequestParam(defaultValue = "0") int page,
                                                                     @RequestParam(defaultValue = "10") int size,
+<<<<<<< Updated upstream
                                                                     @RequestParam(defaultValue = "id") String[] sort) {
+=======
+                                                                    @RequestParam(defaultValue = "id") String[] sort,
+                                                                    HttpSession s) {
+        isAdminLoggedIn(s);
+>>>>>>> Stashed changes
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         Page<Product> products = subcategoryService.getProductsBySubcategoryId(subcategoryId, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
