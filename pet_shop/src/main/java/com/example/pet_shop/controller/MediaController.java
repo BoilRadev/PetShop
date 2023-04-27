@@ -18,33 +18,19 @@ import java.util.List;
 public class MediaController extends AbstractController {
 
     @Autowired
-<<<<<<< Updated upstream
-    protected LoginManager loginManager;
-=======
-    private MediaService mediaService;
->>>>>>> Stashed changes
-
-    @Autowired
     private MediaService mediaService;
 
     @PostMapping("/products/{productId}/media")
-<<<<<<< Updated upstream
-    public ResponseEntity<?> upload(@PathVariable int productId, @RequestParam("file") MultipartFile file, HttpSession ses) {
-        checkAuthorization(loginManager);
-=======
     public ResponseEntity<?> upload(@PathVariable int productId, @RequestParam("file") MultipartFile file, HttpSession s) {
-
         isAdminLoggedIn(s);
->>>>>>> Stashed changes
         mediaService.upload(file, productId);
         return ResponseEntity.ok("Image uploaded successfully.");
     }
 
     @SneakyThrows
     @GetMapping("/media/{fileName}")
-<<<<<<< Updated upstream
-    public void download(@PathVariable("fileName") String fileName, HttpServletResponse response){
-        checkLogin(loginManager);
+    public void download(@PathVariable("fileName") String fileName, HttpServletResponse response, HttpSession s){
+        getLoggedId(s);
         File file = mediaService.getFileByName(fileName);
         response.setContentType("image/jpeg");
         response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
@@ -55,12 +41,5 @@ public class MediaController extends AbstractController {
     public ResponseEntity<List<Image>> getImagesByProductId(@PathVariable int productId) {
         List<Image> images = mediaService.getImagesByProductId(productId);
         return ResponseEntity.ok(images);
-=======
-    public void download(@PathVariable("fileName") String fileName, HttpServletResponse resp, HttpSession s){
-
-        getLoggedId(s);
-        File f = mediaService.download(fileName);
-        Files.copy(f.toPath(), resp.getOutputStream());
->>>>>>> Stashed changes
     }
 }

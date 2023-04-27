@@ -1,7 +1,8 @@
 package com.example.pet_shop.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -69,7 +70,7 @@ public class User {
     @Column(name = "confirmation_token")
     private String confirmationToken;
 
-    @Column
+    @Column(name = "enable")
     private boolean enable;
 
 

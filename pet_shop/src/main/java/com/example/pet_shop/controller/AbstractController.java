@@ -5,8 +5,6 @@ import com.example.pet_shop.exceptions.BadRequestException;
 import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.exceptions.UnauthorizedException;
 import com.example.pet_shop.model.DTOS.orderDTO.CartDTO;
-import com.example.pet_shop.model.entities.User;
-import com.example.pet_shop.model.repositories.UserRepository;
 import com.example.pet_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +16,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public abstract class AbstractController {
 
     @Autowired
-    protected UserService userService;
+    private UserService userService;
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -68,7 +65,6 @@ public abstract class AbstractController {
         });
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
-<<<<<<< Updated upstream
     protected CartDTO getCart(HttpSession ses){
         CartDTO cart;
 
@@ -81,29 +77,6 @@ public abstract class AbstractController {
 
         return cart;
     }
-    protected void checkAuthorization(LoginManager log) {
-        if (!log.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-        if (!log.isAdmin()) {
-            throw new UnauthorizedException("You are not admin");
-        }
-    }
-    protected void checkLogin(LoginManager log){
-        if (!log.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        }
-    }
-
-    protected int getLoggedUserId(LoginManager log) {
-        if (!log.isLogged()) {
-            throw new BadRequestException("You have to be logged in!");
-        } else {
-            return log.id();
-        }
-    }
-
-=======
 
     protected void isAdminLoggedIn(HttpSession session) {
         getLoggedId(session);
@@ -119,5 +92,4 @@ public abstract class AbstractController {
         }
         return (int) s.getAttribute("LOGGED_ID");
     }
->>>>>>> Stashed changes
 }

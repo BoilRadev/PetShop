@@ -51,15 +51,9 @@ public class RegisterDTO {
     @NotNull
     private boolean isSubscribed;
 
-<<<<<<< Updated upstream
-=======
     @NotNull
-    private boolean isAdmin;
+    private  boolean isAdmin;
 
-    @NotNull
-    public boolean isEnable;
-
->>>>>>> Stashed changes
 }
 
 

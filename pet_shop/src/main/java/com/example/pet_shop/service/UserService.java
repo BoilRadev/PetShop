@@ -7,10 +7,15 @@ import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.exceptions.UnauthorizedException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,10 +30,9 @@ public class UserService extends AbstractService{
     @Autowired
     private BCryptPasswordEncoder encoder;
     @Autowired
-    private JavaMailSender mailSender;
+    JavaMailSender mailSender;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
 
     public UserWithoutPassDTO register(RegisterDTO dto) {
         if(!dto.getPassword().equals(dto.getConfirmPassword())){
@@ -43,7 +47,6 @@ public class UserService extends AbstractService{
         u.setAdmin(dto.isAdmin());
         u.setSubscribed(dto.isSubscribed());
         u.setPersonalDiscount(BigDecimal.valueOf(dto.isSubscribed() ? 5 : 0));
-        u.setConfirmationToken(generateConfirmationToken());
         userRepository.save(u);
         sendConfirmationEmail(u);
         logger.info("User with email : "+ u.getEmail() + "have registered");
@@ -77,7 +80,6 @@ public class UserService extends AbstractService{
         u.setAddress(dto.getAddress());
         u.setSubscribed(dto.isSubscribed());
 
-
         userRepository.save(u);
         return mapper.convertValue(u, UserWithoutPassDTO.class);
     }
@@ -90,15 +92,14 @@ public class UserService extends AbstractService{
         message.setTo(user.getEmail());
         message.setSubject("Confirm your email");
         message.setText("To confirm your email, please click the link below:\n\n" +
-                "http://localhost:2023/confirm?token=" + user.getConfirmationToken() );
-        mailSender.send(message);
-    }
+                "http://localhost:2023/confirm?token=" + generateConfirmationToken());
+        new Thread(()->  mailSender.send(message)).start();
 
+    }
     public boolean confirmEmail(String token){
-        User user=userRepository.findAllByConfirmationToken(token).orElseThrow(()
-                -> new NotFoundException("Token not found"));
-        user.setEnable(true);
+        User user=userRepository.findAllByConfirmationToken(token).orElseThrow(()->new NotFoundException("Token not found"));
         user.setConfirmationToken(null);
+        user.setEnable(true);
         userRepository.save(user);
         return true;
     }
@@ -118,7 +119,6 @@ public class UserService extends AbstractService{
         }
         throw new NotFoundException("User not found");
     }
-
 
     public Page<UserWithoutPassDTO> getAllUsers(Pageable pageable) {
         Page<User> userPage = userRepository.findAll(pageable);
@@ -146,37 +146,7 @@ public class UserService extends AbstractService{
         user.setPersonalDiscount(BigDecimal.valueOf(5));
         userRepository.save(user);
     }
-<<<<<<< Updated upstream
-
-    private String generateConfirmationToken(){
-        return UUID.randomUUID().toString();
-    }
-    private void sendConfirmationEmail(User user){
-        SimpleMailMessage message =new SimpleMailMessage();
-        message.setTo(user.getEmail());
-        message.setSubject("Confirm your email");
-        message.setText("To confirm your email, please click the link below:\n\n" +
-                "http://localhost:2023/confirm?token=" + user.getConfirmationToken());
-        new Thread(()->  mailSender.send(message)).start();
-
-    }
-    public boolean confirmEmail(String token){
-        User user=userRepository.findAllByConfirmationToken(token).orElseThrow(()->new NotFoundException("Token not found"));
-        user.setConfirmationToken(null);
-        user.setEnable(true);
-        userRepository.save(user);
-        return true;
-    }
-
-    @Scheduled(fixedRate = 1000*60*5)
-    public void deleteUnverifiedUsers() {
-
-        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(5);
-        List<User> unverifiedUsers = userRepository.findAllByEnableFalseAAndDateTimeRegistration(cutoffTime);
-        userRepository.deleteAll(unverifiedUsers);
-=======
     public User findLoggedUser(int userId) {
         return userRepository.getReferenceById(userId);
->>>>>>> Stashed changes
     }
 }

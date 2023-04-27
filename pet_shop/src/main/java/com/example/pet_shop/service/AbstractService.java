@@ -1,13 +1,12 @@
 package com.example.pet_shop.service;
 
 
-import com.example.pet_shop.model.entities.Discount;
+
 import com.example.pet_shop.model.entities.Product;
 import com.example.pet_shop.model.entities.User;
 import com.example.pet_shop.exceptions.NotFoundException;
 import com.example.pet_shop.model.repositories.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +35,7 @@ public abstract class AbstractService {
     protected SubcategoryRepository subcategoryRepository;
     @Autowired
     protected DiscountRepository discountRepository;
+
     public User getUserById(int id){
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }

@@ -37,7 +37,6 @@ public class ProductController extends AbstractController {
         return productService.filter(subId, pageable, order);
     }
 
-
     @GetMapping("/search")
     public Page<ProductInfoDTO> search(@RequestParam(value = "name") String name,
                                        @RequestParam(value = "page", defaultValue = "0") int page,
@@ -46,32 +45,19 @@ public class ProductController extends AbstractController {
         return productService.search(name, pageable);
     }
 
-<<<<<<< Updated upstream
     @PostMapping
-    public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto){
-        checkAuthorization(loginManager);
-        return productService.addProduct(dto);
-    }
-
-    @PutMapping("/{id}/edit")
-    public ResponseEntity<?> editProduct(@RequestBody ProductAddDTO productDto, @PathVariable int id) {
-        checkAuthorization(loginManager);
-=======
-    @PostMapping("/products")
     public ProductInfoDTO addProduct(@RequestBody ProductAddDTO dto, HttpSession s){
         isAdminLoggedIn(s);
         return productService.addProduct(dto);
     }
 
-    @PutMapping("/products/{id}")
-    public void editProduct(@RequestBody ProductAddDTO productDto, @PathVariable int id, HttpSession s) {
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<?> editProduct(@RequestBody ProductAddDTO productDto, @PathVariable int id, HttpSession s) {
         isAdminLoggedIn(s);
->>>>>>> Stashed changes
         productService.editProduct(productDto, id);
         return ResponseEntity.ok("Changes edited successfully.");
     }
 
-<<<<<<< Updated upstream
     @PutMapping("/{productId}")
     public void addToCart(@PathVariable int productId, HttpSession session) {
         CartDTO cart = getCart(session);
@@ -86,17 +72,9 @@ public class ProductController extends AbstractController {
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<?> deleteProduct(@PathVariable int id){
-        checkAuthorization(loginManager);
+    public ResponseEntity<?> deleteProduct(@PathVariable int id, HttpSession s){
+        isAdminLoggedIn(s);
         productService.deleteProduct(id);
         return ResponseEntity.ok().body("Product deleted !");
     }
-
-=======
-    @DeleteMapping("/products/{id}")
-    public void deleteProduct(@PathVariable int id, HttpSession s){
-        isAdminLoggedIn(s);
-        productService.deleteProduct(id);
-    }
->>>>>>> Stashed changes
 }

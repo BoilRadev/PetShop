@@ -35,7 +35,6 @@ public class SubcategoryService extends AbstractService{
         subcategoryRepository.deleteById(subcategoryId);
     }
 
-
     public Page<Product> getProductsBySubcategoryId(int subcategoryId, Pageable pageable) {
         return subcategoryRepository.findAllProductsBySubcategoryId(subcategoryId, pageable);
     }

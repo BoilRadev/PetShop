@@ -13,34 +13,17 @@ public class SupplierController extends AbstractController {
     @Autowired
     private SupplierService supplierService;
 
-<<<<<<< Updated upstream
-    @Autowired
-    protected LoginManager loginManager;
-
     @PostMapping
-    public ResponseEntity<Void> addSupplier(@RequestBody SupplierDTO supplierDTO) {
-        checkAuthorization(loginManager);
-=======
-    @PostMapping("/suppliers")
     public ResponseEntity<Void> addSupplier(@RequestBody SupplierDTO supplierDTO, HttpSession s) {
         isAdminLoggedIn(s);
->>>>>>> Stashed changes
         supplierService.addSupplier(supplierDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-<<<<<<< Updated upstream
     @DeleteMapping("/{supplier-id}")
-    public ResponseEntity<String> deleteSupplier(@PathVariable("supplier-id") int supplierId) {
-        checkAuthorization(loginManager);
-        supplierService.deleteById(supplierId);
-        return ResponseEntity.ok("Successfully deleted");
-=======
-    @DeleteMapping("/suppliers/{supplier-id}")
     public ResponseEntity<String> deleteSupplier(@PathVariable("supplier-id") int supplierId, HttpSession s) {
         isAdminLoggedIn(s);
         supplierService.deleteById(supplierId);
-        return ResponseEntity.ok("successfully deleted");
->>>>>>> Stashed changes
+        return ResponseEntity.ok("Successfully deleted");
     }
 }

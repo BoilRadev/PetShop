@@ -20,7 +20,7 @@ public class AdminController extends AbstractController {
     }
 
     @DeleteMapping("/admin/users/{user-id}")
-    public ResponseEntity<?> deleteUserById(@PathVariable("user-id") int userId, HttpSession s) {
+    public ResponseEntity<?> deleteUserById(@PathVariable("user-id") int userId, HttpSession s ) {
         isAdminLoggedIn(s);
         userService.deleteUser(userId);
         return ResponseEntity.ok("User deleted successfully.");

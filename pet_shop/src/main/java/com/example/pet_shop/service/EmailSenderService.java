@@ -8,18 +8,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailSenderService {
 
-
     @Autowired
     private JavaMailSender mailSender;
 
     public void sendEmail(String toEmail, String subject , String body){
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-<<<<<<< Updated upstream
-        mailMessage.setFrom("georgikalachev44@gmail.com");
-=======
         mailMessage.setFrom("pet.shop.ittalents@gmail.com");
->>>>>>> Stashed changes
         mailMessage.setTo(toEmail);
         mailMessage.setText(body);
         mailMessage.setSubject(subject);

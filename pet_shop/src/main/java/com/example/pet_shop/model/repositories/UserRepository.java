@@ -29,9 +29,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAllByEnableFalseAAndDateTimeRegistration(@Param("cutoffTime") LocalDateTime cutoffTime);
 
 
-<<<<<<< Updated upstream
-=======
-    Optional<User> findByEmail(String email);
-
->>>>>>> Stashed changes
 }

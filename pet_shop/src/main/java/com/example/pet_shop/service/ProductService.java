@@ -33,11 +33,11 @@ public class ProductService extends AbstractService{
                 cart.getCart().put(product, cart.getCart().get(product) - 1);
                 throw new  BadRequestException("Not enough products.");
             }
-
         } else {
             throw new NotFoundException("Not enough products.");
         }
     }
+
     public ProductInfoDTO viewProductById(int id) {
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){
@@ -45,6 +45,7 @@ public class ProductService extends AbstractService{
         }
         throw new NotFoundException("Product not found");
     }
+
     public Page<ProductInfoDTO> viewAll(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
         List<ProductInfoDTO> productInfoDTOList = productPage.getContent()
@@ -72,17 +73,14 @@ public class ProductService extends AbstractService{
     }
 
     public ProductInfoDTO addProduct(ProductAddDTO dto) {
-        Product product = new Product();
 
+        Product product = new Product();
         product.setSupplier(getSupplierById(dto.getSupplierId()));
         product.setSubcategory(getSubcategoryById(dto.getSubcategoryId()));
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setQuantity(dto.getQuantity());
         product.setPrice(BigDecimal.valueOf(dto.getPrice()));
-
-
-
         ProductInfoDTO productInfoDTO = mapper.convertValue(product, ProductInfoDTO.class);
         productInfoDTO.setId(product.getId());
         getSubcategoryById(dto.getSubcategoryId()).getProducts().add(product);
@@ -99,6 +97,7 @@ public class ProductService extends AbstractService{
             throw new NotFoundException("Product not found");
         }
     }
+
     public void removeFromCart(int productId, CartDTO cart) {
 
         Product product = productRepository.getProductsById(productId).orElseThrow(()
@@ -114,6 +113,7 @@ public class ProductService extends AbstractService{
             throw new NotFoundException("Product not found in cart");
         }
     }
+
     public ProductInfoDTO editProduct(ProductAddDTO dto, int id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) {
@@ -131,8 +131,6 @@ public class ProductService extends AbstractService{
         infoDto.setId(id);
         return mapper.convertValue(product, ProductInfoDTO.class);
     }
-
-
 
     private Supplier getSupplierById(int supplierId) {
         Optional<Supplier> optionalSupplier = supplierRepository.findById(supplierId);
