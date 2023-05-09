@@ -7,7 +7,7 @@ This project is a web application built with Java 17 and the Spring framework, s
 **Validation** : Spring Validation is used to validate the user inputs on the server-side to ensure that they meet the required criteria.
 **Pagination** : The Pageable feature is implemented to manage the display of products and orders across multiple pages.
 **API Documentation** : Swagger is used to generate API documentation for the web services.
-**Email Sending** : Java Mail Sender is used to send emails to users when they register or make an order.
+**Email Sending**: Java Mail Sender is used to send emails to users when they register or make an order.
 **Database Migration** : Flyway is used for database migration to manage the database schema evolution.
 
 # Prerequisites
